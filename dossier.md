@@ -4,11 +4,11 @@
 > Lees <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet> om te weten hoe een Markdown-bestand opgemaakt moet worden.
 > Verwijder alle instructies (lijnen die starten met >).
 
-- Student: VOORNAAM NAAM
-- Studentennummer: xxxxxxxxx
-- E-mailadres: <mailto:voornaam.naam@student.hogent.be>
+- Student: Dylan De Man
+- Studentennummer: 202396547
+- E-mailadres: <mailto:dylan.deman@student.hogent.be>
 - Demo: <DEMO_LINK_HIER>
-- GitHub-repository: <GITHUB_REPO_LINK_HIER>
+- GitHub-repository: <https://github.com/HOGENT-frontendweb/frontendweb-2425-DylanDeman>
 - Front-end Web Development
   - Online versie: <LINK_ONLINE_VERSIE_HIER>
 - Web Services:
