@@ -20,8 +20,10 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 
 ## Opstarten
 
-> Schrijf hier hoe we de applicatie starten (.env bestanden aanmaken, commando's om uit te voeren...)
-
+### Dependencies installeren
+ * yarn install
+### Front end opstarten
+ * yarn start
 ## Testen
 
 > Schrijf hier hoe we de testen uitvoeren (.env bestanden aanmaken, commando's om uit te voeren...)
@@ -30,7 +32,10 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 
 ## Opstarten
 
-> Schrijf hier hoe we de applicatie starten (.env bestanden aanmaken, commando's om uit te voeren...)
+### Dependencies installeren
+ * yarn install
+### Front end opstarten
+ * yarn start:dev
 
 ## Testen
 
