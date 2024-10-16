@@ -6,7 +6,7 @@ export default function Layout() {
     <div className='container-xl'>
       <Navbar />
       <Outlet />
-      <ScrollRestoration /> {/* 👈 */}
+      <ScrollRestoration />
     </div>
   );
 }

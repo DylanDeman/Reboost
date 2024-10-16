@@ -1,10 +1,17 @@
+import { IoTrashOutline } from 'react-icons/io5';
+
 const dateFormat = new Intl.DateTimeFormat('nl-BE', {
   day: '2-digit',
   month: '2-digit',
   year: 'numeric',
 });
 
-export default function Evenement({ id, naam, datum, plaats, auteur }) {
+const Evenement = ({ id, naam, datum, plaats, auteur, onDelete }) => {
+
+  const handleDelete = () => {
+    onDelete(id);
+  };
+
   return (
     <tr>
       <td>{id}</td>
@@ -12,6 +19,10 @@ export default function Evenement({ id, naam, datum, plaats, auteur }) {
       <td>{dateFormat.format(new Date(datum))}</td>
       <td>{plaats.adres}</td>
       <td>{auteur.naam}</td>
+      <td><button className='btn btn-danger' onClick={handleDelete}>
+        <IoTrashOutline></IoTrashOutline></button></td>
     </tr>
   );
-}
+};
+
+export default Evenement;

@@ -1,14 +1,13 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'; // 👈
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import EvenementenLijst from './pages/Evenementen/EvenementenLijst.jsx';
 import Layout from './pages/Layout';
 import { Navigate } from 'react-router-dom';
 import NotFound from './pages/notFound/NotFound.jsx';
 import About, { Services, History, Location } from './pages/about/About.jsx';
 
-// 👇
 const router = createBrowserRouter([
   {
     element: <Layout />,
