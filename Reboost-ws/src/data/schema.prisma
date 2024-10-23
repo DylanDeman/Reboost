@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Plaats {
+  id          Int         @id @default(autoincrement()) @db.UnsignedInt
+  straat      String
+  huisnummer  String      @db.VarChar(255)
+  postcode    String      @db.VarChar(255)
+  gemeente    String      @db.VarChar(255)
+  evenementen Evenement[]
+
+  @@map("plaatsen")
+}
+
+model Evenement {
+  id        Int       @id @default(autoincrement()) @db.UnsignedInt
+  naam      String
+  datum     DateTime  @db.DateTime(0)
+  auteur_id Int       @db.UnsignedInt
+  plaats_id Int       @db.UnsignedInt
+  locatie   Plaats    @relation(fields: [plaats_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evenement_plaats")
+  auteur    Gebruiker @relation(fields: [auteur_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evenement_gebruiker")
+
+  @@map("evenementen")
+}
+
+model Gebruiker {
+  id          Int         @id @default(autoincrement()) @db.UnsignedInt
+  name        String      @db.VarChar(255)
+  wachtwoord  String //TODO: Wachtwoord hashing
+  evenementen Evenement[]
+
+  @@map("gebruikers")
+}
