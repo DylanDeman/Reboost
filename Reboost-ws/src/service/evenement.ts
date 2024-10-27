@@ -6,7 +6,7 @@ const Evenement_SELECT = {
   id: true,
   naam: true,
   datum: true,
-  plaats: true,
+  locatie: true,
   auteur: {
     select: {
       id: true,

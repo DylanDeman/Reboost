@@ -1,16 +1,39 @@
-import EvenementenTabel from '../../components/Evenementen/EvenementenTabel';
-import { useState, useMemo } from 'react';
-import { EVENEMENT_DATA } from '../../api/mock_data';
+import EvenementenTabel from '../../components/evenementen/EvenementenTabel';
+import { useState, useMemo, useCallback } from 'react';
+import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
+import { getAll, deleteById } from '../../api';
+import AsyncData from '../../components/AsyncData';
+import { Link } from 'react-router-dom';
+
 export default function EvenementenLijst() {
 
   const [text, setText] = useState('');
   const [search, setSearch] = useState('');
 
-  const filteredEvenementen = useMemo(() => EVENEMENT_DATA.filter((evenement) => {
-    console.log('filtering...');
-    return evenement.naam.toLowerCase().includes(search.toLowerCase());
-  }), [search],
+  const {
+    data: evenementen = [],
+    isLoading,
+    error,
+  } = useSWR('evenementen', getAll);
+
+  const { trigger: deleteEvenement, error: deleteError } = useSWRMutation(
+    'transactions',
+    deleteById,
   );
+
+  const filteredEvenementen = useMemo(
+    () =>
+      evenementen.filter((t) => {
+        return t.naam.toLowerCase().includes(search.toLowerCase());
+      }),
+    [search, evenementen],
+  );
+
+  const handleDeleteEvenement = useCallback(async (id) => {
+    await deleteEvenement(id);
+    alert('Transaction is removed');
+  }, [deleteEvenement]);
 
   return (
     <>
@@ -31,10 +54,17 @@ export default function EvenementenLijst() {
         >
           Zoeken
         </button>
+        <div className='clearfix'>
+          <Link to='/evenementen/add' className='btn btn-primary float-end'>
+            Voeg een evenement toe.
+          </Link>
+        </div>
       </div>
-
+      
       <div className='mt-4'>
-        <EvenementenTabel evenementen={filteredEvenementen} />
+        <AsyncData loading={isLoading} error={error || deleteError}>
+          <EvenementenTabel evenementen={filteredEvenementen} onDelete={handleDeleteEvenement} />
+        </AsyncData>
       </div>
     </>
   );

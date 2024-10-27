@@ -1,40 +1,33 @@
 import Evenement from './Evenement';
-import { useState } from 'react';
-import { EVENEMENT_DATA } from '../../api/mock_data';
 
-const EvenementenTabel = () => {
-  const [evenementen, setEvenementen] = useState(EVENEMENT_DATA);
-
-  const handleDeleteEvenement = (id) => {
-    setEvenementen((evenementen) => evenementen.filter((p) => p.id !== id));
-  };
+function EvenementenTabel({evenementen, onDelete}) {
 
   if (evenementen.length === 0) {
     return (
       <div className="alert alert-info">Er staan nog geen evenementen ingepland</div>
     );
   }
-  // TODO: delete handler fixen, worden gedisplayed als losse tekst, moeten weer in tabelvorm staan.
+  // TODO: CRUD implementatie
   return (
     <div>
-      <table className='table table-hover table-responsive table-dark'>
+      <table className='table table-hover table-responsive table-dark text-center'>
         <thead>
           <tr>
             <th>Id</th>
             <th>Naam</th>
             <th>Datum</th>
-            <th>Plaats</th>
+            <th>PlaatsNaam</th>
+            <th>Straat</th>
+            <th>Huisnr</th>
+            <th>Postcode</th>
+            <th>Gemeente</th>
             <th>Auteur</th>
           </tr>
         </thead>
         <tbody>
-          {evenementen
-            .map((p) => (
-              <div className='col' key={p.id}>
-                <Evenement {...p}
-                  onDelete={handleDeleteEvenement} />
-              </div>
-            ))}
+          {evenementen.map((evenement) => (
+            <Evenement key={evenement.id} {...evenement} onDelete={onDelete} />
+          ))}
 
         </tbody>
       </table>

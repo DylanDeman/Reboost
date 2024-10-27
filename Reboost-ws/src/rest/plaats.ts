@@ -51,7 +51,7 @@ const getEvenementsByPlaatsId = async (ctx: KoaContext<GetAllEvenementenReponse,
 
 export default (parent: KoaRouter) => {
   const router = new Router<ReboostState, ReboostContext>({
-    prefix: '/Plaatss',
+    prefix: '/plaatsen',
   });
 
   router.get('/', getAllPlaatsen);

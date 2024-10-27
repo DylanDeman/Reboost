@@ -41,7 +41,7 @@ const deleteGebruikerById = async (ctx: KoaContext<void, IdParams>) => {
 };
 
 export default (parent: KoaRouter) => {
-  const router = new Router<ReboostState, ReboostContext>({ prefix: '/Gebruikers' });
+  const router = new Router<ReboostState, ReboostContext>({ prefix: '/gebruikers' });
 
   router.get('/', getAllGebruikers);
   router.get('/:id', getGebruikerById);

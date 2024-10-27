@@ -1,4 +1,6 @@
-import { IoTrashOutline } from 'react-icons/io5';
+import { IoTrashOutline, IoPencil } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
+import { memo } from 'react';
 
 const dateFormat = new Intl.DateTimeFormat('nl-BE', {
   day: '2-digit',
@@ -6,7 +8,7 @@ const dateFormat = new Intl.DateTimeFormat('nl-BE', {
   year: 'numeric',
 });
 
-const Evenement = ({ id, naam, datum, plaats, auteur, onDelete }) => {
+const EvenementMemoized = memo(function Evenement({ id, naam, datum, locatie, auteur, onDelete }) {
 
   const handleDelete = () => {
     onDelete(id);
@@ -17,12 +19,22 @@ const Evenement = ({ id, naam, datum, plaats, auteur, onDelete }) => {
       <td>{id}</td>
       <td>{naam}</td>
       <td>{dateFormat.format(new Date(datum))}</td>
-      <td>{plaats.adres}</td>
+      <td>{locatie.naam}</td>
+      <td>{locatie.straat}</td>
+      <td>{locatie.huisnummer}</td>
+      <td>{locatie.postcode}</td>
+      <td>{locatie.gemeente}</td>
       <td>{auteur.naam}</td>
-      <td><button className='btn btn-danger' onClick={handleDelete}>
-        <IoTrashOutline></IoTrashOutline></button></td>
+      <td>
+        {onDelete ?
+          <><Link to={`/evenementen/edit/${id}`} className='btn btn-warning'>
+            <IoPencil />
+          </Link><button className='btn btn-danger' onClick={handleDelete}><IoTrashOutline /></button></> : ''
+        }
+      </td>
+
     </tr>
   );
-};
-
-export default Evenement;
+},
+);
+export default EvenementMemoized;

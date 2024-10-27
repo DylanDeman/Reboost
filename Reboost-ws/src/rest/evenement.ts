@@ -48,7 +48,7 @@ const deleteEvenement = async (ctx: KoaContext<void, IdParams>) => {
 
 export default (parent: KoaRouter) => {
   const router = new Router<ReboostState, ReboostContext>({
-    prefix: '/Evenements',
+    prefix: '/evenementen',
   });
 
   router.get('/', getAllEvenementen);
