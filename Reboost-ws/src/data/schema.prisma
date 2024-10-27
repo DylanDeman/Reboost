@@ -15,6 +15,7 @@ datasource db {
 
 model Plaats {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
+  naam        String
   straat      String
   huisnummer  String      @db.VarChar(255)
   postcode    String      @db.VarChar(255)
@@ -38,7 +39,7 @@ model Evenement {
 
 model Gebruiker {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
-  name        String      @db.VarChar(255)
+  naam        String      @db.VarChar(255)
   wachtwoord  String //TODO: Wachtwoord hashing
   evenementen Evenement[]
 
