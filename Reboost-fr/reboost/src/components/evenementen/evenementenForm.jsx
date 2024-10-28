@@ -1,8 +1,8 @@
-// src/components/Evenements/EvenementForm.jsx
+// src/components/evenements/evenementForm.jsx
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-const EMPTY_EVENEMENT = {
+const EMPTY_evenement = {
   id: undefined,
   naam: '',
   datum: new Date(),
@@ -19,7 +19,7 @@ const EMPTY_EVENEMENT = {
 const todatumInputString = (datum) => {
   if (!datum) return null;
   if (typeof datum !== Object) {
-    datum = new datum(datum);
+    datum = new Date(datum);
   }
   let asString = datum.toISOString();
   return asString.substring(0, asString.indexOf('T'));
@@ -32,43 +32,44 @@ const validationRules = {
   },
   datum: {
     required: 'Een evenement moet een datum hebben',
-    valueAsdatum: true,
+    valueAsDate: true,
   },
   plaats_id: {
     required: 'Een evenement moet een plaats hebben',
   },
 };
-
-export default function EvenementForm({ plaatsen = [], Evenement = EMPTY_EVENEMENT, saveEvenement }) {
+// TODO: Plaatsnaam doorgeven ipv id
+export default function EvenementForm({ plaatsen = [], evenement = EMPTY_evenement, saveEvenement }) {
   const navigate = useNavigate();
 
   const { register, handleSubmit, formState: { errors, isValid } } = useForm({
     mode: 'onBlur',
     defaultValues: {
-      datum: todatumInputString(Evenement?.datum),
-      plaats_id: Evenement?.plaats.id,
-      amount: Evenement?.amount,
-      auteur_id: Evenement?.gebruiker.id,
+      
+      naam: evenement?.naam,
+      datum: todatumInputString(evenement?.datum),
+      plaats_id: evenement?.plaats.id,
+      auteur_id: evenement?.gebruiker.id,
     },
   });
 
   const onSubmit = async (values) => {
     if (!isValid) return;
     await saveEvenement({
-      id: Evenement?.id,
+      id: evenement?.id,
       ...values,
     }, {
       throwOnError: false,
-      onSuccess: () => navigate('/Evenements'),
+      onSuccess: () => navigate('/evenementen'),
     });
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className='w-50 mb-3'>
+      <form onSubmit={handleSubmit(onSubmit)} className='w-50 mb-3 text-light'>
         <div className='mb-3'>
           <label htmlFor='auteur_id' className='form-label'>
-            Auteurs Id
+            Auteur
           </label>
           <input
             {...register('auteur_id', validationRules.auteur_id)}
@@ -82,7 +83,7 @@ export default function EvenementForm({ plaatsen = [], Evenement = EMPTY_EVENEME
         </div>
         <div className='mb-3'>
           <label htmlFor='datum' className='form-label'>
-            datum
+            Datum
           </label>
           <input
             {...register('datum', validationRules.datum)}
@@ -94,21 +95,21 @@ export default function EvenementForm({ plaatsen = [], Evenement = EMPTY_EVENEME
           {errors.datum && <p className="form-text text-danger">{errors.datum.message}</p>}
         </div>
         <div className='mb-3'>
-          <label htmlFor='plaatss' className='form-label'>
-            plaats
+          <label htmlFor='plaats' className='form-label'>
+            Plaats
           </label>
           <select
             {...register('plaats_id', validationRules.plaats)}
-            id='plaatss'
+            id='plaats'
             className='form-select'
             required
           >
             <option value='' disabled>
               -- Select a plaats --
             </option>
-            {plaatsen.map(({ id, name }) => (
+            {plaatsen.map(({ id, naam }) => (
               <option key={id} value={id}>
-                {name}
+                {naam}
               </option>
             ))}
           </select>
@@ -117,9 +118,9 @@ export default function EvenementForm({ plaatsen = [], Evenement = EMPTY_EVENEME
         <div className='clearfix'>
           <div className='btn-group float-end'>
             <button type='submit' className='btn btn-primary'>
-              {Evenement?.id
-                ? 'Save Evenement'
-                : 'Add Evenement'}
+              {evenement?.id
+                ? 'Sla evenement op'
+                : 'Voeg evenement toe'}
             </button>
           </div>
         </div>

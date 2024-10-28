@@ -15,11 +15,11 @@ export default function Navbar() {
             Evenementen
           </NavLink>
         </div>
-        {/* <div className='nav-item my-2 mx-sm-3 my-sm-0'>
-          <NavLink className='nav-link' to='/places'>
-            Places
+        <div className='nav-item my-2 mx-sm-3 my-sm-0'>
+          <NavLink className='nav-link' to='/plaatsen'>
+            Plaatsen
           </NavLink>
-        </div> */}
+        </div>
         <div className='nav-item my-2 mx-sm-3 my-sm-0'>
           <NavLink className='nav-link' to='/about'>
             About us

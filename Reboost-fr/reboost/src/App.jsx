@@ -9,6 +9,9 @@ function App() {
         <li>
           <Link to='/evenementen'>Evenementen</Link> {/* 👈 */}
         </li>
+        <li>
+          <Link to='/plaatsen'>Plaatsen</Link> {/* 👈 */}
+        </li>
       </ul>
     </div>
   );

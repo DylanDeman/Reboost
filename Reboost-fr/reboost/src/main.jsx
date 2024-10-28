@@ -7,7 +7,9 @@ import Layout from './pages/Layout';
 import { Navigate } from 'react-router-dom';
 import NotFound from './pages/notFound/NotFound.jsx';
 import About, { Services, History, Location } from './pages/about/About.jsx';
-
+import AddOrEditEvenement from './pages/Evenementen/AddOrEditEvenement.jsx';
+import PlaatsenLijst from './pages/plaatsen/PlaatsenLijst.jsx';
+import PlaatsDetail from './pages/plaatsen/PlaatsDetail.jsx';
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -18,7 +20,33 @@ const router = createBrowserRouter([
       },
       {
         path: '/evenementen',
-        element: <EvenementenLijst></EvenementenLijst>,
+        children: [
+          {
+            index: true,
+            element: <EvenementenLijst />,
+          },
+          {
+            path: 'add',
+            element: <AddOrEditEvenement />,
+          },
+          {
+            path: 'edit/:id',
+            element: <AddOrEditEvenement />,
+          },
+        ],
+      },
+      {
+        path: '/plaatsen',
+        children: [
+          {
+            index: true,
+            element: <PlaatsenLijst />,
+          },
+          {
+            path: ':id',
+            element: <PlaatsDetail />,
+          },
+        ],
       },
       {
         path: 'about',
