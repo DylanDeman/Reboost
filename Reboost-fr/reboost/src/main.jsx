@@ -10,7 +10,9 @@ import About, { Services, History, Location } from './pages/about/About.jsx';
 import AddOrEditEvenement from './pages/Evenementen/AddOrEditEvenement.jsx';
 import PlaatsenLijst from './pages/plaatsen/PlaatsenLijst.jsx';
 import PlaatsDetail from './pages/plaatsen/PlaatsDetail.jsx';
+import { ThemeProvider } from './contexts/Theme.context'; // 👈
 const router = createBrowserRouter([
+
   {
     element: <Layout />,
     children: [
@@ -74,6 +76,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>,
 );

@@ -18,7 +18,7 @@ export default function EvenementenLijst() {
   } = useSWR('evenementen', getAll);
 
   const { trigger: deleteEvenement, error: deleteError } = useSWRMutation(
-    'transactions',
+    'evenementen',
     deleteById,
   );
 
@@ -60,7 +60,7 @@ export default function EvenementenLijst() {
           </Link>
         </div>
       </div>
-      
+
       <div className='mt-4'>
         <AsyncData loading={isLoading} error={error || deleteError}>
           <EvenementenTabel evenementen={filteredEvenementen} onDelete={handleDeleteEvenement} />

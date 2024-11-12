@@ -1,6 +1,10 @@
 import Evenement from './Evenement';
+import { useContext } from 'react'; // 👈 1
+import { ThemeContext } from '../../contexts/Theme.context';
 
-function EvenementenTabel({evenementen, onDelete}) {
+function EvenementenTabel({ evenementen, onDelete }) {
+
+  const { theme } = useContext(ThemeContext);
 
   if (evenementen.length === 0) {
     return (
@@ -10,7 +14,7 @@ function EvenementenTabel({evenementen, onDelete}) {
   // TODO: CRUD implementatie
   return (
     <div>
-      <table className='table table-hover table-responsive table-dark text-center'>
+      <table className={`table table-hover table-responsive table-${theme}`}>
         <thead>
           <tr>
             <th>Id</th>

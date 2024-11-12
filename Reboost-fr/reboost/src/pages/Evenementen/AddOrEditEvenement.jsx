@@ -1,14 +1,14 @@
 // src/pages/Evenements/AddOrEditEvenement.jsx
 import useSWR from 'swr'; // 👈 1
-import { getAll, save , getById} from '../../api'; // 👈 1
-import EvenementenForm from '../../components/evenementen/EvenementenForm'; // 👈 2
+import { getAll, save, getById } from '../../api'; // 👈 1
+import EvenementenForm from '../../components/evenementen/evenementenForm'; // 👈 2
 import AsyncData from '../../components/AsyncData'; // 👈 3
 import useSWRMutation from 'swr/mutation'; // 👈 1
 import { useParams } from 'react-router-dom'; // 👈 1
 
 export default function AddOrEditEvenement() {
 
-  const {id} = useParams();
+  const { id } = useParams();
 
   const {
     data: Evenement,

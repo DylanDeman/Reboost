@@ -1,6 +1,8 @@
 // src/components/evenements/evenementForm.jsx
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useNavigate, Link } from 'react-router-dom';
+import LabelInput from '../LabelInput';
+import SelectList from '../SelectList';
 
 const EMPTY_evenement = {
   id: undefined,
@@ -37,21 +39,26 @@ const validationRules = {
   plaats_id: {
     required: 'Een evenement moet een plaats hebben',
   },
+  evenement_naam: {
+    required: 'Een evenement moet een naam hebben',
+  },
 };
 // TODO: Plaatsnaam doorgeven ipv id
 export default function EvenementForm({ plaatsen = [], evenement = EMPTY_evenement, saveEvenement }) {
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors, isValid } } = useForm({
+  const methods = useForm({
     mode: 'onBlur',
     defaultValues: {
-      
-      naam: evenement?.naam,
-      datum: todatumInputString(evenement?.datum),
+      date: todatumInputString(evenement?.datum),
       plaats_id: evenement?.plaats.id,
-      auteur_id: evenement?.gebruiker.id,
     },
   });
+
+  const {
+    handleSubmit,
+    formState: { isValid, isSubmitting },
+  } = methods;
 
   const onSubmit = async (values) => {
     if (!isValid) return;
@@ -65,66 +72,52 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)} className='w-50 mb-3 text-light'>
-        <div className='mb-3'>
-          <label htmlFor='auteur_id' className='form-label'>
-            Auteur
-          </label>
-          <input
-            {...register('auteur_id', validationRules.auteur_id)}
-            id="user"
-            type="number"
-            className="form-control"
-            placeholder="auteur_id"
-            required
-          />
-          {errors.auteur_id && <p className="form-text text-danger">{errors.auteur_id.message}</p>}
-        </div>
-        <div className='mb-3'>
-          <label htmlFor='datum' className='form-label'>
-            Datum
-          </label>
-          <input
-            {...register('datum', validationRules.datum)}
-            id='datum'
-            type='datum'
-            className='form-control'
-            placeholder='datum'
-          />
-          {errors.datum && <p className="form-text text-danger">{errors.datum.message}</p>}
-        </div>
-        <div className='mb-3'>
-          <label htmlFor='plaats' className='form-label'>
-            Plaats
-          </label>
-          <select
-            {...register('plaats_id', validationRules.plaats)}
-            id='plaats'
-            className='form-select'
-            required
-          >
-            <option value='' disabled>
-              -- Select a plaats --
-            </option>
-            {plaatsen.map(({ id, naam }) => (
-              <option key={id} value={id}>
-                {naam}
-              </option>
-            ))}
-          </select>
-          {errors.plaats_id && <p className="form-text text-danger">{errors.plaats_id.message}</p>}
-        </div>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)} className='mb-5'>
+        <LabelInput
+          label='Naam'
+          name='naam'
+          type='text'
+          validationRules={validationRules.evenement_naam}
+          data-cy='evenementNaam_input'
+        />
+        <LabelInput
+          label='Datum'
+          name='datum'
+          type='date'
+          validationRules={validationRules.datum}
+          data-cy='datum_input'
+        />
+        <SelectList
+          label='Plaats'
+          name='plaats_id'
+          placeholder='-- Selecteer een plaats --'
+          items={plaatsen}
+          validationRules={validationRules.plaats_id}
+          data-cy='plaats_input'
+        />
+
         <div className='clearfix'>
           <div className='btn-group float-end'>
-            <button type='submit' className='btn btn-primary'>
-              {evenement?.id
-                ? 'Sla evenement op'
-                : 'Voeg evenement toe'}
+            <button
+              type='submit'
+              className='btn btn-primary'
+              data-cy='submit_evenement'
+              disabled={isSubmitting}  //TODO: Evenement editen/ toevoegen laten werken in Api
+            >
+              {evenement?.id ? 'Sla evenement op' : 'Voeg evenement toe'}
             </button>
+            <Link
+              disabled={isSubmitting}
+              className='btn btn-light'
+              to='/evenementen'
+            >
+              Annuleren
+            </Link>
           </div>
         </div>
       </form>
-    </>
+    </FormProvider>
   );
+
 }
