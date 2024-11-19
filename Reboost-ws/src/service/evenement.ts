@@ -1,12 +1,12 @@
 import { prisma } from '../data';
 import type { Evenement, EvenementCreateInput, EvenementUpdateInput } from '../types/evenement';
-import * as placeService from './plaats';
+import * as plaatsService from './plaats';
 
 const Evenement_SELECT = {
   id: true,
   naam: true,
   datum: true,
-  plaats_id: true,
+  plaats: true,
   auteur: {
     select: {
       id: true,
@@ -42,9 +42,9 @@ export const create = async ({
   plaats_id,
   auteur_id,
 }: EvenementCreateInput): Promise<Evenement> => {
-  const existingPlace = await placeService.getById(plaats_id);
+  const bestaandePlaats = await plaatsService.getById(plaats_id);
 
-  if (!existingPlace) {
+  if (!bestaandePlaats) {
     throw new Error(`Er bestaat geen plaats met id: ${plaats_id}.`);
   }
 
@@ -65,20 +65,20 @@ export const updateById = async (id: number, {
   plaats_id,
   auteur_id,
 }: EvenementUpdateInput): Promise<Evenement> => {
-  const existingPlace = await placeService.getById(plaats_id);
+  const bestaandePlaats = await plaatsService.getById(plaats_id);
 
-  if (!existingPlace) {
+  if (!bestaandePlaats) {
     throw new Error(`Er bestaat geen plaats met id: ${plaats_id}.`);
   }
 
   return prisma.evenement.update({
     where: {
-      id,
-      auteur_id: auteur_id,
+      id: id,
     },
     data: {
       naam: naam,
       datum: datum,
+      auteur_id: auteur_id,
       plaats_id: plaats_id,
     },
     select: Evenement_SELECT,

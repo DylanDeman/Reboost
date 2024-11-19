@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import * as EvenementService from '../service/evenement';
-import type { ReboostContext, ReboostState} from '../types/koa';
+import type { ReboostContext, ReboostState } from '../types/koa';
 import type { KoaContext, KoaRouter } from '../types/koa';
 import type {
   CreateEvenementRequest,

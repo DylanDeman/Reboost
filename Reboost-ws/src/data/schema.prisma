@@ -31,7 +31,7 @@ model Evenement {
   datum     DateTime  @db.DateTime(0)
   auteur_id Int       @db.UnsignedInt
   plaats_id Int       @db.UnsignedInt
-  locatie   Plaats    @relation(fields: [plaats_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evenement_plaats")
+  plaats    Plaats    @relation(fields: [plaats_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evenement_plaats")
   auteur    Gebruiker @relation(fields: [auteur_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evenement_gebruiker")
 
   @@map("evenementen")

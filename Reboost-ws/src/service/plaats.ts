@@ -22,7 +22,7 @@ export const getById = async (id: number): Promise<Plaats> => {
   });
 
   if (!plaats) {
-    throw new Error('No plaats with this id exists');
+    throw new Error('Er bestaat geen plaats met dit id');
   }
 
   return plaats;

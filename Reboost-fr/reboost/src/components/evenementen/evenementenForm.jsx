@@ -94,7 +94,7 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
           placeholder='-- Selecteer een plaats --'
           items={plaatsen}
           validationRules={validationRules.plaats_id}
-          data-cy='plaats_input'
+          data-cy='plaats'
         />
 
         <div className='clearfix'>

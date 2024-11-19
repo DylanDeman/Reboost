@@ -8,7 +8,7 @@ const dateFormat = new Intl.DateTimeFormat('nl-BE', {
   year: 'numeric',
 });
 
-const EvenementMemoized = memo(function Evenement({ id, naam, datum, locatie, auteur, onDelete }) {
+const EvenementMemoized = memo(function Evenement({ id, naam, datum, plaats, auteur, onDelete }) {
 
   const handleDelete = () => {
     onDelete(id);
@@ -19,11 +19,11 @@ const EvenementMemoized = memo(function Evenement({ id, naam, datum, locatie, au
       <td>{id}</td>
       <td>{naam}</td>
       <td>{dateFormat.format(new Date(datum))}</td>
-      <td>{locatie.naam}</td>
-      <td>{locatie.straat}</td>
-      <td>{locatie.huisnummer}</td>
-      <td>{locatie.postcode}</td>
-      <td>{locatie.gemeente}</td>
+      <td>{plaats.naam}</td>
+      <td>{plaats.straat}</td>
+      <td>{plaats.huisnummer}</td>
+      <td>{plaats.postcode}</td>
+      <td>{plaats.gemeente}</td>
       <td>{auteur.naam}</td>
       <td>
         {onDelete ?

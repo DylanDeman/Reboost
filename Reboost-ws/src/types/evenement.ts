@@ -6,13 +6,12 @@ export interface Evenement extends Entity {
   naam: string;
   datum: Date;
   auteur: Pick<Gebruiker, 'id' | 'naam'>;
-  plaats: Pick<Plaats, 'id' | 'id'>;
+  plaats: Pick<Plaats, 'id' | 'naam'>;
 }
 
 export interface EvenementCreateInput {
   naam: string;
   datum: Date;
-  plaats: Plaats;
   auteur_id: number;
   plaats_id: number;
 }

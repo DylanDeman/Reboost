@@ -24,7 +24,7 @@ CREATE TABLE `evenementen` (
 -- CreateTable
 CREATE TABLE `gebruikers` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL,
+    `naam` VARCHAR(255) NOT NULL,
     `wachtwoord` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
