@@ -32,7 +32,7 @@ export default function EvenementenLijst() {
 
   const handleDeleteEvenement = useCallback(async (id) => {
     await deleteEvenement(id);
-    alert('Transaction is removed');
+    alert('Het evenement is verwijderd.');
   }, [deleteEvenement]);
 
   return (

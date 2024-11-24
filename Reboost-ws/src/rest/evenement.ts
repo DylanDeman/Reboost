@@ -38,7 +38,9 @@ const updateEvenement = async (ctx: KoaContext<UpdateEvenementResponse, IdParams
     plaats_id: Number(ctx.request.body.plaats_id),
     auteur_id: Number(ctx.request.body.auteur_id),
     datum: new Date(ctx.request.body.datum),
+    
   });
+  console.log(ctx.body);
 };
 
 const deleteEvenement = async (ctx: KoaContext<void, IdParams>) => {

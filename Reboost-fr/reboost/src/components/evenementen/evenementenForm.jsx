@@ -38,12 +38,12 @@ const validationRules = {
   },
   plaats_id: {
     required: 'Een evenement moet een plaats hebben',
+    min: { value: 1, message: 'min 1' },
   },
   evenement_naam: {
     required: 'Een evenement moet een naam hebben',
   },
 };
-// TODO: Plaatsnaam doorgeven ipv id
 export default function EvenementForm({ plaatsen = [], evenement = EMPTY_evenement, saveEvenement }) {
   const navigate = useNavigate();
 
@@ -52,6 +52,8 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
     defaultValues: {
       date: todatumInputString(evenement?.datum),
       plaats_id: evenement?.plaats.id,
+      naam: evenement?.naam,
+      
     },
   });
 
@@ -61,6 +63,7 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
   } = methods;
 
   const onSubmit = async (values) => {
+    console.log('Submitted values:', values);
     if (!isValid) return;
     await saveEvenement({
       id: evenement?.id,
@@ -80,6 +83,13 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
           type='text'
           validationRules={validationRules.evenement_naam}
           data-cy='evenementNaam_input'
+        />
+        <LabelInput
+          label='AuteursID'
+          name='auteur_id'
+          type='number'
+          validationRules={validationRules.auteur_id}
+          data-cy='evenementAuteur_input'
         />
         <LabelInput
           label='Datum'
@@ -103,7 +113,7 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
               type='submit'
               className='btn btn-primary'
               data-cy='submit_evenement'
-              disabled={isSubmitting}  //TODO: Evenement editen/ toevoegen laten werken in Api
+              disabled={isSubmitting} 
             >
               {evenement?.id ? 'Sla evenement op' : 'Voeg evenement toe'}
             </button>

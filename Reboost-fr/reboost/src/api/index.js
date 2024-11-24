@@ -22,4 +22,6 @@ export async function save(url, { arg: { id, ...data } }) {
     url: `${baseUrl}/${url}/${id ?? ''}`,
     data,
   });
+  console.log(url);
+  console.log(data);
 }

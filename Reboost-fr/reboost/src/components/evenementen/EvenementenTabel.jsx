@@ -1,5 +1,5 @@
 import Evenement from './Evenement';
-import { useContext } from 'react'; // 👈 1
+import { useContext } from 'react';
 import { ThemeContext } from '../../contexts/Theme.context';
 
 function EvenementenTabel({ evenementen, onDelete }) {
@@ -11,7 +11,7 @@ function EvenementenTabel({ evenementen, onDelete }) {
       <div className="alert alert-info">Er staan nog geen evenementen ingepland</div>
     );
   }
-  // TODO: CRUD implementatie
+
   return (
     <div>
       <table className={`table table-hover table-responsive table-${theme}`}>
