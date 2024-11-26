@@ -53,7 +53,6 @@ export default function EvenementForm({ gebruikers = [], plaatsen = [], evenemen
       datum: todatumInputString(evenement?.datum),
       plaats_id: evenement?.plaats.id,
       naam: evenement?.naam,
-      auteur_id: evenement?.gebruiker,
 
     },
   });

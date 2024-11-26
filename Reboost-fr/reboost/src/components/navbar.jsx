@@ -26,7 +26,7 @@ export default function Navbar() {
         </div>
         <div className='nav-item my-2 mx-sm-3 my-sm-0'>
           <NavLink className='nav-link' to='/about'>
-            About us
+            Over ons
           </NavLink>
         </div>
         <div className='flex-grow-1'></div>
