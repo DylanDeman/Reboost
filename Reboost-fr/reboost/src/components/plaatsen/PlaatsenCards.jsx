@@ -19,7 +19,7 @@ export default function PlacesCards({
           .sort((a, b) => a.naam.toUpperCase().localeCompare(b.naam.toUpperCase()))
           .map((p) => (
             <div className="col" key={p.id}>
-              <Plaats {...p}  onDelete={onDelete}/>
+              <Plaats {...p} onDelete={onDelete} />
             </div>
           ))}
       </div>

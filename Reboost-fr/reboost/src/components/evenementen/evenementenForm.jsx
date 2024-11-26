@@ -44,16 +44,17 @@ const validationRules = {
     required: 'Een evenement moet een naam hebben',
   },
 };
-export default function EvenementForm({ plaatsen = [], evenement = EMPTY_evenement, saveEvenement }) {
+export default function EvenementForm({ gebruikers = [], plaatsen = [], evenement = EMPTY_evenement, saveEvenement }) {
   const navigate = useNavigate();
 
   const methods = useForm({
     mode: 'onBlur',
     defaultValues: {
-      date: todatumInputString(evenement?.datum),
+      datum: todatumInputString(evenement?.datum),
       plaats_id: evenement?.plaats.id,
       naam: evenement?.naam,
-      
+      auteur_id: evenement?.gebruiker,
+
     },
   });
 
@@ -85,13 +86,6 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
           data-cy='evenementNaam_input'
         />
         <LabelInput
-          label='AuteursID'
-          name='auteur_id'
-          type='number'
-          validationRules={validationRules.auteur_id}
-          data-cy='evenementAuteur_input'
-        />
-        <LabelInput
           label='Datum'
           name='datum'
           type='date'
@@ -106,6 +100,14 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
           validationRules={validationRules.plaats_id}
           data-cy='plaats'
         />
+        <SelectList
+          label='Auteur'
+          name='auteur_id'
+          placeholder='-- Selecteer een auteur --'
+          items={gebruikers}
+          validationRules={validationRules.auteur_id}
+          data-cy='auteur'
+        />
 
         <div className='clearfix'>
           <div className='btn-group float-end'>
@@ -113,7 +115,7 @@ export default function EvenementForm({ plaatsen = [], evenement = EMPTY_eveneme
               type='submit'
               className='btn btn-primary'
               data-cy='submit_evenement'
-              disabled={isSubmitting} 
+              disabled={isSubmitting}
             >
               {evenement?.id ? 'Sla evenement op' : 'Voeg evenement toe'}
             </button>
