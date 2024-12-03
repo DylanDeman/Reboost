@@ -1,6 +1,6 @@
 // src/components/places/Place.jsx
 import { Link } from 'react-router-dom';
-import { IoTrashOutline } from 'react-icons/io5';
+import { IoTrashOutline, IoPencil } from 'react-icons/io5';
 import { memo, useCallback } from 'react';
 
 const PlaatsMemoized = memo(function Place({ id, naam, onDelete }) {
@@ -12,9 +12,11 @@ const PlaatsMemoized = memo(function Place({ id, naam, onDelete }) {
     <div className='card bg-dark border-dark mb-4'>
       <div className='card-body'>
         <h5 className='card-title'>  <Link to={`/plaatsen/${id}`}>{naam}</Link></h5>
-        <button className='btn btn-danger' onClick={handleDelete}>
-          <IoTrashOutline />
-        </button>
+        {onDelete ?
+          <><Link to={`/plaatsen/edit/${id}`} className='btn btn-warning'>
+            <IoPencil />
+          </Link><button className='btn btn-danger' onClick={handleDelete}><IoTrashOutline /></button></> : ''
+        }
       </div>
     </div>
   );
