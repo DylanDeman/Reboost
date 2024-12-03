@@ -49,13 +49,13 @@ export default function EvenementenLijst() {
         />
         <button
           type='button'
-          className='btn btn-outline-primary'
+          className='btn bg-color'
           onClick={() => setSearch(text)}
         >
           Zoeken
         </button>
         <div className='clearfix'>
-          <Link to='/evenementen/add' className='btn btn-primary float-end'>
+          <Link to='/evenementen/add' className='btn bg-color float-end'>
             Voeg een evenement toe.
           </Link>
         </div>

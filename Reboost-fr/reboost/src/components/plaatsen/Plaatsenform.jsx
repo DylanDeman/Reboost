@@ -105,7 +105,7 @@ export default function PlaatsenForm({ plaats = EMPTY_plaats, savePlaats }) {
           <div className='btn-group float-end'>
             <button
               type='submit'
-              className='btn btn-primary'
+              className='btn bg-color'
               data-cy='submit_evenement'
               disabled={isSubmitting}
             >

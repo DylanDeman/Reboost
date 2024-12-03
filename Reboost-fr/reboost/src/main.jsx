@@ -9,7 +9,6 @@ import NotFound from './pages/notFound/NotFound.jsx';
 import About, { Services, History, Location } from './pages/about/About.jsx';
 import AddOrEditEvenement from './pages/Evenementen/AddOrEditEvenement.jsx';
 import PlaatsenLijst from './pages/plaatsen/PlaatsenLijst.jsx';
-import PlaatsDetail from './pages/plaatsen/PlaatsDetail.jsx';
 import { ThemeProvider } from './contexts/Theme.context';
 import AddOrEditPlaats from './pages/plaatsen/AddOrEditPlaats.jsx';
 const router = createBrowserRouter([
@@ -52,10 +51,6 @@ const router = createBrowserRouter([
           {
             path: 'edit/:id',
             element: <AddOrEditPlaats />,
-          },
-          {
-            path: ':id',
-            element: <PlaatsDetail />,
           },
         ],
       },

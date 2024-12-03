@@ -112,7 +112,7 @@ export default function EvenementForm({ gebruikers = [], plaatsen = [], evenemen
           <div className='btn-group float-end'>
             <button
               type='submit'
-              className='btn btn-primary'
+              className='btn bg-color'
               data-cy='submit_evenement'
               disabled={isSubmitting}
             >

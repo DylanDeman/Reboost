@@ -31,7 +31,7 @@ export default function Navbar() {
         </div>
         <div className='flex-grow-1'></div>
         <button
-          className='btn btn-secondary'
+          className='btn bg-color'
           type='button'
           onClick={toggleTheme}
         >

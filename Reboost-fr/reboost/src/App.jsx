@@ -7,10 +7,10 @@ function App() {
       <p>Kies één van de volgende links:</p>
       <ul>
         <li>
-          <Link to='/evenementen'>Evenementen</Link> {/* 👈 */}
+          <Link to='/evenementen'>Evenementen</Link>
         </li>
         <li>
-          <Link to='/plaatsen'>Plaatsen</Link> {/* 👈 */}
+          <Link to='/plaatsen'>Plaatsen</Link>
         </li>
       </ul>
     </div>
