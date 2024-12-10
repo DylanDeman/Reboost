@@ -37,7 +37,7 @@ export default function EvenementenLijst() {
 
   return (
     <>
-      <h1 className='text-light'>Evenementen</h1>
+      <h1>Evenementen</h1>
       <div className='input-group mb-3 w-50'>
         <input
           type="search"
