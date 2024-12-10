@@ -11,6 +11,11 @@ import AddOrEditEvenement from './pages/Evenementen/AddOrEditEvenement.jsx';
 import PlaatsenLijst from './pages/plaatsen/PlaatsenLijst.jsx';
 import { ThemeProvider } from './contexts/Theme.context';
 import AddOrEditPlaats from './pages/plaatsen/AddOrEditPlaats.jsx';
+import Login from './pages/Login.jsx';
+import Logout from './pages/Logout.jsx';
+import PrivateRoute from './components/PrivateRoute';
+import { AuthProvider } from './contexts/Auth.context.jsx';
+
 const router = createBrowserRouter([
 
   {
@@ -22,6 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/evenementen',
+        element: <PrivateRoute />,
         children: [
           {
             index: true,
@@ -39,6 +45,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/plaatsen',
+        element: <PrivateRoute />,
         children: [
           {
             index: true,
@@ -55,7 +62,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'about',
+        path: 'over',
         element: <About />,
         children: [
           {
@@ -73,15 +80,26 @@ const router = createBrowserRouter([
         ],
       },
       { path: '*', element: <NotFound /> },
+      {
+        path: '/login',
+        element: <Login />,
+      },
+      {
+        path: '/logout',
+        element: <Logout />,
+      },
     ],
   },
 ],
 );
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
-  </StrictMode>,
+
+  <AuthProvider>
+    <StrictMode>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </StrictMode>,
+  </AuthProvider>,
 );

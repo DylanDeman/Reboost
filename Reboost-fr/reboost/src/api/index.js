@@ -25,3 +25,9 @@ export async function save(url, { arg: { id, ...data } }) {
   console.log(url);
   console.log(data);
 }
+
+export const post = async (url, { arg }) => {
+  const { data } = await axios.post(`${baseUrl}/${url}`, arg);
+
+  return data;
+};

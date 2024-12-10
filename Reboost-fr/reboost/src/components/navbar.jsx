@@ -2,8 +2,12 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../contexts/Theme.context';
 import { IoMoonSharp, IoSunny } from 'react-icons/io5';
 import { useContext } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
+
+  const { isAuthenticated } = useAuth0();
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
@@ -31,6 +35,21 @@ export default function Navbar() {
           </NavLink>
         </div>
         <div className='flex-grow-1'></div>
+        {
+          isAuthenticated ? (
+            <div className='nav-item my-2 mx-sm-3 my-sm-0'>
+              <Link className='nav-link' to='/logout'>
+                Uitloggen
+              </Link>
+            </div>
+          ) : (
+            <div className='nav-item my-2 mx-sm-3 my-sm-0'>
+              <Link className='nav-link' to='/login'>
+                Inloggen
+              </Link>
+            </div>
+          )
+        }
         <button
           className='btn bg-color'
           type='button'
