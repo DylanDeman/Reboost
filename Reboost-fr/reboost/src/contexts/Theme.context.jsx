@@ -1,4 +1,3 @@
-// src/contexts/Theme.context.jsx
 import { createContext, useState, useCallback, useMemo } from 'react';
 import { themes } from './theme';
 

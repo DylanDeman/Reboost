@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { useTheme } from '../contexts/theme'; // 👈 1
+import { ThemeContext } from '../contexts/Theme.context';
 import { IoMoonSharp, IoSunny } from 'react-icons/io5';
+import { useContext } from 'react';
 
 export default function Navbar() {
 
-  const { theme, toggleTheme } = useTheme(); // 👈 2
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
     <nav className={`navbar sticky-top bg-${theme} text-bg-${theme} mb-4`}>

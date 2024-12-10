@@ -1,5 +1,5 @@
 a.nav-link.active {
-  color: blue;
+  color: #66c0c0;
 }
 
 .bg-color,
@@ -8,6 +8,7 @@ a.nav-link.active {
 }
 
 
-.nav-link:hover {
+.nav-link:hover,
+.l-hover:hover {
   color: #66c0c0;
 }

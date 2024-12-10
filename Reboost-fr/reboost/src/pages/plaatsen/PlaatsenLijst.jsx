@@ -20,7 +20,7 @@ export default function PlaatsenLijst() {
 
   return (
     <>
-      <h1 className='text-light'>Plaatsen</h1>
+      <h1>Plaatsen</h1>
 
       <AsyncData loading={isLoading} error={error || deleteError || saveError}>
         <PlaatsenCards plaatsen={data} onRate={savePlaats} onDelete={handleDeletePlaats} />
