@@ -14,92 +14,60 @@ import AddOrEditPlaats from './pages/plaatsen/AddOrEditPlaats.jsx';
 import Login from './pages/Login.jsx';
 import Logout from './pages/Logout.jsx';
 import PrivateRoute from './components/PrivateRoute';
-import { AuthProvider } from './contexts/Auth.context.jsx';
+import AuthProvider from './contexts/Auth.context.jsx';
+import CallbackHandler from './components/CallbackHandler.jsx';
 
 const router = createBrowserRouter([
-
   {
-    element: <Layout />,
+    element: (
+      <AuthProvider>
+        <Layout />
+      </AuthProvider>
+    ), 
     children: [
-      {
-        path: '/',
-        element: <Navigate replace to='/evenementen' />,
-      },
+      { path: '/', element: <Navigate replace to="/evenementen" /> },
       {
         path: '/evenementen',
         element: <PrivateRoute />,
         children: [
-          {
-            index: true,
-            element: <EvenementenLijst />,
-          },
-          {
-            path: 'add',
-            element: <AddOrEditEvenement />,
-          },
-          {
-            path: 'edit/:id',
-            element: <AddOrEditEvenement />,
-          },
+          { index: true, element: <EvenementenLijst /> },
+          { path: 'add', element: <AddOrEditEvenement /> },
+          { path: 'edit/:id', element: <AddOrEditEvenement /> },
         ],
       },
       {
         path: '/plaatsen',
         element: <PrivateRoute />,
         children: [
-          {
-            index: true,
-            element: <PlaatsenLijst />,
-          },
-          {
-            path: 'add',
-            element: <AddOrEditPlaats />,
-          },
-          {
-            path: 'edit/:id',
-            element: <AddOrEditPlaats />,
-          },
+          { index: true, element: <PlaatsenLijst /> },
+          { path: 'add', element: <AddOrEditPlaats /> },
+          { path: 'edit/:id', element: <AddOrEditPlaats /> },
         ],
       },
       {
-        path: 'over',
+        path: '/about',
         element: <About />,
         children: [
-          {
-            path: 'services',
-            element: <Services />,
-          },
-          {
-            path: 'history',
-            element: <History />,
-          },
-          {
-            path: 'location',
-            element: <Location />,
-          },
+          { path: 'services', element: <Services /> },
+          { path: 'history', element: <History /> },
+          { path: 'location', element: <Location /> },
         ],
       },
       { path: '*', element: <NotFound /> },
+      { path: '/login', element: <Login /> }, 
+      { path: '/logout', element: <Logout /> },
       {
-        path: '/login',
-        element: <Login />,
-      },
-      {
-        path: '/logout',
-        element: <Logout />,
+        path: '/callback', 
+        element: <CallbackHandler />, 
       },
     ],
   },
-],
-);
+]);
 
 createRoot(document.getElementById('root')).render(
-
-  <AuthProvider>
-    <StrictMode>
-      <ThemeProvider>
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </StrictMode>,
-  </AuthProvider>,
+  <StrictMode>
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  </StrictMode>,
 );

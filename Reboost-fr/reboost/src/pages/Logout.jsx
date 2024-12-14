@@ -5,8 +5,7 @@ const LogoutButton = () => {
   const { logout } = useAuth0();
 
   useEffect(() => {
-    // method aanroepen op laden van pagina
-    logout({ logoutParams: { returnTo: 'http://localhost:5173/evenementen' } });
+    logout({ logoutParams: { returnTo: 'http://localhost:5173/about' } });
   }, [logout]);
 
   return null;
