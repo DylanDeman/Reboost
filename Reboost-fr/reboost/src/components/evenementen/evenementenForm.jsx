@@ -97,7 +97,7 @@ export default function EvenementForm({ gebruikers = [], plaatsen = [], evenemen
           placeholder='-- Selecteer een plaats --'
           items={plaatsen}
           validationRules={validationRules.plaats_id}
-          data-cy='plaats'
+          data-cy='plaats_input'
         />
         <SelectList
           label='Auteur'
@@ -105,7 +105,7 @@ export default function EvenementForm({ gebruikers = [], plaatsen = [], evenemen
           placeholder='-- Selecteer een auteur --'
           items={gebruikers}
           validationRules={validationRules.auteur_id}
-          data-cy='auteur'
+          data-cy='auteur_input'
         />
 
         <div className='clearfix'>
