@@ -1,0 +1,25 @@
+{
+  "plaatsen": [
+    {
+      "naam": "Het klokhuis",
+      "straat": "Kaaiplein",
+      "huisnummer": "18",
+      "postcode": "9220",
+      "gemeente": "Hamme"
+    },
+    {
+      "naam": "JH Snuffel",
+      "straat": "Hamsesteenweg",
+      "huisnummer": "1",
+      "postcode": "9200",
+      "gemeente": "Dendermonde"
+    },
+    {
+      "naam": "JH Zenith",
+      "straat": "Otterstraat",
+      "huisnummer": "58",
+      "postcode": "9200",
+      "gemeente": "Dendermonde"
+    }
+  ]
+}

@@ -2,10 +2,9 @@
 import { isAxiosError } from 'axios';
 
 export default function Error({ error }) {
-  // 👆 1 👇 2
   if (isAxiosError(error)) {
     return (
-      <div className='alert alert-danger'>
+      <div data-cy='axios_error_message' className='alert alert-danger'>
         <h4 className='alert-heading'>Oops, something went wrong</h4>
         <p>
           {/* 👇 3 */}
@@ -22,7 +21,7 @@ export default function Error({ error }) {
     );
   }
 
-  // 👇 4
+
   if (error) {
     return (
       <div className='alert alert-danger'>
@@ -32,5 +31,5 @@ export default function Error({ error }) {
     );
   }
 
-  return null; // 👈 5
+  return null; 
 }

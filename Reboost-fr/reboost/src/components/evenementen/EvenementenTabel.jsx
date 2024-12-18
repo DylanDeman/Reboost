@@ -8,7 +8,7 @@ function EvenementenTabel({ evenementen, onDelete }) {
 
   if (evenementen.length === 0) {
     return (
-      <div className="alert alert-info">Er staan nog geen evenementen ingepland</div>
+      <div data-cy='geen_evenementen_melding' className="alert alert-info">Er staan nog geen evenementen ingepland</div>
     );
   }
 

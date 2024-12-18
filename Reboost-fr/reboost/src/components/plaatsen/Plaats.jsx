@@ -14,12 +14,12 @@ const PlaatsMemoized = memo(function Place({ id, naam, straat, huisnummer, postc
   return (
     <div className={`card text-${textTheme} card-bg bg-${theme} bg-gradient border-dark mb-4`}>
       <div className='card-body'>
-        <h5 className='card-title'>{naam}</h5>
-        <p className='card-text'>{straat} {huisnummer} {postcode} {gemeente}</p>
+        <h5 className='card-title' data-cy='plaats_naam'>{naam}</h5>
+        <p className='card-text' data-cy='plaats_adres'>{straat} {huisnummer} {postcode} {gemeente}</p>
         {onDelete ?
-          <><Link to={`/plaatsen/edit/${id}`} className='btn btn-warning card-link'>
+          <><Link data-cy='plaats_edit' to={`/plaatsen/edit/${id}`} className='btn btn-warning card-link'>
             <IoPencil />
-          </Link><button className='btn btn-danger card-link' onClick={handleDelete}><IoTrashOutline /></button></> : ''
+          </Link><button data-cy='plaats_delete' className='btn btn-danger card-link' onClick={handleDelete}><IoTrashOutline /></button></> : ''
         }
       </div>
     </div>

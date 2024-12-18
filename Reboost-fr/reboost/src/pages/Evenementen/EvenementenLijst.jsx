@@ -25,7 +25,7 @@ export default function EvenementenLijst() {
   const filteredEvenementen = useMemo(
     () =>
       evenementen.filter((t) => {
-        return t.naam.toLowerCase().includes(search.toLowerCase());
+        return t.plaats.naam.toLowerCase().includes(search.toLowerCase());
       }),
     [search, evenementen],
   );
@@ -42,6 +42,7 @@ export default function EvenementenLijst() {
         <input
           type="search"
           id='search'
+          data-cy='evenementen_search_input'
           className='form-control rounded'
           placeholder='Zoeken'
           value={text}
@@ -49,6 +50,7 @@ export default function EvenementenLijst() {
         />
         <button
           type='button'
+          data-cy='evenementen_search_btn'
           className='btn bg-color'
           onClick={() => setSearch(text)}
         >

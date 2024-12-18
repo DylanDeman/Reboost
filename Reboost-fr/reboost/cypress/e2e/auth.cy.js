@@ -1,5 +1,3 @@
-// cypress/integration/auth.spec.js
-
 describe('Auth0', () => {
   beforeEach(() => {
     const username = 'test@reboost.be';

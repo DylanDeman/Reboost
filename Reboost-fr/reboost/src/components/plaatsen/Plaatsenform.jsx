@@ -70,7 +70,7 @@ export default function PlaatsenForm({ plaats = EMPTY_plaats, savePlaats }) {
           name='naam'
           type='text'
           validationRules={validationRules.naam}
-          data-cy='evenementNaam_input'
+          data-cy='plaats_naam_input'
         />
         <LabelInput
           label='Straat'
@@ -106,7 +106,7 @@ export default function PlaatsenForm({ plaats = EMPTY_plaats, savePlaats }) {
             <button
               type='submit'
               className='btn bg-color'
-              data-cy='submit_evenement'
+              data-cy='submit_plaats'
               disabled={isSubmitting}
             >
               {plaats?.id ? 'Sla plaats op' : 'Voeg plaats toe'}
