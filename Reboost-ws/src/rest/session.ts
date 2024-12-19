@@ -11,8 +11,27 @@ import type {
 } from '../types/koa';
 import type { LoginResponse, LoginRequest } from '../types/gebruiker';
 
+/**
+ * @api {post} /sessions Login en verkrijg een JWT-token
+ * @apiName Login
+ * @apiGroup Session
+ * @apiParam {String} email Email van de gebruiker.
+ * @apiParam {String} wachtwoord Wachtwoord van de gebruiker.
+ * @apiSuccess {String} token JWT-token dat wordt gebruikt voor authenticatie.
+ * @apiSuccessExample {json} Success-Response:
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "token": "jwt_token_example"
+ *    }
+ * @apiError (401) Unauthorized Onjuiste inloggegevens.
+ * @apiErrorExample {json} Error-Response:
+ *    HTTP/1.1 401 Unauthorized
+ *    {
+ *      "code": "UNAUTHORIZED",
+ *      "message": "Inloggegevens zijn onjuist"
+ *    }
+ */
 const login = async (ctx: KoaContext<LoginResponse, void, LoginRequest>) => {
-
   const { naam, wachtwoord } = ctx.request.body;
   const token = await userService.login(naam, wachtwoord);
 
@@ -22,8 +41,8 @@ const login = async (ctx: KoaContext<LoginResponse, void, LoginRequest>) => {
 
 login.validationScheme = {
   body: {
-    email: Joi.string().email(),
-    password: Joi.string(),
+    email: Joi.string().email().required(),
+    wachtwoord: Joi.string().min(6).required(),
   },
 };
 
@@ -32,6 +51,7 @@ export default function installSessionRouter(parent: KoaRouter) {
     prefix: '/sessions',
   });
 
+  // Login route
   router.post('/', validate(login.validationScheme), login);
 
   parent.use(router.routes()).use(router.allowedMethods());
