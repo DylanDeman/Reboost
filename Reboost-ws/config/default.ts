@@ -13,8 +13,6 @@ export default {
       audience: 'budget.hogent.be',
       issuer: 'budget.hogent.be',
       expirationInterval: 60 * 60, 
-      secret:
-        'fedslmhkfhrtuertersrterrhzegzerfeergsfgfghrrtyuyfdsdherzzj',
     },
     argon: {
       hashLength: 32,

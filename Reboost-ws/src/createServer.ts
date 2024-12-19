@@ -9,13 +9,14 @@ import type {
   ReboostContext,
   ReboostState,
 } from './types/koa'; 
+import config from 'config';
 
 export interface Server {
   getApp(): KoaApplication;
   start(): Promise<void>;
   stop(): Promise<void>;
 }
-
+const PORT = config.get<number>('port');
 export default async function createServer(): Promise<Server> {
   const app = new Koa<ReboostState, ReboostContext>();
 
@@ -30,10 +31,9 @@ export default async function createServer(): Promise<Server> {
 
     start() {
       return new Promise<void>((resolve) => {
-        app.listen(9000, () => {
-          getLogger().info('🚀 Server listening on http://localhost:9000');
-          resolve();
-        });
+        app.listen(PORT); // 👈
+        getLogger().info(`🚀 Server listening on http://localhost:${PORT}`); // 👈
+        resolve();
       });
     },
 
