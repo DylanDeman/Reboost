@@ -5,6 +5,6 @@ export default {
     },
   },
   cors: {
-    origins: ['https://frontendweb-budget-dna5.onrender.com'], 
+    origins: ['https://frontendweb-2425-dylandeman-1.onrender.com'], 
   },
 };
