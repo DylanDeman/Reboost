@@ -12,3 +12,23 @@ a.nav-link.active {
 .l-hover:hover {
   color: #66c0c0;
 }
+
+
+html, body {
+  height: 100%;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+body.dark {
+  background-color: rgb(33, 37, 41);
+  color: white;
+}
+
+body.light {
+  background-color: white;
+  color: black;
+}

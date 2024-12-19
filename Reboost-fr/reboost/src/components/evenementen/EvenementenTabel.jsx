@@ -8,13 +8,15 @@ function EvenementenTabel({ evenementen, onDelete }) {
 
   if (evenementen.length === 0) {
     return (
-      <div data-cy='geen_evenementen_melding' className="alert alert-info">Er staan nog geen evenementen ingepland</div>
+      <div data-cy='geen_evenementen_melding' className="alert alert-info">
+        Er staan nog geen evenementen ingepland
+      </div>
     );
   }
 
   return (
-    <div>
-      <table className={`table table-hover table-responsive table-${theme}`}>
+    <div className={`table-responsive-${theme}`} style={{ overflowX: 'auto' }}>
+      <table className={`table table-hover table-${theme}`}>
         <thead>
           <tr>
             <th>Id</th>
@@ -32,7 +34,6 @@ function EvenementenTabel({ evenementen, onDelete }) {
           {evenementen.map((evenement) => (
             <Evenement key={evenement.id} {...evenement} onDelete={onDelete} />
           ))}
-
         </tbody>
       </table>
     </div>
@@ -40,4 +41,3 @@ function EvenementenTabel({ evenementen, onDelete }) {
 };
 
 export default EvenementenTabel;
-
