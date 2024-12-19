@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import { prisma } from '../../src/data';
 import createServer from '../../src/createServer'; 
 import type { Server } from '../../src/createServer'; 
+import Role from '../../src/core/roles';
 
 const dataToDelete = {
   evenementen: [1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -11,9 +12,9 @@ const dataToDelete = {
 
 const data = {
   gebruikers: [
-    { id: 1, naam: 'Dylan De Man', wachtwoord: 'hashedpassword123' },
-    { id: 2, naam: 'Steve Schwing', wachtwoord: 'hashedpassword456' },
-    { id: 3, naam: 'Nathan Van Heirseele', wachtwoord: 'hashedpassword789' },
+    { id: 1, naam: 'Dylan De Man', wachtwoord: 'hashedpassword123', roles: JSON.stringify([Role.ADMIN, Role.USER]) },
+    { id: 2, naam: 'Steve Schwing', wachtwoord: 'hashedpassword456', roles: JSON.stringify([Role.USER]) },
+    { id: 3, naam: 'Nathan Van Heirseele', wachtwoord: 'hashedpassword789' , roles: JSON.stringify([Role.USER])},
   ],
   plaatsen: [
     { id: 1, naam: 'Het klokhuis', straat: 'Kaaiplein', huisnummer: '18', postcode: '9220', gemeente: 'Hamme' },
