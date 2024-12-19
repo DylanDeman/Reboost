@@ -29,7 +29,7 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 ### Front end opstarten
  * yarn dev
 ## Testen
-* Install all dependencies: yarn
+* intsalleer alle dependencies: yarn
 * Make sure .env.test exists (see above)
 
 * Run the tests: yarn test
