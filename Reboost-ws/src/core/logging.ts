@@ -1,5 +1,6 @@
 import winston from 'winston';
-import  config  from 'config';
+import config from 'config';
+
 const {
   combine, timestamp, colorize, printf,
 } = winston.format;
@@ -15,20 +16,28 @@ const loggerFormat = () => {
     return `${timestamp} | ${level} | ${message} | ${JSON.stringify(rest)}`;
   };
 
+  // A helper function to format errors
   const formatError = ({
-    error: { stack }, ...rest
-  }: winston.Logform.TransformableInfo) => `${formatMessage(rest)}\n\n${stack}\n`;
-
+    error, ...rest
+  }: winston.Logform.TransformableInfo) => {
+    if (error instanceof Error) {
+      return `${formatMessage(rest)}\n\n${error.stack}\n`; 
+    }
+    return formatMessage(rest); 
+  };
+  
   const format = (info: winston.Logform.TransformableInfo) => {
+
     if (info?.['error'] instanceof Error) {
       return formatError(info);
     }
-
-    return formatMessage(info);
+    return formatMessage(info);  
   };
 
   return combine(
-    colorize(), timestamp(), printf(format),
+    colorize(), 
+    timestamp(), 
+    printf(format),  
   );
 };
 

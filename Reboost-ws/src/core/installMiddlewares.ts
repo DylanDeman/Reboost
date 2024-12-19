@@ -2,9 +2,6 @@ import config from 'config';
 import bodyParser from 'koa-bodyparser';
 import koaCors from '@koa/cors';
 import koaHelmet from 'koa-helmet';
-import { koaSwagger } from 'koa2-swagger-ui';
-import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerOptions from '../../swagger.config';
 import type { KoaApplication } from '../types/koa';
 import { getLogger } from './logging';
 import ServiceError from './serviceError';
@@ -122,20 +119,6 @@ export default function installMiddlewares(app: KoaApplication) {
       ctx.body = errorBody;
     }
   });
-
-  // Swagger UI middleware (only for development)
-  if (isDevelopment) {
-    const spec = swaggerJsdoc(swaggerOptions) as Record<string, unknown>;
-
-    app.use(
-      koaSwagger({
-        routePrefix: '/swagger',  // Swagger UI will be available at /swagger
-        specPrefix: '/swagger.json', // Swagger spec will be available at /swagger.json
-        exposeSpec: true, // Expose the Swagger spec file
-        swaggerOptions: { spec },
-      }),
-    );
-  }
 
   // 404 handler if the route is not found
   app.use(async (ctx, next) => {

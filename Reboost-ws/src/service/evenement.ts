@@ -4,6 +4,19 @@ import * as plaatsService from './plaats';
 import handleDBError from './_handleDBError';
 import ServiceError from '../core/serviceError';
 
+const Evenement_SELECT = {
+  id: true,
+  naam: true,
+  datum: true,
+  plaats: true,
+  auteur: {
+    select: {
+      id: true,
+      naam: true,
+    },
+  },
+};
+
 /**
  * @api {get} /evenementen Get All Evenementen
  * @apiName GetAllEvenementen

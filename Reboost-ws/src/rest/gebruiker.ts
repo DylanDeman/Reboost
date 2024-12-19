@@ -6,6 +6,7 @@ import type {
   GetAllGebruikersResponse,
   GetGebruikerByIdResponse,
   LoginResponse,
+  RegistreerGebruikerRequest,
   UpdateGebruikerRequest,
   UpdateGebruikerResponse,
 } from '../types/gebruiker';

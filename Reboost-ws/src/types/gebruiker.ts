@@ -184,3 +184,12 @@ export interface CreateGebruikerResponse extends GetGebruikerByIdResponse {}
 export interface UpdateGebruikerResponse extends GetGebruikerByIdResponse {
   wachtwoord: string; // Gehashed wachtwoord na het bijwerken
 }
+
+export interface UpdateGebruikerRequest extends Pick<RegistreerGebruikerRequest, 'naam' | 'wachtwoord'> {}
+
+export interface RegistreerGebruikerRequest {
+  id: number;
+  naam: string;
+  wachtwoord: string;
+  roles: Prisma.JsonValue;
+}
