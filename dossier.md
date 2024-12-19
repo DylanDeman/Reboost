@@ -10,26 +10,25 @@
 - Demo: <DEMO_LINK_HIER>
 - GitHub-repository: <https://github.com/HOGENT-frontendweb/frontendweb-2425-DylanDeman>
 - Front-end Web Development
-  - Online versie: <LINK_ONLINE_VERSIE_HIER>
+  - Online versie: [https://frontendweb-2425-dylandeman-1.onrender.com](https://frontendweb-2425-dylandeman-1.onrender.com)
 - Web Services:
-  - Online versie: <LINK_ONLINE_VERSIE_HIER>
+  - Online versie: [https://frontendweb-2425-dylandeman.onrender.com](https://frontendweb-2425-dylandeman.onrender.com)
 
 ## Logingegevens
 
 ### Lokaal
 
-- Gebruikersnaam/e-mailadres:
-- Wachtwoord:
+- Gebruikersnaam/e-mailadres: test@reboost.be
+- Wachtwoord: Test123.
 
 ### Online
 
-- Gebruikersnaam/e-mailadres:
-- Wachtwoord:
+- Gebruikersnaam/e-mailadres: test@reboost.be
+- Wachtwoord: Test123.
 
-> Vul eventueel aan met extra accounts voor administrators of andere rollen.
 
 ## Projectbeschrijving
-
+Reboost is een bedrijf in de evenementensector gelegen in Hamme, in dit project geven we gebruikers de mogelijkheid om evenementen in te plannen.
 
 ## Screenshots
 
