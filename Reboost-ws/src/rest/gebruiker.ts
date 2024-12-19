@@ -3,24 +3,29 @@ import * as GebruikerService from '../service/gebruiker';
 import type { ReboostContext, ReboostState} from '../types/koa';
 import type { KoaContext, KoaRouter } from '../types/koa';
 import type {
-  CreateGebruikerRequest,
-  CreateGebruikerResponse,
   GetAllGebruikersResponse,
   GetGebruikerByIdResponse,
+  LoginResponse,
   UpdateGebruikerRequest,
   UpdateGebruikerResponse,
 } from '../types/gebruiker';
 import type { IdParams } from '../types/common';
+import Joi from 'joi';
 
 const getAllGebruikers = async (ctx: KoaContext<GetAllGebruikersResponse>) => {
   const Gebruikers = await GebruikerService.getAll();
   ctx.body = { items: Gebruikers };
 };
-
-const createGebruiker = async (ctx: KoaContext<CreateGebruikerResponse, void, CreateGebruikerRequest>) => {
-  const Gebruiker = await GebruikerService.create(ctx.request.body);
+const registreerGebruiker = async(ctx: KoaContext<LoginResponse, void, RegistreerGebruikerRequest>) => {
+  const token = await GebruikerService.register(ctx.request.body); 
   ctx.status = 200;
-  ctx.body = Gebruiker; 
+  ctx.body = { token };
+};
+registreerGebruiker.validationScheme = {
+  body: {
+    naam: Joi.string().max(255),
+    wachtwoord: Joi.string().min(12).max(128),
+  },
 };
 
 const getGebruikerById = async (ctx: KoaContext<GetGebruikerByIdResponse, IdParams>) => {

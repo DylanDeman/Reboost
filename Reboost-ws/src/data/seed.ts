@@ -1,26 +1,32 @@
 import { PrismaClient } from '@prisma/client';
+import { hashPassword } from '../core/password';
+import Role from '../core/roles';
 
 const prisma = new PrismaClient();
 
 async function main() {
   // Seed users
   // ==========
+  const passwordHash = await hashPassword('12345678');
   await prisma.gebruiker.createMany({
     data: [
       {
         id: 1,
         naam: 'Dylan De Man',
-        wachtwoord: 'test',
+        wachtwoord: passwordHash,
+        roles: JSON.stringify([Role.ADMIN, Role.USER]),
       },
       {
         id: 2,
         naam: 'Steve Schwing',
-        wachtwoord: 'test',
+        wachtwoord: passwordHash,
+        roles: JSON.stringify([Role.USER]),
       },
       {
         id: 3,
         naam: 'Nathan Van heirseele',
-        wachtwoord: 'test',
+        wachtwoord: passwordHash,
+        roles: JSON.stringify([Role.USER]),
       },
     ],
   });

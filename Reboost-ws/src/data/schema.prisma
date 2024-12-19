@@ -33,8 +33,9 @@ model Evenement {
 
 model Gebruiker {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
-  naam        String      @db.VarChar(255)
-  wachtwoord  String 
+  naam        String      @unique(map:"idx_gebruikersnaam_uniek") @db.VarChar(255)
+  wachtwoord  String      @db.VarChar(255)
+  roles Json
   evenementen Evenement[]
 
   @@map("gebruikers")
