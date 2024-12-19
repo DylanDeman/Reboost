@@ -1,7 +1,7 @@
 // src/pages/Evenements/AddOrEditEvenement.jsx
 import useSWR from 'swr';
 import { save, getById } from '../../api';
-import Plaatsenform from '../../components/plaatsen/plaatsenForm';
+import Plaatsenform from '../../components/plaatsen/Plaatsenform.jsx';
 import AsyncData from '../../components/AsyncData';
 import useSWRMutation from 'swr/mutation';
 import { useParams } from 'react-router-dom';
