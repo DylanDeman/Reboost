@@ -1,6 +1,8 @@
 import { prisma } from '../data';
 import type { Evenement, EvenementCreateInput, EvenementUpdateInput } from '../types/evenement';
 import * as plaatsService from './plaats';
+import handleDBError from './_handleDBError';
+import ServiceError from '../core/serviceError';
 
 const Evenement_SELECT = {
   id: true,
@@ -30,7 +32,7 @@ export const getById = async (id: number): Promise<Evenement> => {
   });
 
   if (!Evenement) {
-    throw new Error('Er bestaat geen evenement met dit Id');
+    throw ServiceError.notFound('Er bestaat geen evenement met dit Id');
   }
 
   return Evenement;
@@ -42,21 +44,20 @@ export const create = async ({
   plaats_id,
   auteur_id,
 }: EvenementCreateInput): Promise<Evenement> => {
-  const bestaandePlaats = await plaatsService.getById(plaats_id);
+  try{
+    await plaatsService.getById(plaats_id);
 
-  if (!bestaandePlaats) {
-    throw new Error(`Er bestaat geen plaats met id: ${plaats_id}.`);
-  }
-
-  return prisma.evenement.create({
-    data: {
+    return await prisma.evenement.create({data: {
       naam: naam,
       datum: datum,
       auteur_id: auteur_id,
       plaats_id: plaats_id,
     },
     select: Evenement_SELECT,
-  });
+    });
+  } catch (error:any) {
+    throw handleDBError(error);
+  }
 };
 
 export const updateById = async (id: number, {
@@ -65,24 +66,24 @@ export const updateById = async (id: number, {
   plaats_id,
   auteur_id,
 }: EvenementUpdateInput): Promise<Evenement> => {
-  const bestaandePlaats = await plaatsService.getById(plaats_id);
+  try{
+    await plaatsService.getById(plaats_id);
 
-  if (!bestaandePlaats) {
-    throw new Error(`Er bestaat geen plaats met id: ${plaats_id}.`);
-  }
-
-  return prisma.evenement.update({
-    where: {
-      id: id,
-    },
-    data: {
-      naam: naam,
-      datum: datum,
-      auteur_id: auteur_id,
-      plaats_id: plaats_id,
-    },
-    select: Evenement_SELECT,
-  });
+    return await prisma.evenement.update({
+      where: {
+        id: id,
+      },
+      data: {
+        naam: naam,
+        datum: datum,
+        auteur_id: auteur_id,
+        plaats_id: plaats_id,
+      },
+      select: Evenement_SELECT,
+    });
+  } catch (error:any) {
+    throw handleDBError(error);
+  };
 };
 
 export const deleteById = async (id: number): Promise<void> => {

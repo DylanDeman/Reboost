@@ -1,4 +1,3 @@
-// src/createServer.ts
 import Koa from 'koa';
 
 import { getLogger } from './core/logging';
