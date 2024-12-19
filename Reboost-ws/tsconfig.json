@@ -21,7 +21,5 @@
   "include": [
     "**/*.ts"
   ],
-  "exclude": [
-    "test"
-  ]
+  "exclude": ["jest.config.ts", "__tests__"]
 }
