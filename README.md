@@ -29,10 +29,9 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 ### Front end opstarten
  * yarn dev
 ## Testen
-* intsalleer alle dependencies: yarn
-* Make sure .env.test exists (see above)
+* installeer alle dependencies: yarn
 
-* Run the tests: yarn test
+* Run de testen: yarn test
 
 ## Back-end
 ### Maak een .env bestand aan met volgende:
@@ -55,4 +54,4 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 * DATABASE_URL="mysql://root:root@localhost:3306/Reboost_test"
 ### testen uitvoeren
 * Run de migrations: yarn migrate:test
-* yarn test
+* Run de testen: yarn test
