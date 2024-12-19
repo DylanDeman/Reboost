@@ -5,7 +5,7 @@ const LogoutButton = () => {
   const { logout } = useAuth0();
 
   useEffect(() => {
-    logout({ logoutParams: { returnTo: 'http://localhost:5173/about' } });
+    logout({ logoutParams: { returnTo: 'https://frontendweb-2425-dylandeman-1.onrender.com/about' } });
   }, [logout]);
 
   return null;
