@@ -131,7 +131,7 @@ const deletePlaats = async (ctx: KoaContext<void, IdParams>) => {
  *      ]
  *    }
  */
-const getEvenementsByPlaatsId = async (ctx: KoaContext<GetAllEvenementenReponse, IdParams>) => {
+const getEvenementenByPlaatsId = async (ctx: KoaContext<GetAllEvenementenReponse, IdParams>) => {
   const evenementen = await EvenementenService.getEvenementenByPlaceId(Number(ctx.params.id));
   ctx.body = {
     items: evenementen,
@@ -150,7 +150,7 @@ export default (parent: KoaRouter) => {
   router.delete('/:id', deletePlaats);
 
   // Haal evenementen op voor een specifieke plaats
-  router.get('/:id/transactions', getEvenementsByPlaatsId);
+  router.get('/:id/evenementen', getEvenementenByPlaatsId);
 
   parent.use(router.routes())
     .use(router.allowedMethods());
