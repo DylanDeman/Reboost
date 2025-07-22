@@ -9,15 +9,15 @@ export default {
     maxAge: 3 * 60 * 60,
   },
   auth: {
-    jwt: {
-      audience: 'budget.hogent.be',
-      issuer: 'budget.hogent.be',
-      expirationInterval: 60 * 60, 
-    },
+    maxDelay: 5000,
     argon: {
       hashLength: 32,
       timeCost: 6,
       memoryCost: 2 ** 17,
+    },
+    jwt: {
+      audience: 'reboost.hogent.be',
+      issuer: 'reboost.hogent.be',
     },
   },
 };

@@ -1,24 +1,68 @@
-import { prisma } from '../data';
-import type { CreateGebruikerResponse, Gebruiker, GebruikerUpdateInput } from '../types/gebruiker';
-import { hashPassword, verifyPassword } from '../core/password';
-import { generateJWT } from '../core/jwt';
-import handleDBError from './_handleDBError';
+import jwt from 'jsonwebtoken';
 import ServiceError from '../core/serviceError';
+import { prisma } from '../data';
+import { hashPassword, verifyPassword } from '../core/password';
+import { generateJWT, verifyJWT } from '../core/jwt';
+import { getLogger } from '../core/logging';
+import type { Gebruiker, GebruikerCreateInput, GebruikerUpdateInput, PublicGebruiker } from '../types/gebruiker';
+import type { SessionInfo } from '../types/auth';
+import handleDBError from './_handleDBError';
 
-/**
- * @api {post} /sessions Login Gebruiker
- * @apiName LoginGebruiker
- * @apiGroup Gebruikers
- * @apiParam {String} naam Gebruikersnaam van de gebruiker.
- * @apiParam {String} wachtwoord Wachtwoord van de gebruiker.
- * @apiSuccess {String} token JWT token voor de ingelogde gebruiker.
- * @apiSuccessExample {json} Success-Response:
- *    HTTP/1.1 200 OK
- *    {
- *      "token": "JWT_TOKEN_HERE"
- *    }
- * @apiError (401) Unauthorized Gebruikersnaam of wachtwoord komt niet overeen.
- */
+const makeExposedUser = (
+  { 
+    id, naam, roles }
+  : Gebruiker): PublicGebruiker => ({
+  id,
+  naam,
+  roles,
+});
+
+export const checkAndParseSession = async (
+  authHeader?: string,
+): Promise<SessionInfo> => {
+  if (!authHeader) {
+    throw ServiceError.unauthorized('Je Moet Ingelogd Zijn');
+  }
+
+  if (!authHeader.startsWith('Bearer ')) {
+    throw ServiceError.unauthorized('Ongeldig authenticatietoken');
+  }
+
+  const authToken = authHeader.substring(7);
+
+  try {
+    const { roles, sub } = await verifyJWT(authToken);
+
+    return {
+      userId: Number(sub),
+      roles,
+    };
+  } catch (error: any) {
+    getLogger().error(error.message, { error });
+
+    if (error instanceof jwt.TokenExpiredError) {
+      throw ServiceError.unauthorized('Het token is verlopen');
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      throw ServiceError.unauthorized(
+        `Ongeldig authenticatietoken: ${error.message}`,
+      );
+    } else {
+      throw ServiceError.unauthorized(error.message);
+    }
+  }
+};
+
+export const checkRole = (requiredRoles: string[], rolesUser: string[]): void => {
+  // Check if any of the required roles are present in the user's roles
+  const hasPermission = requiredRoles.some((role) => rolesUser.includes(role));
+
+  if (!hasPermission) {
+    throw ServiceError.forbidden(
+      'Je bent niet toegestaan om dit deel van de applicatie te bekijken',
+    );
+  }
+};
+
 export const login = async (
   naam: string,
   wachtwoord: string,
@@ -26,148 +70,78 @@ export const login = async (
   const gebruiker = await prisma.gebruiker.findUnique({ where: { naam } });
 
   if (!gebruiker) {
+    // DO NOT expose we don't know the user
     throw ServiceError.unauthorized(
-      'de gebruikersnaam en paswoord komen niet overeen',
+      'De gegeven gebruikersnaam en wachtwoord komen niet overeen',
     );
   }
 
-  const passwordValid = await verifyPassword(wachtwoord, gebruiker.wachtwoord);
+  const wachtwoordValid = await verifyPassword(wachtwoord, gebruiker.wachtwoord);
 
-  if (!passwordValid) {
+  if (!wachtwoordValid) {
+    // DO NOT expose we know the user but an invalid password was given
     throw ServiceError.unauthorized(
-      'de gebruikersnaam en paswoord komen niet overeen',
+      'De gegeven gebruikersnaam en wachtwoord komen niet overeen',
     );
   }
 
   return await generateJWT(gebruiker);
 };
 
-/**
- * @api {post} /gebruikers Register Gebruiker
- * @apiName RegisterGebruiker
- * @apiGroup Gebruikers
- * @apiParam {String} naam Gebruikersnaam van de nieuwe gebruiker.
- * @apiParam {String} wachtwoord Wachtwoord van de nieuwe gebruiker.
- * @apiSuccess {String} token JWT token voor de geregistreerde gebruiker.
- * @apiSuccessExample {json} Success-Response:
- *    HTTP/1.1 201 Created
- *    {
- *      "token": "JWT_TOKEN_HERE"
- *    }
- * @apiError (500) InternalServerError Er is een onverwachte fout opgetreden bij het registreren van de gebruiker.
- */
 export const register = async ({
   naam,
   wachtwoord,
-}: CreateGebruikerResponse): Promise<string> => {
-  try {
-    const passwordHash = await hashPassword(wachtwoord);
+  roles,
 
-    const gebruiker = await prisma.gebruiker.create({
+}: GebruikerCreateInput): Promise<string> => {
+  try {
+    const wachtwoordHash = await hashPassword(wachtwoord);
+
+    const user = await prisma.gebruiker.create({
       data: {
         naam,
-        wachtwoord: passwordHash,
-        roles: ['user'],
+        wachtwoord: wachtwoordHash,
+        roles: roles || [],
       },
     });
-    if (!gebruiker) {
-      throw ServiceError.internalServerError(
-        'Er is een onverwachte fout opgetreden bij het registreren van de gebruiker',
-      );
-    }
-    return await generateJWT(gebruiker);
-  } catch (error: any) {
+
+    return await generateJWT(user);
+  } catch (error) {
     throw handleDBError(error);
   }
 };
 
-/**
- * @api {get} /gebruikers Get All Gebruikers
- * @apiName GetAllGebruikers
- * @apiGroup Gebruikers
- * @apiSuccess {Object[]} items Lijst van gebruikers.
- * @apiSuccess {Number} items.id Gebruiker ID.
- * @apiSuccess {String} items.naam Naam van de gebruiker.
- * @apiSuccessExample {json} Success-Response:
- *    HTTP/1.1 200 OK
- *    {
- *      "items": [
- *        {
- *          "id": 1,
- *          "naam": "Jan"
- *        },
- *        {
- *          "id": 2,
- *          "naam": "Piet"
- *        }
- *      ]
- *    }
- * @apiError (500) InternalServerError Fout bij het ophalen van gebruikers.
- */
-export const getAll = async (): Promise<Gebruiker[]> => {
-  return prisma.gebruiker.findMany();
+export const getAll = async (): Promise<PublicGebruiker[]> => {
+  const users = await prisma.gebruiker.findMany();
+  return users.map(makeExposedUser);
 };
 
-/**
- * @api {get} /gebruikers/:id Get Gebruiker by ID
- * @apiName GetGebruikerById
- * @apiGroup Gebruikers
- * @apiParam {Number} id Gebruiker ID.
- * @apiSuccess {Number} id Gebruiker ID.
- * @apiSuccess {String} naam Naam van de gebruiker.
- * @apiSuccessExample {json} Success-Response:
- *    HTTP/1.1 200 OK
- *    {
- *      "id": 1,
- *      "naam": "Jan"
- *    }
- * @apiError (404) NotFound Geen gebruiker gevonden met de opgegeven ID.
- */
-export const getById = async (id: number): Promise<Gebruiker> => {
+export const getById = async (id: number): Promise<PublicGebruiker> => {
   const gebruiker = await prisma.gebruiker.findUnique({ where: { id } });
 
   if (!gebruiker) {
-    throw new Error('Er bestaat geen gebruiker met dit Id');
+    throw ServiceError.notFound('Er bestaat geen gebruiker met dit id');
   }
 
-  return gebruiker;
+  return makeExposedUser(gebruiker);
 };
 
-/**
- * @api {put} /gebruikers/:id Update Gebruiker
- * @apiName UpdateGebruiker
- * @apiGroup Gebruikers
- * @apiParam {Number} id Gebruiker ID.
- * @apiParam {String} naam Naam van de gebruiker.
- * @apiSuccess {Number} id Gebruiker ID.
- * @apiSuccess {String} naam Naam van de gebruiker.
- * @apiSuccessExample {json} Success-Response:
- *    HTTP/1.1 200 OK
- *    {
- *      "id": 1,
- *      "naam": "Jan Updated"
- *    }
- * @apiError (404) NotFound Gebruiker niet gevonden met de opgegeven ID.
- * @apiError (500) InternalServerError Fout bij het bijwerken van de gebruiker.
- */
-export const updateById = async (id: number, { naam }: GebruikerUpdateInput): Promise<Gebruiker> => {
-  return prisma.gebruiker.update({
-    where: { id },
-    data: { naam },
-  });
+export const updateById = async (id: number, changes: GebruikerUpdateInput): Promise<PublicGebruiker> => {
+  try {
+    const user = await prisma.gebruiker.update({
+      where: { id },
+      data: changes,
+    });
+    return makeExposedUser(user);
+  } catch (error) {
+    throw handleDBError(error);
+  }
 };
 
-/**
- * @api {delete} /gebruikers/:id Delete Gebruiker
- * @apiName DeleteGebruiker
- * @apiGroup Gebruikers
- * @apiParam {Number} id Gebruiker ID.
- * @apiSuccess {String} message Bevestiging dat de gebruiker succesvol is verwijderd.
- * @apiSuccessExample {json} Success-Response:
- *    HTTP/1.1 204 No Content
- * @apiError (404) NotFound Gebruiker niet gevonden met de opgegeven ID.
- * @apiError (500) InternalServerError Fout bij het verwijderen van de gebruiker.
- */
 export const deleteById = async (id: number): Promise<void> => {
-  await prisma.gebruiker.delete({ where: { id } });
+  try {
+    await prisma.gebruiker.delete({ where: { id } });
+  } catch (error) {
+    throw handleDBError(error);
+  }
 };
