@@ -41,8 +41,8 @@ const login = async (ctx: KoaContext<LoginResponse, void, LoginRequest>) => {
 
 login.validationScheme = {
   body: {
-    email: Joi.string().email().required(),
-    wachtwoord: Joi.string().min(6).required(),
+    naam: Joi.string(),
+    wachtwoord: Joi.string().min(6),
   },
 };
 

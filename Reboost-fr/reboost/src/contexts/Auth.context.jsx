@@ -40,12 +40,12 @@ export const AuthProvider = ({ children }) => {
   );
 
   const login = useCallback(
-    async (email, password) => {
+    async (naam, wachtwoord) => {
       try {
 
         const { token } = await doLogin({
-          email,
-          password,
+          naam,
+          wachtwoord,
         });
 
         setSession(token);
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
       loading: loginLoading || userLoading || registerLoading,
       isAuthed: Boolean(token),
       ready: !userLoading,
-      role: user?.role,
+      roles: user?.roles,
       login,
       logout,
       register,

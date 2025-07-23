@@ -24,7 +24,7 @@ const checkUserId = (ctx: KoaContext<unknown, GetGebruikerRequest>, next: Next) 
   if (id !== 'me' && id !== userId) {
     return ctx.throw(
       403,
-      'You are not allowed to view this user\'s information',
+      'Je hebt geen toegang tot deze gebruiker',
       { code: 'FORBIDDEN' },
     );
   }
@@ -44,15 +44,9 @@ const registerUser = async (ctx: KoaContext<LoginResponse, void, RegisterGebruik
 };
 registerUser.validationScheme = {
   body: {
-    address_id: Joi.number().integer().positive(),
-    firstname: Joi.string().max(255),
-    lastname: Joi.string(),
-    birthdate: Joi.date(),
-    email: Joi.string().email(),
-    password: Joi.string().min(12).max(255),
-    phonenumber: Joi.string(),
-    role: Joi.string(),
-    status: Joi.string(),
+    naam: Joi.string().max(255).required(),
+    wachtwoord: Joi.string().min(12).max(255).required(),
+    roles: Joi.array().items(Joi.string()).default([]).optional(),
   },
 };
 
@@ -80,7 +74,7 @@ const updateUserById = async (ctx: KoaContext<UpdateGebruikerResponse, IdParams,
 updateUserById.validationScheme = {
   params: { id: Joi.number().integer().positive() },
   body: {
-    name: Joi.string().max(255).optional(),
+    naam: Joi.string().max(255).optional(),
     roles: Joi.array().items(Joi.string()).default([]).optional(),
     wachtwoord: Joi.string().min(12).max(255).optional(),
   },
