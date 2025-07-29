@@ -1,26 +1,29 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth } from '../contexts/auth';
+
 
 export default function PrivateRoute() {
-  const { isLoading, isAuthenticated } = useAuth0(); 
+  const { ready, isAuthed } = useAuth();
   const { pathname } = useLocation();
-
-  if (isLoading) {
+  
+  if (!ready) {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-12">
-            <h1>Laden...</h1>
-            <p>Even geduld, we controleren of je bent ingelogd.</p>
+      <div className='container'>
+        <div className='row'>
+          <div className='col-12'>
+            <h1>Aan het laden...</h1>
+            <p>
+              Even geduld, we zijn bezig met het laden van de benodigde gegevens.
+            </p>
           </div>
         </div>
       </div>
     );
   }
 
-  if (isAuthenticated) {
-    return <Outlet />;
+  if (!isAuthed) {
+    return <Navigate replace to={`/login?redirect=${pathname}`} />;
   }
 
-  return <Navigate replace to={`/login?redirect=${pathname}`} />;
+  return <Outlet />;
 }
