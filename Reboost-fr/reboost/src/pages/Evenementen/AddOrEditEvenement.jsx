@@ -35,7 +35,7 @@ export default function AddOrEditEvenement() {
 
   return (
     <>
-      <h1 className='text-light'>Voeg een evenement toe of bewerk er een</h1>
+      <h1>Voeg een evenement toe of bewerk er een</h1>
 
       <AsyncData error={gebruikersError || EvenementError || plaatsenError || saveError}
         loading={gebruikersLoading || EvenementLoading || plaatsenLoading}>

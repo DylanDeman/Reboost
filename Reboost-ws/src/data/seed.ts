@@ -1,151 +1,79 @@
 import { PrismaClient } from '@prisma/client';
-import { hashPassword } from '../core/password';
-import Role from '../core/roles';
+import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Seed users
-  // ==========
-  const passwordHash = await hashPassword('12345678');
-  await prisma.gebruiker.createMany({
-    data: [
-      {
-        id: 1,
-        naam: 'Dylan De Man',
-        wachtwoord: passwordHash,
-        roles: JSON.stringify([Role.ADMIN, Role.USER]),
-      },
-      {
-        id: 2,
-        naam: 'Steve Schwing',
-        wachtwoord: passwordHash,
-        roles: JSON.stringify([Role.USER]),
-      },
-      {
-        id: 3,
-        naam: 'Nathan Van heirseele',
-        wachtwoord: passwordHash,
-        roles: JSON.stringify([Role.USER]),
-      },
-    ],
-  });
+  const PASSWORD = '123456789';
 
-  // Seed places
-  // ===========
-  await prisma.plaats.createMany({
-    data: [
-      {
-        id: 1,
-        naam: 'Het klokhuis',
-        straat : 'Kaaiplein',
-        huisnummer: '18',
-        postcode: '9220',
-        gemeente: 'Hamme',
-        
+  // Create users
+  const gebruikers = [];
+  for (let i = 0; i < 5; i++) {
+    const gebruiker = await prisma.gebruiker.create({
+      data: {
+        naam: faker.person.fullName(),
+        wachtwoord: PASSWORD,
+        roles: JSON.stringify(['user']),
       },
-      {
-        id: 2,
-        naam: 'JH Snuffel',
-        straat : 'Hamsesteenweg',
-        huisnummer: '1',
-        postcode: '9200',
-        gemeente: 'Dendermonde',
-      },
-      {
-        id: 3,
-        naam: 'JH Zenith',
-        straat : 'Otterstraat',
-        huisnummer: '58',
-        postcode: '9200',
-        gemeente: 'Dendermonde',
-      },
-    ],
-  });
+    });
+    gebruikers.push(gebruiker);
+  }
 
-  // Seed transactions
-  // =================
-  await prisma.evenement.createMany({
-    data: [
-      // User Dylan
-      // ===========
-      {
-        id: 1,
-        auteur_id: 1,
-        plaats_id: 1,
-        naam: 'Disco Dasco',
-        datum: new Date(2021, 4, 25, 19, 40),
+  // Create places
+  const plaatsen = [];
+  for (let i = 0; i < 5; i++) {
+    const plaats = await prisma.plaats.create({
+      data: {
+        naam: faker.location.city(),
+        straat: faker.location.street(),
+        huisnummer: faker.location.buildingNumber(),
+        postcode: faker.location.zipCode(),
+        gemeente: faker.location.city(),
       },
-      {
-        id: 2,
-        auteur_id: 1,
-        plaats_id: 2,
-        naam: 'Nacht van de jeugdbeweging',
-        datum: new Date(2021, 4, 8, 20, 0),
+    });
+    plaatsen.push(plaats);
+  }
+
+  // Create events
+  const evenementen = [];
+  for (let i = 0; i < 10; i++) {
+    const auteur = faker.helpers.arrayElement(gebruikers);
+    const plaats = faker.helpers.arrayElement(plaatsen);
+
+    const evenement = await prisma.evenement.create({
+      data: {
+        naam: faker.lorem.words(3),
+        datum: faker.date.future(),
+        auteur_id: auteur.id,
+        plaats_id: plaats.id,
       },
-      {
-        id: 3,
-        auteur_id: 1,
-        plaats_id: 3,
-        naam: 'Fantasia',
-        datum: new Date(2021, 4, 21, 14, 30),
+    });
+    evenementen.push(evenement);
+  }
+
+  // Create tools
+  for (let i = 0; i < 30; i++) {
+    const evenement = faker.helpers.arrayElement(evenementen);
+
+    await prisma.gereedschap.create({
+      data: {
+        naam: `${faker.commerce.productName()}-${i}`, // ensure uniqueness
+        beschrijving: faker.commerce.productDescription(),
+        beschikbaar: faker.datatype.boolean(),
+        verhuurd: faker.datatype.boolean(),
+        evenement_id: evenement.id,
       },
-      // User Steve
-      // ===========
-      {
-        id: 4,
-        auteur_id: 2,
-        plaats_id: 1,
-        naam: 'Gentse feesten',
-        datum: new Date(2021, 4, 25, 19, 40),
-      },
-      {
-        id: 5,
-        auteur_id: 2,
-        naam: 'Tomorrowland',
-        plaats_id: 2,
-        datum: new Date(2021, 4, 9, 23, 0),
-      },
-      {
-        id: 6,
-        auteur_id: 2,
-        plaats_id: 3,
-        naam: 'Pukkelpop',
-        datum: new Date(2021, 4, 22, 12, 0),
-      },
-      // User Nathan
-      // ===========
-      {
-        id: 7,
-        auteur_id: 3,
-        plaats_id: 1,
-        naam: 'ZogRock',
-        datum: new Date(2021, 4, 25, 19, 40),
-      },
-      {
-        id: 8,
-        auteur_id: 3,
-        plaats_id: 2,
-        naam: 'Redalert',
-        datum: new Date(2021, 4, 10, 10, 0),
-      },
-      {
-        id: 9,
-        auteur_id: 3,
-        plaats_id: 3,
-        naam: 'Blue',
-        datum: new Date(2021, 4, 19, 11, 30),
-      },
-    ],
-  });
+    });
+  }
+
+  console.log('🌱 Dummy data seeded.');
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
+  .catch((e) => {
     console.error(e);
-    await prisma.$disconnect();
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });
