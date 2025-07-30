@@ -12,17 +12,14 @@ import PlaatsenLijst from './pages/plaatsen/PlaatsenLijst.jsx';
 import { ThemeProvider } from './contexts/Theme.context';
 import AddOrEditPlaats from './pages/plaatsen/AddOrEditPlaats.jsx';
 import Login from './pages/Login.jsx';
-import Logout from './pages/Logout.jsx';
 import PrivateRoute from './components/PrivateRoute';
-import AuthProvider from './contexts/Auth.context.jsx';
-import CallbackHandler from './components/CallbackHandler.jsx';
+import { AuthProvider } from './contexts/Auth.context.jsx';
+
 
 const router = createBrowserRouter([
   {
     element: (
-      <AuthProvider>
         <Layout />
-      </AuthProvider>
     ), 
     children: [
       { path: '/', element: <Navigate replace to="/evenementen" /> },
@@ -55,19 +52,16 @@ const router = createBrowserRouter([
       },
       { path: '*', element: <NotFound /> },
       { path: '/login', element: <Login /> }, 
-      { path: '/logout', element: <Logout /> },
-      {
-        path: '/callback', 
-        element: <CallbackHandler />, 
-      },
     ],
   },
 ]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </AuthProvider>
   </StrictMode>,
 );

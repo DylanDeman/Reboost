@@ -1,18 +1,102 @@
-import { Auth0Provider } from '@auth0/auth0-react';
+import {
+  createContext,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react';
+import useSWRMutation from 'swr/mutation';
+import * as api from '../api';
+import useSWR from 'swr';
+import { mutate } from 'swr';
 
-const AuthProvider = ({ children }) => {
+export const JWT_TOKEN_KEY = 'jwtToken';
+export const AuthContext = createContext();
 
-  return (
-    <Auth0Provider
-      domain="dev-eu5g8sejk0b6k23l.us.auth0.com"
-      clientId="DsCO5tTYas6vWM3MrPCZ4h9Qw5IuXExs"
-      authorizationParams={{
-        redirect_uri: window.location.origin + '/callback', 
-      }}
-    >
-      {children}
-    </Auth0Provider>
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem(JWT_TOKEN_KEY));
+
+  const {
+    data: user, loading: userLoading, error: userError,
+  } = useSWR(token ? 'gebruikers/me' : null, api.getById);
+
+  const {
+    isMutating: loginLoading,
+    error: loginError,
+    trigger: doLogin,
+  } = useSWRMutation('sessions', api.post);
+
+  const {
+    isMutating: registerLoading,
+    error: registerError,
+    trigger: doRegister,
+  } = useSWRMutation('gebruikers', api.post);
+
+  const setSession = useCallback(
+    (token) => {
+      setToken(token);
+      localStorage.setItem(JWT_TOKEN_KEY, token);
+    },
+    [],
   );
-};
 
-export default AuthProvider;
+  const login = useCallback(
+    async (naam, wachtwoord) => {
+      try {
+
+        const { token } = await doLogin({
+          naam,
+          wachtwoord,
+        });
+
+        setSession(token);
+
+        localStorage.setItem(JWT_TOKEN_KEY, token);
+
+        return true;
+
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    },
+    [doLogin, setSession],
+  );
+
+  const register = useCallback(
+    async (data) => {
+      try {
+        const { token } = await doRegister(data);
+        setSession(token);
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    },
+    [doRegister, setSession],
+  );
+
+  const logout = useCallback(() => {
+    setToken(null);
+    localStorage.removeItem(JWT_TOKEN_KEY);
+    mutate('gebruikers/me', null, false);
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      user,
+      error: loginError || userError || registerError,
+      loading: loginLoading || userLoading || registerLoading,
+      isAuthed: Boolean(token),
+      ready: !userLoading,
+      roles: user?.roles,
+      login,
+      logout,
+      register,
+    }),
+    [token, user, loginError, loginLoading, userError, userLoading, registerError,
+      registerLoading, login, logout, register],
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

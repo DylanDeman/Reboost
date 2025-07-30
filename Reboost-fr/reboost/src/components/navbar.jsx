@@ -2,16 +2,22 @@ import { useContext, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../contexts/Theme.context';
 import { IoMoonSharp, IoSunny } from 'react-icons/io5';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth } from '../contexts/auth';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthed } = useAuth();
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const { logout } = useAuth();
 
  
   const textColorClass = theme === 'dark' ? 'text-light' : 'text-dark';
 
+   const uitloggen = async () => {
+    logout();
+    navigate('/login?logout=success');
+    return;
+  };
 
   useEffect(() => {
     document.body.style.backgroundColor = theme === 'dark' ? '#212529' : '#f8f9fa'; 
@@ -54,11 +60,11 @@ export default function Navbar() {
                 Over ons
               </NavLink>
             </li>
-            {isAuthenticated ? (
+            {isAuthed ? (
               <li className="nav-item">
-                <Link className={`nav-link ${textColorClass}`} to="/logout">
+                <button className={`nav-link ${textColorClass}`} onClick={uitloggen}>
                   Uitloggen
-                </Link>
+                </button>
               </li>
             ) : (
               <li className="nav-item">
