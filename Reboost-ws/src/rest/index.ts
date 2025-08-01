@@ -4,6 +4,7 @@ import installHealthRouter from './health';
 import installPlaatsenRoutes from './plaats';
 import installGebruikerRoutes from './gebruiker';
 import installSessionRouter from './session';
+import installGereedschapRoutes from './gereedschap';
 import type { ReboostContext, ReboostState, KoaApplication } from '../types/koa';
 
 export default (app: KoaApplication) => {
@@ -12,9 +13,10 @@ export default (app: KoaApplication) => {
   });
 
   installEvenementenRouter(router);
-  installHealthRouter(router);
   installPlaatsenRoutes(router);
   installGebruikerRoutes(router);
+  installGereedschapRoutes(router);
+  installHealthRouter(router);
   installSessionRouter(router);
 
   app.use(router.routes())

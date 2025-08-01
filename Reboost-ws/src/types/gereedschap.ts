@@ -5,28 +5,20 @@ export interface Gereedschap extends Entity {
   naam: string;
   beschrijving: string;
   beschikbaar: boolean;
-  verhuurd: boolean;
-  evenement?: {
-    id: number;
-    naam: string;
-    datum: Date;
-  }; 
 }
 
 export interface GereedschapCreateInput {
   naam: string;
   beschrijving: string;
   beschikbaar: boolean;
-  verhuurd: boolean;
-  evenementId?: number; 
+  evenementId?: number | undefined; 
 }
 
 export interface GereedschapUpdateInput {
-  naam?: string;
-  beschrijving?: string;
-  beschikbaar?: boolean;
-  verhuurd?: boolean;
-  evenementId?: number; 
+  naam?: string | undefined;
+  beschrijving?: string | undefined;
+  beschikbaar?: boolean | undefined;
+  evenementId?: number | undefined; 
 }
 
 export interface GereedschapListResponse {

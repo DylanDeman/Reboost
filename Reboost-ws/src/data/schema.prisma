@@ -44,12 +44,12 @@ model Gebruiker {
 
 model Gereedschap {
   id            Int        @id @default(autoincrement()) @db.UnsignedInt
-  naam          String     @unique(map:"idx_gereedschap_naam_uniek") @db.VarChar(255)
+  naam          String     @unique(map: "idx_gereedschap_naam_uniek") @db.VarChar(255)
   beschrijving  String     @db.Text
   beschikbaar   Boolean    @default(true)
-  verhuurd      Boolean    @default(false)
-  evenement_id  Int        @db.UnsignedInt
-  evenement     Evenement  @relation(fields: [evenement_id], references: [id], onDelete: Cascade)
+  evenement_id  Int?       @db.UnsignedInt
+  evenement     Evenement? @relation(fields: [evenement_id], references: [id], onDelete: SetNull)
 
   @@map("gereedschap")
 }
+

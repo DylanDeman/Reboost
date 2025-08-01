@@ -55,6 +55,13 @@ export default function Navbar() {
                 Plaatsen
               </NavLink>
             </li>
+               {isAuthed ? (
+              <li className="nav-item">
+                <NavLink className={`nav-link ${textColorClass}`} to="/gereedschappen">
+                  Gereedschappen
+                </NavLink>
+              </li>
+            ) : null}
             <li className="nav-item">
               <NavLink className={`nav-link ${textColorClass}`} to="/about">
                 Over ons
