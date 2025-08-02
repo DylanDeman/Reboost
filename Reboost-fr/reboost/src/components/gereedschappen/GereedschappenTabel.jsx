@@ -28,7 +28,7 @@ function GereedschapTabel({ gereedschappen, onDelete }) {
           </tr>
         </thead>
         <tbody>
-          {gereedschappen.map((gereedschap) => (
+          {gereedschappen.map(gereedschap => (
             <Gereedschap key={gereedschap.id} {...gereedschap} onDelete={onDelete} />
           ))}
         </tbody>

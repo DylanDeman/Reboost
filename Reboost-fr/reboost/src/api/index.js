@@ -25,6 +25,8 @@ export async function getAll(url) {
   return data.items;
 }
 
+
+
 export async function getById(url) {
   const { data } = await api.get(`/${url}`);
   return data;

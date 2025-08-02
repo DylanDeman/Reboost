@@ -14,13 +14,13 @@ const GereedschapMemoized = memo(function Gereedschap({ id, naam, beschrijving, 
       <td data-cy='gereedschap_naam'>{naam}</td>
       <td data-cy='gereedschap_beschrijving'>{beschrijving}</td>
       <td data-cy='gereedschap_beschikbaar'>{beschikbaar ? 'Ja' : 'Nee'}</td>
-      <td data-cy='gereedschap_evenement_naam'>{evenement?.naam}</td>
+      <td data-cy='gereedschap_evenement_naam'>{evenement?.naam ? evenement.naam : 'Geen evenement'}</td>
       <td>
         {onDelete ? (
           <>
             <Link
               data-cy='gereedschap_bewerk_knop'
-              to={`/gereedschap/edit/${id}`}
+              to={`/gereedschappen/edit/${id}`}
               className='btn btn-warning'
             >
               <IoPencil />

@@ -1,8 +1,7 @@
 import Router from '@koa/router';
 import Joi from 'joi';
-import { GereedschapService } from '../service/gereedschap';
-
 import validate from '../core/validation';
+import * as gereedschapService from '../service/gereedschap';
 
 import type { KoaContext, KoaRouter, ReboostContext, ReboostState } from '../types/koa';
 import type { IdParams } from '../types/common';
@@ -13,27 +12,19 @@ import type {
   GereedschapByIdResponse,
   GereedschapCreateResponse,
   GereedschapUpdateResponse,
-  GereedschapDeleteResponse,
   GereedschapEventResponse,
 } from '../types/gereedschap';
 
-/**
- * @api {get} /gereedschap Haal alle gereedschappen op
- */
+// GET /gereedschap — list all
 const listGereedschap = async (ctx: KoaContext<GereedschapListResponse>) => {
-  const { gereedschappen, totalCount } = await GereedschapService.list();
-  ctx.body = {
-    gereedschappen,
-    totalCount,
-  };
+  const gereedschappen = await gereedschapService.getAll();
+  ctx.body = { items: gereedschappen };
 };
 listGereedschap.validationScheme = null;
 
-/**
- * @api {get} /gereedschap/:id Haal één gereedschap op
- */
+// GET /gereedschap/:id — get one by ID
 const getGereedschapById = async (ctx: KoaContext<GereedschapByIdResponse, IdParams>) => {
-  ctx.body = await GereedschapService.getById(Number(ctx.params.id));
+  ctx.body = await gereedschapService.getById(Number(ctx.params.id));
 };
 getGereedschapById.validationScheme = {
   params: {
@@ -41,9 +32,7 @@ getGereedschapById.validationScheme = {
   },
 };
 
-/**
- * @api {post} /gereedschap Maak een nieuw gereedschap aan
- */
+// POST /gereedschap — create
 const createGereedschap = async (
   ctx: KoaContext<GereedschapCreateResponse, void, GereedschapCreateInput>,
 ) => {
@@ -51,15 +40,10 @@ const createGereedschap = async (
     naam: ctx.request.body.naam,
     beschrijving: ctx.request.body.beschrijving,
     beschikbaar: ctx.request.body.beschikbaar,
-    evenementId: undefined,
+    evenementId: ctx.request.body.evenementId ?? null,
   };
 
-  // Only connect evenement if evenementId is passed and valid
-  if (ctx.request.body.evenementId) {
-    data.evenementId = Number(ctx.request.body.evenementId);
-  }
-
-  const gereedschap = await GereedschapService.create(data);
+  const gereedschap = await gereedschapService.create(data);
   ctx.status = 201;
   ctx.body = gereedschap;
 };
@@ -68,28 +52,25 @@ createGereedschap.validationScheme = {
     naam: Joi.string().required(),
     beschrijving: Joi.string().allow('', null),
     beschikbaar: Joi.boolean().required(),
-    verhuurd: Joi.boolean().required(),
-    evenementId: Joi.number().integer().positive().optional(),
+    evenementId: Joi.number().integer().positive().allow(null).optional(),
   },
 };
 
+// PUT /gereedschap/:id — update
 const updateGereedschap = async (
   ctx: KoaContext<GereedschapUpdateResponse, IdParams, GereedschapUpdateInput>,
 ) => {
-  const data: GereedschapUpdateInput = { ...ctx.request.body };
+  const id = Number(ctx.params.id);
+  const body = ctx.request.body;
 
-  if ('evenementId' in ctx.request.body) {
-    if (ctx.request.body.evenementId) {
-      data.evenementId = Number(ctx.request.body.evenementId);
-    } else {
-      data.evenementId = undefined; 
-    }
-  } else {
+  const data: GereedschapUpdateInput = {};
+  
+  if (body.naam !== undefined) data.naam = body.naam;
+  if (body.beschrijving !== undefined) data.beschrijving = body.beschrijving;
+  if (body.beschikbaar !== undefined) data.beschikbaar = body.beschikbaar;
+  if (body.evenementId !== undefined) data.evenementId = body.evenementId;
 
-    delete data.evenementId;
-  }
-
-  ctx.body = await GereedschapService.update(Number(ctx.params.id), data);
+  ctx.body = await gereedschapService.updateById(id, data);
 };
 updateGereedschap.validationScheme = {
   params: {
@@ -99,16 +80,14 @@ updateGereedschap.validationScheme = {
     naam: Joi.string().optional(),
     beschrijving: Joi.string().allow('', null).optional(),
     beschikbaar: Joi.boolean().optional(),
-    verhuurd: Joi.boolean().optional(),
     evenementId: Joi.number().integer().positive().allow(null).optional(),
   },
 };
-/**
- * @api {delete} /gereedschap/:id Verwijder gereedschap
- */
-const deleteGereedschap = async (ctx: KoaContext<GereedschapDeleteResponse, IdParams>) => {
-  ctx.body = await GereedschapService.delete(Number(ctx.params.id));
-  ctx.status = 200;
+
+// DELETE /gereedschap/:id — delete
+const deleteGereedschap = async (ctx: KoaContext<void, IdParams>) => {
+  await gereedschapService.deleteById(Number(ctx.params.id));
+  ctx.status = 204;
 };
 deleteGereedschap.validationScheme = {
   params: {
@@ -116,13 +95,16 @@ deleteGereedschap.validationScheme = {
   },
 };
 
-/**
- * @api {get} /gereedschap/:id/evenement Haal gekoppeld evenement op
- */
+// GET /gereedschap/:id/evenement — get event
 const getEventByGereedschapId = async (
   ctx: KoaContext<GereedschapEventResponse, IdParams>,
 ) => {
-  ctx.body = await GereedschapService.getEventByGereedschapId(Number(ctx.params.id));
+  const gereedschap = await gereedschapService.getById(Number(ctx.params.id));
+
+  ctx.body = {
+    gereedschap: gereedschap,
+    evenement: gereedschap.evenement || null,
+  };
 };
 getEventByGereedschapId.validationScheme = {
   params: {

@@ -1,6 +1,6 @@
 import Plaats from './Plaats';
 
-export default function PlacesCards({
+export default function PlaatsenCards({
   plaatsen, onDelete,
 }) {
 

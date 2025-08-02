@@ -1,10 +1,9 @@
-// src/components/places/Place.jsx
 import { Link } from 'react-router-dom';
 import { IoTrashOutline, IoPencil } from 'react-icons/io5';
 import { memo, useCallback, useContext } from 'react';
 import { ThemeContext } from '../../contexts/Theme.context';
 
-const PlaatsMemoized = memo(function Place({ id, naam, straat, huisnummer, postcode, gemeente, onDelete }) {
+const PlaatsMemoized = memo(function Plaats({ id, naam, straat, huisnummer, postcode, gemeente, onDelete }) {
 
   const { theme, textTheme } = useContext(ThemeContext);
   const handleDelete = useCallback(() => {

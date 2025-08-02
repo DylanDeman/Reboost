@@ -14,6 +14,8 @@ function EvenementenTabel({ evenementen, onDelete }) {
     );
   }
 
+  
+
   return (
     <div className={`table-responsive-${theme}`} style={{ overflowX: 'auto' }}>
       <table className={`table table-hover table-${theme}`}>

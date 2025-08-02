@@ -1,33 +1,35 @@
-import type { Entity } from './common';
+import type { Entity, ListResponse } from './common';
+import type { Evenement } from './evenement';
 
 export interface Gereedschap extends Entity {
-  id: number;
   naam: string;
   beschrijving: string;
   beschikbaar: boolean;
+  evenement?: Pick<Evenement, 'id' | 'naam' | 'datum'> | null;
 }
 
 export interface GereedschapCreateInput {
   naam: string;
   beschrijving: string;
   beschikbaar: boolean;
-  evenementId?: number | undefined; 
+  evenementId?: number | null;
 }
 
 export interface GereedschapUpdateInput {
-  naam?: string | undefined;
-  beschrijving?: string | undefined;
-  beschikbaar?: boolean | undefined;
-  evenementId?: number | undefined; 
+  naam?: string;
+  beschrijving?: string;
+  beschikbaar?: boolean;
+  evenementId?: number | null;
 }
 
-export interface GereedschapListResponse {
-  gereedschappen: Gereedschap[];
-  totalCount: number;
-}
+export interface GereedschapListResponse extends ListResponse<Gereedschap> {}
+
 export interface GereedschapByIdResponse extends Gereedschap {}
+
 export interface GereedschapCreateResponse extends Gereedschap {}
+
 export interface GereedschapUpdateResponse extends Gereedschap {}
+
 export interface GereedschapDeleteResponse {
   success: boolean;
   message: string;
@@ -35,9 +37,5 @@ export interface GereedschapDeleteResponse {
 
 export interface GereedschapEventResponse {
   gereedschap: Gereedschap;
-  evenement: {
-    id: number;
-    naam: string;
-    datum: Date;
-  };
+  evenement: Pick<Evenement, 'id' | 'naam' | 'datum'> | null;
 }

@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation';
 import { getAll, deleteById } from '../../api';
 import AsyncData from '../../components/AsyncData';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function GereedschapLijst() {
   const [text, setText] = useState('');
@@ -16,6 +17,7 @@ export default function GereedschapLijst() {
     error,
   } = useSWR('gereedschap', getAll);
 
+
   const { trigger: deleteGereedschap, error: deleteError } = useSWRMutation(
     'gereedschap',
     deleteById,
@@ -23,12 +25,12 @@ export default function GereedschapLijst() {
 
   const filteredGereedschappen = useMemo(
     () =>
-      // gereedschappen.filter((g) => {
-      //   return (
-      //     g.naam.toLowerCase().includes(search.toLowerCase()) ||
-      //     g.beschrijving.toLowerCase().includes(search.toLowerCase())
-      //   );
-      // }),
+      gereedschappen.filter((g) => {
+        return (
+          g.naam.toLowerCase().includes(search.toLowerCase()) ||
+          g.beschrijving.toLowerCase().includes(search.toLowerCase())
+        );
+      }),
     [search, gereedschappen],
   );
 
@@ -63,7 +65,7 @@ export default function GereedschapLijst() {
           Zoeken
         </button>
         <div className='clearfix'>
-          <Link to='/gereedschap/add' className='btn bg-color float-end'>
+          <Link to='/gereedschappen/add' className='btn bg-color float-end'>
             Voeg gereedschap toe
           </Link>
         </div>
