@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker/locale/nl_BE'; // Belgian Dutch locale
 import { hashPassword } from '../core/password';
 
 const prisma = new PrismaClient();
@@ -31,12 +31,24 @@ async function main() {
     gebruikers.push(gebruiker);
   }
 
-  // Create places
+  const suffixes = [
+    'Convention Center',
+    'Event Hall',
+    'Grand Ballroom',
+    'Expo Center',
+    'Auditorium',
+    'Garden Pavilion',
+    'Palace',
+    'Forum',
+    'Arena',
+    'Theater',
+  ];
+
   const plaatsen = [];
   for (let i = 0; i < 50; i++) {
     const plaats = await prisma.plaats.create({
       data: {
-        naam: faker.location.city(),
+        naam: `${faker.company.name()} ${faker.helpers.arrayElement(suffixes)}`,
         straat: faker.location.street(),
         huisnummer: faker.location.buildingNumber(),
         postcode: faker.location.zipCode(),
@@ -79,36 +91,36 @@ async function main() {
   }
 
   const eventEquipmentList = [
-    { naam: 'Speaker', beschrijving: 'High-quality audio speaker suitable for large venues and outdoor events.' },
-    { naam: 'Wireless Microphone', beschrijving: 'Reliable wireless microphone with noise-cancellation and long battery life.' },
-    { naam: 'Mixing Panel', beschrijving: 'Digital mixing console with multiple channels and advanced sound control.' },
-    { naam: 'Projector', beschrijving: 'HD projector capable of displaying crisp images on large screens.' },
-    { naam: 'LED Stage Light', beschrijving: 'Energy-efficient LED stage lighting with adjustable colors and brightness.' },
-    { naam: 'Video Camera', beschrijving: 'Professional video camera for recording events in high definition.' },
-    { naam: 'Exhibition Booth', beschrijving: 'Modular exhibition booth suitable for trade shows and product displays.' },
-    { naam: 'Podium', beschrijving: 'Sturdy podium designed for speakers and presentations.' },
-    { naam: 'Folding Chair', beschrijving: 'Comfortable and lightweight folding chair for event seating.' },
-    { naam: 'Round Table', beschrijving: 'Durable round table ideal for dining or discussion groups.' },
-    { naam: 'Banner Stand', beschrijving: 'Portable banner stand perfect for promotional displays and signage.' },
-    { naam: 'Wi-Fi Router', beschrijving: 'High-speed Wi-Fi router ensuring reliable internet connectivity for attendees.' },
-    { naam: 'Power Generator', beschrijving: 'Portable power generator providing backup electricity for event operations.' },
-    { naam: 'Audio Cable', beschrijving: 'High-quality audio cable for connecting sound equipment with minimal interference.' },
-    { naam: 'Laptop', beschrijving: 'Laptop computer used for presentations, streaming, and event management.' },
-    { naam: 'Headset for Translation', beschrijving: 'Wireless headset for simultaneous translation during multilingual events.' },
-    { naam: 'Stage Backdrop', beschrijving: 'Customizable stage backdrop enhancing event branding and visuals.' },
-    { naam: 'Catering Station', beschrijving: 'Fully equipped catering station for serving food and beverages.' },
-    { naam: 'Security Scanner', beschrijving: 'Handheld security scanner for event access control and safety checks.' },
-    { naam: 'Registration Kiosk', beschrijving: 'Self-service registration kiosk to streamline attendee check-in processes.' },
-    { naam: 'First Aid Kit', beschrijving: 'Comprehensive first aid kit for handling medical emergencies onsite.' },
-    { naam: 'Stage Monitor', beschrijving: 'Audio stage monitor for performers to hear themselves clearly during presentations.' },
-    { naam: 'Video Switcher', beschrijving: 'Professional video switcher for live event video mixing and transitions.' },
-    { naam: 'Lighting Console', beschrijving: 'Control console for programming and managing stage lighting effects.' },
-    { naam: 'Podium Microphone', beschrijving: 'High-sensitivity microphone designed for podium speeches and presentations.' },
-    { naam: 'Wireless Presenter', beschrijving: 'Remote wireless presenter for controlling slideshows and presentations.' },
-    { naam: 'Backdrop Frame', beschrijving: 'Sturdy frame used to support large event backdrops and banners.' },
-    { naam: 'Event Tent', beschrijving: 'Weather-resistant event tent providing shelter for outdoor activities.' },
-    { naam: 'Charging Station', beschrijving: 'Multi-device charging station for attendee convenience.' },
-    { naam: 'Video Wall', beschrijving: 'Large-scale LED video wall for dynamic visuals and presentations.' },
+    { naam: 'Luidspreker', beschrijving: 'Hoogwaardige audioluidspreker geschikt voor grote venues en buitenevenementen.' },
+    { naam: 'Draadloze Microfoon', beschrijving: 'Betrouwbare draadloze microfoon met ruisonderdrukking en lange batterijduur.' },
+    { naam: 'Mengpaneel', beschrijving: 'Digitaal mengpaneel met meerdere kanalen en geavanceerde geluidsregeling.' },
+    { naam: 'Projector', beschrijving: 'HD-projector die scherpe beelden kan weergeven op grote schermen.' },
+    { naam: 'LED Podiumverlichting', beschrijving: 'Energiezuinige LED podiumverlichting met instelbare kleuren en helderheid.' },
+    { naam: 'Videocamera', beschrijving: 'Professionele videocamera voor het opnemen van evenementen in hoge definitie.' },
+    { naam: 'Tentoonstellingsstand', beschrijving: 'Modulaire tentoonstellingsstand geschikt voor beurzen en productpresentaties.' },
+    { naam: 'Podium', beschrijving: 'Stevig podium ontworpen voor sprekers en presentaties.' },
+    { naam: 'Klapstoel', beschrijving: 'Comfortabele en lichtgewicht klapstoel voor evenementenzitplaatsen.' },
+    { naam: 'Ronde Tafel', beschrijving: 'Duurzame ronde tafel ideaal voor dineren of discussiegroepen.' },
+    { naam: 'Bannerstandaard', beschrijving: 'Draagbare bannerstandaard perfect voor promotionele displays en bewegwijzering.' },
+    { naam: 'Wi-Fi Router', beschrijving: 'Snelle Wi-Fi router die betrouwbare internetverbinding voor deelnemers verzekert.' },
+    { naam: 'Stroomgenerator', beschrijving: 'Draagbare stroomgenerator die back-up elektriciteit levert voor evenementenactiviteiten.' },
+    { naam: 'Audiokabel', beschrijving: 'Hoogwaardige audiokabel voor het verbinden van geluidsapparatuur met minimale interferentie.' },
+    { naam: 'Laptop', beschrijving: 'Laptopcomputer gebruikt voor presentaties, streaming en evenementenbeheer.' },
+    { naam: 'Headset voor Vertaling', beschrijving: 'Draadloze headset voor simultaanvertaling tijdens meertalige evenementen.' },
+    { naam: 'Podiumachtergrond', beschrijving: 'Aanpasbare podiumachtergrond die evenementenbranding en visuele aspecten verbetert.' },
+    { naam: 'Cateringstation', beschrijving: 'Volledig uitgerust cateringstation voor het serveren van eten en dranken.' },
+    { naam: 'Beveiligingsscanner', beschrijving: 'Handheld beveiligingsscanner voor toegangscontrole en veiligheidscontroles bij evenementen.' },
+    { naam: 'Registratiekiosk', beschrijving: 'Zelfbedieningsregistratiekiosk om het inchecken van deelnemers te stroomlijnen.' },
+    { naam: 'EHBO-kit', beschrijving: 'Uitgebreide EHBO-kit voor het behandelen van medische noodgevallen ter plaatse.' },
+    { naam: 'Podiummonitor', beschrijving: 'Audio podiummonitor voor artiesten om zichzelf duidelijk te horen tijdens presentaties.' },
+    { naam: 'Videoswitscher', beschrijving: 'Professionele videoswitscher voor live evenementen video menging en overgangen.' },
+    { naam: 'Lichtconsole', beschrijving: 'Bedieningsconsole voor het programmeren en beheren van podiumlichteffecten.' },
+    { naam: 'Podiummicrofoon', beschrijving: 'Hooggevoelige microfoon ontworpen voor podiumspeeches en presentaties.' },
+    { naam: 'Draadloze Presenter', beschrijving: 'Draadloze afstandsbediening voor het bedienen van diavoorstellingen en presentaties.' },
+    { naam: 'Achtergrondframe', beschrijving: 'Stevig frame gebruikt om grote evenementenachtergronden en banners te ondersteunen.' },
+    { naam: 'Evenemententent', beschrijving: 'Weerbestendige evenemententent die onderdak biedt voor buitenactiviteiten.' },
+    { naam: 'Oplaadstation', beschrijving: 'Multi-device oplaadstation voor het gemak van deelnemers.' },
+    { naam: 'Videomuur', beschrijving: 'Grootschalige LED videomuur voor dynamische visuele effecten en presentaties.' },
   ];
 
   // Shuffle a copy of the array and pick unique ones

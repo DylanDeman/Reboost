@@ -90,122 +90,91 @@ export default function GereedschapForm({
   };
 
   return (
-    <div className="container-fluid py-5">
+    <div className="container py-5">
       <div className="row justify-content-center">
-        <div className="col-lg-10 col-xl-8">
-          {/* Header Section */}
-          <div className="text-center mb-5">
-            <h1 className={`display-5 fw-bold text-${textTheme} mb-3`}>
-              {isEdit ? 'Gereedschap bewerken' : 'Nieuw gereedschap'}
-            </h1>
-            <p className={`fs-5 text-${textTheme === 'light' ? 'muted' : 'light'} mb-0`}>
-              {isEdit ? 'Wijzig de gegevens van het gereedschap' : 'Voeg nieuw gereedschap toe aan je inventaris'}
-            </p>
-          </div>
+        <div className="col-lg-6">
+          
 
-          {/* Form Section */}
-          <div className="row justify-content-center">
-            <div className="col-lg-8">
-              <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmit)} className="row g-4">
-                  
-                  {/* Name Field */}
-                  <div className="col-12">
-                    <LabelInput
-                      label="Naam"
-                      name="naam"
-                      type="text"
-                      placeholder="Voer de naam van het gereedschap in"
-                      validationRules={validationRules.naam}
-                      data-cy="gereedschap_naam_input"
-                    />
-                  </div>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="needs-validation">
+              
+              <div className="mb-4">
+                <LabelInput
+                  label="Naam"
+                  name="naam"
+                  type="text"
+                  placeholder="Voer de naam van het gereedschap in"
+                  validationRules={validationRules.naam}
+                  data-cy="gereedschap_naam_input"
+                />
+              </div>
 
-                  {/* Description Field */}
-                  <div className="col-12">
-                    <LabelInput
-                      label="Beschrijving"
-                      name="beschrijving"
-                      type="textarea"
-                      placeholder="Beschrijf het gereedschap in detail..."
-                      rows={4}
-                      validationRules={validationRules.beschrijving}
-                      data-cy="gereedschap_beschrijving_input"
-                    />
-                  </div>
+              <div className="mb-4">
+                <LabelInput
+                  label="Beschrijving"
+                  name="beschrijving"
+                  type="textarea"
+                  placeholder="Beschrijf het gereedschap..."
+                  rows={3}
+                  validationRules={validationRules.beschrijving}
+                  data-cy="gereedschap_beschrijving_input"
+                />
+              </div>
 
-                  {/* Two Column Section */}
-                  <div className="col-md-6">
-                    <div className="h-100 d-flex flex-column justify-content-center">
-                      <div className="form-check form-switch">
-                        <LabelInput
-                          label="Beschikbaar voor gebruik"
-                          name="beschikbaar"
-                          type="checkbox"
-                          className="form-check-input"
-                          validationRules={validationRules.beschikbaar}
-                          data-cy="gereedschap_beschikbaar_input"
-                        />
-                      </div>
-                      <small className={`form-text text-${textTheme === 'light' ? 'muted' : 'light'} mt-1`}>
-                        Schakel in als het gereedschap beschikbaar is
-                      </small>
-                    </div>
-                  </div>
+              <div className="mb-4">
+                <SelectList
+                  label="Evenement (optioneel)"
+                  name="evenementId"
+                  placeholder="-- Selecteer evenement --"
+                  items={evenementen.map(evenement => ({
+                    id: evenement.id,
+                    naam: `${evenement.naam} - ${new Date(evenement.datum).toLocaleDateString('nl-NL')}`,
+                  }))}
+                  validationRules={validationRules.evenementId}
+                  data-cy="gereedschap_evenement_select"
+                />
+              </div>
 
-                  <div className="col-md-6">
-                    <SelectList
-                      label="Gekoppeld evenement"
-                      name="evenementId"
-                      placeholder="-- Selecteer een evenement --"
-                      items={evenementen.map(evenement => ({
-                        id: evenement.id,
-                        naam: `${evenement.naam} - ${new Date(evenement.datum).toLocaleDateString('nl-NL')}`,
-                      }))}
-                      validationRules={validationRules.evenementId}
-                      data-cy="gereedschap_evenement_select"
-                    />
-                    <small className={`form-text text-${textTheme === 'light' ? 'muted' : 'light'} mt-1`}>
-                      Optioneel: koppel aan een evenement
-                    </small>
-                  </div>
+              <div className="mb-5">
+                <div className="form-check form-switch">
+                  <LabelInput
+                    label="Beschikbaar voor gebruik"
+                    name="beschikbaar"
+                    type="checkbox"
+                    className="form-check-input"
+                    validationRules={validationRules.beschikbaar}
+                    data-cy="gereedschap_beschikbaar_input"
+                  />
+                </div>
+              </div>
 
-                  {/* Action Buttons */}
-                  <div className="col-12 pt-4">
-                    <hr className={`border-${textTheme === 'light' ? 'secondary' : 'light'} opacity-25 my-4`} />
-                    <div className="d-flex flex-column flex-sm-row gap-3 justify-content-end">
-                      <Link
-                        className={`btn btn-outline-${textTheme === 'light' ? 'secondary' : 'light'} btn-lg px-4 order-2 order-sm-1`}
-                        to="/gereedschappen"
-                        data-cy="gereedschap_cancel_btn"
-                      >
-                        <i className="bi bi-x-circle me-2"></i>
-                        Annuleren
-                      </Link>
-                      <button
-                        type="submit"
-                        className={`btn btn-${theme} btn-lg px-4 fw-semibold order-1 order-sm-2`}
-                        data-cy="gereedschap_submit_btn"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            Bezig met opslaan...
-                          </>
-                        ) : (
-                          <>
-                            <i className={`bi ${isEdit ? 'bi-pencil-square' : 'bi-plus-circle'} me-2`}></i>
-                            {isEdit ? 'Bijwerken' : 'Toevoegen'}
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </FormProvider>
-            </div>
-          </div>
+              <div className="d-flex gap-3 justify-content-end">
+                <Link
+                  className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'}`}
+                  to="/gereedschappen"
+                  data-cy="gereedschap_cancel_btn"
+                >
+                  Annuleren
+                </Link>
+
+                <button
+                  type="submit"
+                  className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'}`}
+                  data-cy="gereedschap_submit_btn"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2"></span>
+                      Opslaan...
+                    </>
+                  ) : (
+                    isEdit ? 'Opslaan' : 'Toevoegen'
+                  )}
+                </button>
+              </div>
+            </form>
+          </FormProvider>
         </div>
       </div>
     </div>
