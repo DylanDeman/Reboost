@@ -1,14 +1,15 @@
-// src/pages/Evenements/AddOrEditEvenement.jsx
 import useSWR from 'swr';
 import { save, getById } from '../../api';
 import Plaatsenform from '../../components/plaatsen/Plaatsenform.jsx';
 import AsyncData from '../../components/AsyncData';
 import useSWRMutation from 'swr/mutation';
 import { useParams } from 'react-router-dom';
+import { useContext } from 'react';
+import { ThemeContext } from '../../contexts/Theme.context';
 
 export default function AddOrEditPlaats() {
-
   const { id } = useParams();
+  const { theme } = useContext(ThemeContext);
 
   const {
     data: plaats,
@@ -23,13 +24,12 @@ export default function AddOrEditPlaats() {
 
   return (
     <>
-      <h1 className='text-light'>Voeg een plaats toe of bewerk er een</h1>
+      <h1 className={theme === 'dark' ? 'text-light' : 'text-dark'}>
+        {id ? 'Bewerk plaats' : 'Voeg een plaats toe'}
+      </h1>
 
-      <AsyncData error={PlaatsenError || saveError}
-        loading={PlaatsenLoading}>
-
-        <Plaatsenform plaats={plaats}
-          savePlaats={savePlaats} />
+      <AsyncData error={PlaatsenError || saveError} loading={PlaatsenLoading}>
+        <Plaatsenform plaats={plaats} savePlaats={savePlaats} />
       </AsyncData>
     </>
   );

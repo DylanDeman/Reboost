@@ -1,15 +1,18 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/auth';
 import Error from '../components/Error';
 import Loader from '../components/Loader.jsx';
+import { ThemeContext } from '../contexts/Theme.context.jsx';
 
 const Login = () => {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const isLoggedOut = params.get('logout') === 'success';
 
+const { theme, textTheme } = useContext(ThemeContext);
+  
   const { error, loading, login } = useAuth();
   const navigate = useNavigate();
 
@@ -29,7 +32,7 @@ const Login = () => {
   );
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div className={`min-vh-100 d-flex align-items-center justify-content-center bg-${theme} text-${textTheme}`}>
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-sm-8 col-md-6 col-lg-4">
@@ -42,7 +45,7 @@ const Login = () => {
                 className="img-fluid mb-3"
                 style={{ maxWidth: '200px' }}
               />
-              <h2 className="h4 fw-normal text-dark mb-0">Welkom terug</h2>
+              <h2 className="h4 fw-normal mb-0">Welkom terug</h2>
             </div>
 
             {/* Login Form */}

@@ -14,6 +14,9 @@ import AddOrEditPlaats from './pages/plaatsen/AddOrEditPlaats.jsx';
 import Login from './pages/Login.jsx';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './contexts/Auth.context.jsx';
+import GereedschapsLijst from './pages/gereedschappen/GereedschapsLijst.jsx';
+import AddOrEditGereedschap from './pages/gereedschappen/AddOrEditGereedschap.jsx';
+import { useNavigate } from 'react-router-dom';
 
 
 const router = createBrowserRouter([
@@ -39,6 +42,15 @@ const router = createBrowserRouter([
           { index: true, element: <PlaatsenLijst /> },
           { path: 'add', element: <AddOrEditPlaats /> },
           { path: 'edit/:id', element: <AddOrEditPlaats /> },
+        ],
+      },
+      {
+        path: '/gereedschappen',
+        element: <PrivateRoute />,
+        children: [
+          { index: true, element: <GereedschapsLijst /> },
+          { path: 'add', element: <AddOrEditGereedschap /> },
+          { path: 'edit/:id', element: <AddOrEditGereedschap /> },
         ],
       },
       {

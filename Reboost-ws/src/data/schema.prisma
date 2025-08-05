@@ -20,13 +20,14 @@ model Plaats {
 }
 
 model Evenement {
-  id        Int       @id @default(autoincrement()) @db.UnsignedInt
-  naam      String
-  datum     DateTime  @db.DateTime(0)
-  auteur_id Int       @db.UnsignedInt
-  plaats_id Int       @db.UnsignedInt
-  plaats    Plaats    @relation(fields: [plaats_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_evenement_plaats")
-  auteur    Gebruiker @relation(fields: [auteur_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_evenement_gebruiker")
+  id             Int            @id @default(autoincrement()) @db.UnsignedInt
+  naam           String
+  datum          DateTime       @db.DateTime(0)
+  auteur_id      Int            @db.UnsignedInt
+  plaats_id      Int            @db.UnsignedInt
+  plaats         Plaats         @relation(fields: [plaats_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_evenement_plaats")
+  auteur         Gebruiker      @relation(fields: [auteur_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_evenement_gebruiker")
+  gereedschappen Gereedschap[] 
 
   @@map("evenementen")
 }
@@ -35,9 +36,20 @@ model Gebruiker {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
   naam        String      @unique(map:"idx_gebruikersnaam_uniek") @db.VarChar(255)
   wachtwoord  String      @db.VarChar(255)
-  roles Json
+  roles       Json
   evenementen Evenement[]
 
   @@map("gebruikers")
+}
+
+model Gereedschap {
+  id            Int        @id @default(autoincrement()) @db.UnsignedInt
+  naam          String     @unique(map: "idx_gereedschap_naam_uniek") @db.VarChar(255)
+  beschrijving  String     @db.Text
+  beschikbaar   Boolean    @default(true)
+  evenement_id  Int?       @db.UnsignedInt
+  evenement     Evenement? @relation(fields: [evenement_id], references: [id], onDelete: SetNull)
+
+  @@map("gereedschap")
 }
 

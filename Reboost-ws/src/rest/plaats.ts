@@ -13,6 +13,7 @@ import type {
 } from '../types/plaats';
 import type { IdParams } from '../types/common';
 import type { GetAllEvenementenReponse } from '../types/evenement';
+import { requireAuthentication } from '../core/auth';
 
 /**
  * @api {get} /plaatsen Haal alle plaatsen op
@@ -143,14 +144,14 @@ export default (parent: KoaRouter) => {
     prefix: '/plaatsen',
   });
 
-  router.get('/', getAllPlaatsen);
-  router.get('/:id', getPlaatsById);
-  router.post('/', createPlaats);
-  router.put('/:id', updatePlaats);
-  router.delete('/:id', deletePlaats);
+  router.get('/',requireAuthentication, getAllPlaatsen);
+  router.get('/:id',requireAuthentication, getPlaatsById);
+  router.post('/',requireAuthentication, createPlaats);
+  router.put('/:id',requireAuthentication, updatePlaats);
+  router.delete('/:id',requireAuthentication, deletePlaats);
 
   // Haal evenementen op voor een specifieke plaats
-  router.get('/:id/evenementen', getEvenementenByPlaatsId);
+  router.get('/:id/evenementen',requireAuthentication, getEvenementenByPlaatsId);
 
   parent.use(router.routes())
     .use(router.allowedMethods());
