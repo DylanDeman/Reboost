@@ -1,41 +1,48 @@
 import EvenementenTabel from '../../components/evenementen/EvenementenTabel';
-import { useState, useMemo, useCallback, useContext } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
-import { getAll, deleteById } from '../../api';
+import { getAll, deleteById, getById, save } from '../../api';
 import AsyncData from '../../components/AsyncData';
 import { Link } from 'react-router-dom';
 import { ThemeContext } from '../../contexts/Theme.context';
-import { IoCalendarOutline, IoLocationOutline, IoPersonOutline, IoFunnelOutline, IoAddOutline, IoCloseOutline } from 'react-icons/io5';
+import {
+  IoCalendarOutline,
+  IoLocationOutline,
+  IoPersonOutline,
+  IoFunnelOutline,
+  IoAddOutline,
+  IoCloseOutline,
+} from 'react-icons/io5';
 
 export default function EvenementenLijst() {
-
   const { theme, textTheme } = useContext(ThemeContext);
-  
+
   // Filter states
   const [filters, setFilters] = useState({
     naam: '',
     plaats: '',
     auteur: '',
     datumVan: '',
-    datumTot: ''
+    datumTot: '',
   });
 
   const {
     data: evenementen = [],
     isLoading,
     error,
+    mutate: mutateEvenementen,
   } = useSWR('evenementen', getAll);
 
-  const { trigger: deleteEvenement, error: deleteError } = useSWRMutation(
+  const { trigger: triggerDelete, error: deleteError } = useSWRMutation(
     'evenementen',
     deleteById,
   );
 
   // Get unique values for filter dropdowns
   const filterOptions = useMemo(() => {
-    const plaatsen = [...new Set(evenementen.map(e => e.plaats.naam))].sort();
-    const auteurs = [...new Set(evenementen.map(e => e.auteur.naam))].sort();
+    const plaatsen = [...new Set(evenementen.map((e) => e.plaats.naam))].sort();
+    const auteurs = [...new Set(evenementen.map((e) => e.auteur.naam))].sort();
     return { plaatsen, auteurs };
   }, [evenementen]);
 
@@ -56,7 +63,7 @@ export default function EvenementenLijst() {
   }, [filters, evenementen]);
 
   const handleFilterChange = (field, value) => {
-    setFilters(prev => ({ ...prev, [field]: value }));
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   const clearFilters = () => {
@@ -65,16 +72,31 @@ export default function EvenementenLijst() {
       plaats: '',
       auteur: '',
       datumVan: '',
-      datumTot: ''
+      datumTot: '',
     });
   };
 
-  const hasActiveFilters = Object.values(filters).some(filter => filter !== '');
+  const hasActiveFilters = Object.values(filters).some((filter) => filter !== '');
+async function handleDeleteEvenement(id) {
+  try {
+    const evenement = await getById(`evenementen/${id}`);
+    const linkedGereedschap = evenement.gereedschappen || [];
 
-  const handleDeleteEvenement = useCallback(async (id) => {
-    await deleteEvenement(id);
-    alert('Het evenement is verwijderd.');
-  }, [deleteEvenement]);
+    await Promise.all(
+      linkedGereedschap.map((g) =>
+        save('gereedschap', { arg: { id: g.id, beschikbaar: true, evenementId: null } }),
+      ),
+    );
+
+    await triggerDelete(id); // <-- pass only id here
+
+    mutateEvenementen();
+  } catch (err) {
+    console.error('Failed to delete event and reset gereedschap', err);
+  }
+}
+
+
 
   return (
     <div className="container-fluid">
@@ -84,7 +106,7 @@ export default function EvenementenLijst() {
           <IoCalendarOutline className="me-2 text-primary" size={32} />
           <h1 className={`mb-0 text-${textTheme}`}>Evenementen</h1>
         </div>
-        <Link to='/evenementen/add' className='btn btn-primary d-flex align-items-center'>
+        <Link to="/evenementen/add" className="btn btn-primary d-flex align-items-center">
           <IoAddOutline className="me-2" size={18} />
           Nieuw evenement
         </Link>
@@ -99,12 +121,12 @@ export default function EvenementenLijst() {
               <h5 className={`mb-0 text-${textTheme}`}>Filters</h5>
               {hasActiveFilters && (
                 <span className="badge bg-primary ms-2">
-                  {Object.values(filters).filter(f => f !== '').length}
+                  {Object.values(filters).filter((f) => f !== '').length}
                 </span>
               )}
             </div>
             {hasActiveFilters && (
-              <button 
+              <button
                 className="btn btn-outline-secondary btn-sm d-flex align-items-center"
                 onClick={clearFilters}
               >
@@ -114,7 +136,7 @@ export default function EvenementenLijst() {
             )}
           </div>
         </div>
-        
+
         <div className="card-body">
           <div className="row g-3">
             {/* Event Name Filter */}
@@ -146,8 +168,10 @@ export default function EvenementenLijst() {
                 data-cy="filter_plaats"
               >
                 <option value="">Alle locaties</option>
-                {filterOptions.plaatsen.map(plaats => (
-                  <option key={plaats} value={plaats}>{plaats}</option>
+                {filterOptions.plaatsen.map((plaats) => (
+                  <option key={plaats} value={plaats}>
+                    {plaats}
+                  </option>
                 ))}
               </select>
             </div>
@@ -165,17 +189,17 @@ export default function EvenementenLijst() {
                 data-cy="filter_auteur"
               >
                 <option value="">Alle auteurs</option>
-                {filterOptions.auteurs.map(auteur => (
-                  <option key={auteur} value={auteur}>{auteur}</option>
+                {filterOptions.auteurs.map((auteur) => (
+                  <option key={auteur} value={auteur}>
+                    {auteur}
+                  </option>
                 ))}
               </select>
             </div>
 
             {/* Date From Filter */}
             <div className="col-md-6 col-lg-2">
-              <label className={`form-label small fw-medium text-${textTheme}`}>
-                Datum van
-              </label>
+              <label className={`form-label small fw-medium text-${textTheme}`}>Datum van</label>
               <input
                 type="date"
                 className="form-control form-control-sm"
@@ -187,9 +211,7 @@ export default function EvenementenLijst() {
 
             {/* Date To Filter */}
             <div className="col-md-6 col-lg-2">
-              <label className={`form-label small fw-medium text-${textTheme}`}>
-                Datum tot
-              </label>
+              <label className={`form-label small fw-medium text-${textTheme}`}>Datum tot</label>
               <input
                 type="date"
                 className="form-control form-control-sm"

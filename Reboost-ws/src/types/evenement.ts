@@ -1,6 +1,7 @@
 import type { Gebruiker } from '@prisma/client';
 import type { Entity, ListResponse } from './common';
 import type { Plaats } from './plaats';
+import type { Gereedschap } from './gereedschap';
 
 /**
  * @apiDefine Evenement Evenement Object
@@ -52,6 +53,7 @@ export interface Evenement extends Entity {
   datum: Date;
   auteur: Pick<Gebruiker, 'id' | 'naam'>; // Auteur van het evenement, bevat id en naam van de gebruiker
   plaats: Pick<Plaats, 'id' | 'id'>; // Plaats van het evenement, bevat alleen het id van de plaats
+  gereedschappen?: Gereedschap[];
 }
 
 /**
@@ -93,6 +95,7 @@ export interface EvenementCreateInput {
   datum: Date;
   auteur_id: number; // ID van de auteur
   plaats_id: number; // ID van de plaats
+  gereedschap_ids?: number[];
 }
 
 /**

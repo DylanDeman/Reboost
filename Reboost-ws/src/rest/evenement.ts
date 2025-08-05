@@ -76,6 +76,7 @@ createEvenement.validationScheme = {
     datum: Joi.date().iso(),
     auteur_id: Joi.number().integer().positive().required(),
     plaats_id: Joi.number().integer().positive().required(),
+    gereedschap_ids: Joi.array().items(Joi.number().integer().positive()).optional(),
   },
 };
 
@@ -126,14 +127,16 @@ getEvenementById.validationScheme = {
  *      "auteur_id": 1
  *    }
  */
-const updateEvenement = async (ctx: KoaContext<UpdateEvenementResponse, IdParams, UpdateEvenementRequest>) => {
+const updateEvenement = async (
+  ctx: KoaContext<UpdateEvenementResponse, IdParams, UpdateEvenementRequest>,
+) => {
   ctx.body = await EvenementService.updateById(Number(ctx.params.id), {
     ...ctx.request.body,
     plaats_id: Number(ctx.request.body.plaats_id),
     auteur_id: Number(ctx.request.body.auteur_id),
     datum: new Date(ctx.request.body.datum),
+    gereedschap_ids: ctx.request.body.gereedschap_ids ?? [],
   });
-  console.log(ctx.body);
 };
 
 /**

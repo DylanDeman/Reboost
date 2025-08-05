@@ -5,6 +5,13 @@ import { useContext, useEffect } from 'react';
 import { ThemeContext } from '../../contexts/Theme.context';
 import LabelInput from '../LabelInput';
 import SelectList from '../SelectList';
+import {
+  IoHammerOutline,
+  IoDocumentTextOutline,
+  IoCalendarOutline,
+  IoCheckmarkDoneOutline,
+  IoCloseOutline,
+} from 'react-icons/io5';
 
 const EMPTY_GEREEDSCHAP = {
   id: undefined,
@@ -30,18 +37,24 @@ const validationRules = {
     // No validation needed for boolean
   },
   evenementId: {
-    // Optional field, no validation needed
+    // Optional, no validation needed
   },
 };
 
-export default function GereedschapForm({ 
-  evenementen = [], 
-  gereedschap = EMPTY_GEREEDSCHAP, 
+const formatEvenementName = (evenement) => {
+  if (!evenement) return '';
+  const date = evenement.datum ? new Date(evenement.datum).toLocaleDateString('nl-NL') : '';
+  return `${evenement.naam} - ${date}`;
+};
+
+export default function GereedschapForm({
+  evenementen = [],
+  gereedschap = EMPTY_GEREEDSCHAP,
   saveGereedschap,
-  isEdit = false 
+  isEdit = false,
 }) {
   const navigate = useNavigate();
-  const { theme, textTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   const methods = useForm({
     mode: 'onBlur',
@@ -55,11 +68,10 @@ export default function GereedschapForm({
 
   const {
     handleSubmit,
-    formState: { isValid, isSubmitting },
+    formState: { errors, isValid, isSubmitting },
     reset,
   } = methods;
 
-  // Reset form when gereedschap changes (for editing)
   useEffect(() => {
     if (gereedschap && isEdit) {
       reset({
@@ -72,9 +84,8 @@ export default function GereedschapForm({
   }, [gereedschap, isEdit, reset]);
 
   const onSubmit = async (values) => {
-    console.log('Submitted values:', values);
     if (!isValid) return;
-    
+
     const submitData = {
       id: gereedschap?.id,
       ...values,
@@ -89,87 +100,101 @@ export default function GereedschapForm({
     });
   };
 
+  const renderLabel = (IconComponent, labelText) => (
+    <label className="form-label d-flex align-items-center gap-2">
+      <IconComponent size={20} />
+      {labelText}
+    </label>
+  );
+
   return (
     <div className="container py-5">
       <div className="row justify-content-center">
         <div className="col-lg-6">
-          
-
           <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="needs-validation">
-              
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <div className="mb-4">
+                {renderLabel(IoHammerOutline, 'Naam')}
                 <LabelInput
-                  label="Naam"
                   name="naam"
                   type="text"
                   placeholder="Voer de naam van het gereedschap in"
                   validationRules={validationRules.naam}
                   data-cy="gereedschap_naam_input"
+                  isInvalid={!!errors.naam}
                 />
               </div>
 
               <div className="mb-4">
+                {renderLabel(IoDocumentTextOutline, 'Beschrijving')}
                 <LabelInput
-                  label="Beschrijving"
                   name="beschrijving"
                   type="textarea"
                   placeholder="Beschrijf het gereedschap..."
                   rows={3}
                   validationRules={validationRules.beschrijving}
                   data-cy="gereedschap_beschrijving_input"
+                  isInvalid={!!errors.beschrijving}
                 />
               </div>
 
               <div className="mb-4">
+                {renderLabel(IoCalendarOutline, 'Evenement (optioneel)')}
                 <SelectList
-                  label="Evenement (optioneel)"
                   name="evenementId"
                   placeholder="-- Selecteer evenement --"
-                  items={evenementen.map(evenement => ({
-                    id: evenement.id,
-                    naam: `${evenement.naam} - ${new Date(evenement.datum).toLocaleDateString('nl-NL')}`,
-                  }))}
+                  items={[
+                    { id: '', naam: 'Geen evenement' },  // <-- Add this option here
+                    ...evenementen.map((e) => ({
+                      id: e.id,
+                      naam: formatEvenementName(e),
+                    })),
+                  ]}
                   validationRules={validationRules.evenementId}
                   data-cy="gereedschap_evenement_select"
+                  isInvalid={!!errors.evenementId}
                 />
               </div>
 
-              <div className="mb-5">
-                <div className="form-check form-switch">
-                  <LabelInput
-                    label="Beschikbaar voor gebruik"
-                    name="beschikbaar"
-                    type="checkbox"
-                    className="form-check-input"
-                    validationRules={validationRules.beschikbaar}
-                    data-cy="gereedschap_beschikbaar_input"
-                  />
-                </div>
+              <div className="mb-5 form-check form-switch">
+                <input
+                  type="checkbox"
+                  id="beschikbaar"
+                  className="form-check-input"
+                  {...methods.register('beschikbaar')}
+                  data-cy="gereedschap_beschikbaar_input"
+                />
+                <label htmlFor="beschikbaar" className="form-check-label">
+                  Beschikbaar voor gebruik
+                </label>
               </div>
 
-              <div className="d-flex gap-3 justify-content-end">
+              <div className="d-flex justify-content-end gap-3">
                 <Link
-                  className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'}`}
                   to="/gereedschappen"
+                  className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'} d-flex align-items-center gap-2`}
                   data-cy="gereedschap_cancel_btn"
                 >
+                  <IoCloseOutline size={18} />
                   Annuleren
                 </Link>
 
                 <button
                   type="submit"
-                  className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'}`}
+                  className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'} d-flex align-items-center gap-2`}
                   data-cy="gereedschap_submit_btn"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <>
-                      <span className="spinner-border spinner-border-sm me-2"></span>
+                      <span className="spinner-border spinner-border-sm"></span>
                       Opslaan...
                     </>
                   ) : (
-                    isEdit ? 'Opslaan' : 'Toevoegen'
+                    <>
+                      <IoCheckmarkDoneOutline size={18} />
+                      {isEdit ? 'Opslaan' : 'Toevoegen'}
+                    </>
                   )}
                 </button>
               </div>

@@ -127,19 +127,22 @@ export const getGereedschapByEvenementId = async (evenement_id: number): Promise
   });
 };
 
-// Temporary debug version - try without select
-export const getAllDebug = async () => {
-  try {
-    console.log('Fetching ALL gereedschap fields...');
-    const result = await prisma.gereedschap.findMany({
-      include: {
-        evenement: true,
-      },
-    });
-    console.log('Debug result (all fields):', JSON.stringify(result, null, 2));
-    return result;
-  } catch (error) {
-    console.error('Error in getAllDebug:', error);
-    throw error;
-  }
-};
+export async function getAvailableGereedschappen(evenementId?: number) {
+  return await prisma.gereedschap.findMany({
+    where: {
+      OR: [
+        {
+          evenement_id: null, // unassigned tools
+        },
+        ...(evenementId
+          ? [
+            {
+              evenement_id: evenementId, // tools already assigned to current event
+            },
+          ]
+          : []),
+      ],
+    },
+    orderBy: { naam: 'asc' },
+  });
+}

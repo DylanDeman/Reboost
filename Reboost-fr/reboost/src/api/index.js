@@ -37,14 +37,30 @@ export const deleteById = async (url, { arg: id }) => {
 };
 
 export async function save(url, { arg: { id, ...data } }) {
-  await api({
-    method: id ? 'PUT' : 'POST',
-    url: `/${url}/${id ?? ''}`,
+  const method = id ? 'PUT' : 'POST';
+  const requestUrl = id ? `/${url}/${id}` : `/${url}`;
+
+  const response = await api({
+    method,
+    url: requestUrl,
     data,
   });
+
+
+  return response.data;
 }
+
 
 export const post = async (url, { arg }) => {
   const { data } = await api.post(`/${url}`, arg);
   return data;
 };
+
+
+// export async function updateGereedschap(id, data) {
+//   await api({
+//     method: 'PUT',
+//     url: `/gereedschap/${id}`,
+//     data,
+//   });
+// }
