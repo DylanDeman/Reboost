@@ -130,14 +130,16 @@ async function main() {
     const evenement = faker.helpers.arrayElement(evenementen);
     const equipment = shuffledEquipment[i % shuffledEquipment.length]; // cycle through unique names
 
-    await prisma.gereedschap.create({
-      data: {
-        naam: equipment.naam, 
-        beschrijving: equipment.beschrijving,
-        beschikbaar: faker.datatype.boolean(),
-        evenement_id: evenement.id,
-      },
-    });
+    if (equipment) {
+      await prisma.gereedschap.create({
+        data: {
+          naam: equipment.naam, 
+          beschrijving: equipment.beschrijving,
+          beschikbaar: faker.datatype.boolean(),
+          evenement_id: evenement.id,
+        },
+      });
+    }
   }
 
   console.log('🌱 Dummy data seeded.');
