@@ -13,6 +13,7 @@ import type {
 } from '../types/evenement';
 import type { IdParams } from '../types/common';
 import validate from '../core/validation';
+import { requireAuthentication } from '../core/auth';
 
 /**
  * @api {get} /evenementen Haal alle evenementen op
@@ -166,15 +167,15 @@ export default (parent: KoaRouter) => {
   router.post(
     '/',
     validate(createEvenement.validationScheme),
-    createEvenement,
+    createEvenement, requireAuthentication,
   );
   router.get(
     '/:id',
     validate(getEvenementById.validationScheme),
-    getEvenementById,
+    getEvenementById, requireAuthentication,
   );
-  router.put('/:id', updateEvenement);
-  router.delete('/:id', deleteEvenement);
+  router.put('/:id', updateEvenement, requireAuthentication);
+  router.delete('/:id', deleteEvenement, requireAuthentication);
 
   parent.use(router.routes())
     .use(router.allowedMethods());

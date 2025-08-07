@@ -249,7 +249,11 @@ export default function EvenementForm({
                     </div>
                   </div>
                 ) : (
-                  <div className={`text-muted p-3 border rounded text-center mt-3`}>
+                  <div
+                    className={`p-3 border rounded text-center mt-3 ${
+                      theme === 'dark' ? 'bg-dark text-light border-secondary' : ''
+                    }`}
+                  >
                     <IoConstructOutline size={24} className="mb-2" />
                     <p className="mb-0">Geen gereedschappen geselecteerd</p>
                   </div>

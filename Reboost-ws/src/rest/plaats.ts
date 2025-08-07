@@ -150,7 +150,6 @@ export default (parent: KoaRouter) => {
   router.put('/:id',requireAuthentication, updatePlaats);
   router.delete('/:id',requireAuthentication, deletePlaats);
 
-  // Haal evenementen op voor een specifieke plaats
   router.get('/:id/evenementen',requireAuthentication, getEvenementenByPlaatsId);
 
   parent.use(router.routes())

@@ -22,7 +22,6 @@ export default function PlaatsenLijst() {
 
   const handleDeletePlaats = useCallback(async (id) => {
     await deletePlaats(id);
-    alert('De plaats is verwijderd.');
   }, [deletePlaats]);
 
   const handleFilterChange = (field, value) => {

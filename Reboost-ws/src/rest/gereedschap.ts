@@ -14,6 +14,7 @@ import type {
   GereedschapUpdateResponse,
   GereedschapEventResponse,
 } from '../types/gereedschap';
+import { requireAuthentication } from '../core/auth';
 
 // GET /gereedschap — list all
 const listGereedschap = async (ctx: KoaContext<GereedschapListResponse>) => {
@@ -118,12 +119,12 @@ export default (parent: KoaRouter) => {
     prefix: '/gereedschap',
   });
 
-  router.get('/', validate(listGereedschap.validationScheme), listGereedschap);
-  router.post('/', validate(createGereedschap.validationScheme), createGereedschap);
-  router.get('/:id', validate(getGereedschapById.validationScheme), getGereedschapById);
-  router.put('/:id', validate(updateGereedschap.validationScheme), updateGereedschap);
-  router.delete('/:id', validate(deleteGereedschap.validationScheme), deleteGereedschap);
-  router.get('/:id/evenement', validate(getEventByGereedschapId.validationScheme), getEventByGereedschapId);
+  router.get('/', validate(listGereedschap.validationScheme), listGereedschap, requireAuthentication);
+  router.post('/', validate(createGereedschap.validationScheme), createGereedschap, requireAuthentication);
+  router.get('/:id', validate(getGereedschapById.validationScheme), getGereedschapById, requireAuthentication);
+  router.put('/:id', validate(updateGereedschap.validationScheme), updateGereedschap, requireAuthentication);
+  router.delete('/:id', validate(deleteGereedschap.validationScheme), deleteGereedschap, requireAuthentication);
+  router.get('/:id/evenement', validate(getEventByGereedschapId.validationScheme), getEventByGereedschapId, requireAuthentication);
 
   parent.use(router.routes()).use(router.allowedMethods());
 };

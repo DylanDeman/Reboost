@@ -24,8 +24,14 @@ import type { Plaats, PlaatsCreateInput, PlaatsUpdateInput } from '../types/plaa
  *    }
  * @apiError (500) InternalServerError Fout bij het ophalen van plaatsen.
  */
-export const getAll = async (): Promise<Plaats[]> => {
-  return prisma.plaats.findMany();
+export const getAll = async (): Promise<(Plaats & { _count: { evenementen: number } })[]> => {
+  return prisma.plaats.findMany({
+    include: {
+      _count: {
+        select: { evenementen: true },
+      },
+    },
+  });
 };
 
 /**

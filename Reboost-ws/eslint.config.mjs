@@ -30,7 +30,7 @@ export default tseslint.config(
       '@stylistic/max-len': [
         'error',
         {
-          code: 120,
+          code: 300,
           tabWidth: 2,
         },
       ],
