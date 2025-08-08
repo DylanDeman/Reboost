@@ -31,12 +31,35 @@ const checkUserId = (ctx: KoaContext<unknown, GetGebruikerRequest>, next: Next) 
   return next();
 };
 
+/**
+ * @api {get} /gebruikers Get all gebruikers
+ * @apiName GetAllGebruikers
+ * @apiGroup Gebruiker
+ * @apiPermission authenticated
+ *
+ * @apiSuccess {Object[]} items List of gebruikers
+ * @apiSuccess {Number} items.id User ID
+ * @apiSuccess {String} items.naam User name
+ * @apiSuccess {String[]} items.roles Roles assigned to user
+ */
 const getAllGebruikers = async (ctx: KoaContext<GetAllGebruikersResponse>) => {
   const users = await GebruikerService.getAll();
   ctx.body = { items: users };
 };
 getAllGebruikers.validationScheme = null;
 
+/**
+ * @api {post} /gebruikers Register a new gebruiker
+ * @apiName RegisterUser
+ * @apiGroup Gebruiker
+ * @apiPermission none
+ *
+ * @apiBody {String{..255}} naam Name of the user
+ * @apiBody {String{12..255}} wachtwoord Password for the user (min length 12)
+ * @apiBody {String[]} [roles] Roles for the user
+ *
+ * @apiSuccess {String} token Authentication token for the new user
+ */
 const registerUser = async (ctx: KoaContext<LoginResponse, void, RegisterGebruikerRequest>) => {
   const token = await GebruikerService.register(ctx.request.body);
   ctx.status = 200;
@@ -50,6 +73,18 @@ registerUser.validationScheme = {
   },
 };
 
+/**
+ * @api {get} /gebruikers/:id Get gebruiker by id
+ * @apiName GetGebruikerById
+ * @apiGroup Gebruiker
+ * @apiPermission authenticated
+ *
+ * @apiParam {Number/String} id User's unique ID or 'me' for current user
+ *
+ * @apiSuccess {Number} id User ID
+ * @apiSuccess {String} naam User name
+ * @apiSuccess {String[]} roles Roles assigned to user
+ */
 const getUserById = async (ctx: KoaContext<GetGebruikerByIdResponse, GetGebruikerRequest>) => {
   const user = await GebruikerService.getById(
     ctx.params.id === 'me' ? ctx.state.session.userId : ctx.params.id,
@@ -66,6 +101,22 @@ getUserById.validationScheme = {
   },
 };
 
+/**
+ * @api {put} /gebruikers/:id Update gebruiker by id
+ * @apiName UpdateGebruikerById
+ * @apiGroup Gebruiker
+ * @apiPermission authenticated
+ *
+ * @apiParam {Number} id User's unique ID
+ *
+ * @apiBody {String} [naam] Name of the user
+ * @apiBody {String[]} [roles] Roles assigned to the user
+ * @apiBody {String{12..255}} [wachtwoord] Password for the user (min length 12)
+ *
+ * @apiSuccess {Number} id User ID
+ * @apiSuccess {String} naam Updated user name
+ * @apiSuccess {String[]} roles Updated roles
+ */
 const updateUserById = async (ctx: KoaContext<UpdateGebruikerResponse, IdParams, UpdateGebruikerRequest>) => {
   const user = await GebruikerService.updateById(ctx.params.id, ctx.request.body);
   ctx.status = 200;
@@ -80,6 +131,16 @@ updateUserById.validationScheme = {
   },
 };
 
+/**
+ * @api {delete} /gebruikers/:id Delete gebruiker by id
+ * @apiName DeleteGebruikerById
+ * @apiGroup Gebruiker
+ * @apiPermission authenticated
+ *
+ * @apiParam {Number} id User's unique ID
+ *
+ * @apiSuccess (204) No Content User successfully deleted
+ */
 const deleteUserById = async (ctx: KoaContext<void, IdParams>) => {
   await GebruikerService.deleteById(ctx.params.id);
   ctx.status = 204;

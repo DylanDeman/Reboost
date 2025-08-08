@@ -70,7 +70,6 @@ export const login = async (
   const gebruiker = await prisma.gebruiker.findUnique({ where: { naam } });
 
   if (!gebruiker) {
-    // DO NOT expose we don't know the user
     throw ServiceError.unauthorized(
       'De gegeven gebruikersnaam en wachtwoord komen niet overeen',
     );
@@ -79,7 +78,6 @@ export const login = async (
   const wachtwoordValid = await verifyPassword(wachtwoord, gebruiker.wachtwoord);
 
   if (!wachtwoordValid) {
-    // DO NOT expose we know the user but an invalid password was given
     throw ServiceError.unauthorized(
       'De gegeven gebruikersnaam en wachtwoord komen niet overeen',
     );
