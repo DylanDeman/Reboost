@@ -15,6 +15,8 @@ import {
   IoCloseOutline,
 } from 'react-icons/io5';
 
+
+
 export default function EvenementenLijst() {
   const { theme, textTheme } = useContext(ThemeContext);
 

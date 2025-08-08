@@ -58,6 +58,7 @@ export default function EvenementForm({
   evenement = EMPTY_EVENEMENT,
   saveEvenement,
   isEdit = false,
+  currentUser = null, // Add currentUser prop
 }) {
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
@@ -65,13 +66,25 @@ export default function EvenementForm({
   const [selectedGereedschappen, setSelectedGereedschappen] = useState([]);
   const [availableGereedschappen, setAvailableGereedschappen] = useState([]);
 
+  // Helper function to get the correct author ID
+  const getAuteurId = () => {
+    if (isEdit && evenement?.gebruiker) {
+      // For edit mode, use the event's author
+      return evenement.gebruiker.id?.toString() || '';
+    } else if (!isEdit && currentUser) {
+      // For new events, use current user
+      return currentUser.id?.toString() || '';
+    }
+    return '';
+  };
+
   const methods = useForm({
     mode: 'onBlur',
     defaultValues: {
       naam: evenement?.naam || '',
       datum: todatumInputString(evenement?.datum),
-      plaats_id: evenement?.plaats?.id || '',
-      auteur_id: evenement?.gebruiker?.id || '',
+      plaats_id: evenement?.plaats?.id?.toString() || '',
+      auteur_id: getAuteurId(),
     },
   });
 
@@ -79,19 +92,28 @@ export default function EvenementForm({
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
     reset,
+    setValue,
   } = methods;
 
   useEffect(() => {
-    if (evenement && isEdit) {
+    if (isEdit && evenement && gebruikers.length > 0) {
+      // Reset form with event data for edit mode
+      const auteurId = evenement.gebruiker?.id?.toString() || evenement.auteur?.id?.toString() || '';
+      
       reset({
         naam: evenement.naam || '',
         datum: todatumInputString(evenement.datum),
-        plaats_id: evenement.plaats?.id || '',
-        auteur_id: evenement.gebruiker?.id || '',
+        plaats_id: evenement.plaats?.id?.toString() || '',
+        auteur_id: auteurId,
       });
       setSelectedGereedschappen(evenement.gereedschappen || []);
+    } else if (!isEdit && currentUser && gebruikers.length > 0) {
+      // Set current user as default author for new events
+      const currentUserId = currentUser.id?.toString() || '';
+      console.log('New event - setting currentUser as author:', currentUserId);
+      setValue('auteur_id', currentUserId);
     }
-  }, [evenement, isEdit, reset]);
+  }, [evenement, isEdit, reset, setValue, currentUser, gebruikers]);
 
   useEffect(() => {
     const available = gereedschappen.filter(

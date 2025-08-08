@@ -173,7 +173,7 @@ export default function GereedschapForm({
                 </label>
               </div>
               {geselecteerdEvenementId && (
-                <small className="text-muted mb-4 d-block">
+                <small className=" mb-4 d-block">
                   Beschikbaarheid kan niet worden aangepast wanneer een evenement is gekoppeld.
                 </small>
               )}
