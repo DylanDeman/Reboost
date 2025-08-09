@@ -32,30 +32,29 @@ export default function generateEvenementPdf(evenement) {
   
   const { naam, datum, plaats, gereedschappen = [] } = evenement;
   
-  const logourl = '../../../images/reboost_text_logo.jpg';
+  const logourl = '../../../public/images/reboost_text_logo.jpg';
   const logo = new Image();
   logo.src = logourl;
 
   logo.onload = () => {
     let currentPage = 1;
     
-    // === HEADER (First page only) ===
+
     doc.setFillColor(colors.background);
     doc.rect(0, 0, pageWidth, 100, 'F');
     
-    // Header border
+
     doc.setDrawColor(colors.border);
     doc.setLineWidth(0.5);
     doc.line(margin, 100, pageWidth - margin, 100);
 
-    // Logo
+
     const logoHeight = 60;
     const logoWidth = (logo.width / logo.height) * logoHeight;
     const logoX = margin;
     const logoY = 20;
     doc.addImage(logo, 'JPEG', logoX, logoY, Math.min(logoWidth, 140), logoHeight);
 
-    // === TITLE (Next to logo) ===
     const titleX = logoX + Math.min(logoWidth, 140) + 20;
     const titleY = logoY + logoHeight / 2 + 10;
     
@@ -78,7 +77,6 @@ export default function generateEvenementPdf(evenement) {
 
     let y = 100 + sectionSpacing;
 
-    // === PAGE BREAK HELPER ===
     function addPageIfNeeded(requiredSpace = lineHeight * 2) {
       if (y + requiredSpace > pageHeight - bottomMargin) {
         currentPage++;
@@ -89,7 +87,7 @@ export default function generateEvenementPdf(evenement) {
       return false;
     }
 
-    // === SECTION HEADER ===
+
     function drawSectionHeader(text) {
       addPageIfNeeded(lineHeight * 3);
       
@@ -131,7 +129,6 @@ export default function generateEvenementPdf(evenement) {
       y += spaceAfter - lineHeight;
     }
 
-    // === EVENT DETAILS (Card layout) ===
     drawSectionHeader('Evenement Details');
 
     const formattedDate = new Date(datum).toLocaleDateString('nl-BE', {
@@ -147,7 +144,6 @@ export default function generateEvenementPdf(evenement) {
       { label: 'Adres', value: `${plaats.straat} ${plaats.huisnummer}, ${plaats.postcode} ${plaats.gemeente}` }
     ];
 
-    // Card with subtle shadow
     addPageIfNeeded(lineHeight * (eventDetails.length + 2) * 2);
     doc.setFillColor(colors.background);
     doc.setDrawColor(colors.border);
