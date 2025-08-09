@@ -144,7 +144,7 @@ export default (parent: KoaRouter) => {
     prefix: '/plaatsen',
   });
 
-  router.get('/', requireAuthentication, getAllPlaatsen);
+  router.get('/', getAllPlaatsen);
   router.get('/:id', requireAuthentication, getPlaatsById);
   router.post('/', requireAuthentication, createPlaats);
   router.put('/:id', requireAuthentication, updatePlaats);

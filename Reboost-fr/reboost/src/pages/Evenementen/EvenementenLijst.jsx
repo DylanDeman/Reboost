@@ -1,11 +1,12 @@
 import EvenementenTabel from '../../components/evenementen/EvenementenTabel';
 import { useState, useMemo, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/auth';
+import { ThemeContext } from '../../contexts/Theme.context';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { getAll, deleteById, getById, save } from '../../api';
 import AsyncData from '../../components/AsyncData';
-import { Link } from 'react-router-dom';
-import { ThemeContext } from '../../contexts/Theme.context';
 import {
   IoCalendarOutline,
   IoLocationOutline,
@@ -15,9 +16,9 @@ import {
   IoCloseOutline,
 } from 'react-icons/io5';
 
-
-
 export default function EvenementenLijst() {
+  const navigate = useNavigate();
+  const { isAuthed } = useAuth();
   const { theme, textTheme } = useContext(ThemeContext);
 
   // Filter states
@@ -79,26 +80,31 @@ export default function EvenementenLijst() {
   };
 
   const hasActiveFilters = Object.values(filters).some((filter) => filter !== '');
-async function handleDeleteEvenement(id) {
-  try {
-    const evenement = await getById(`evenementen/${id}`);
-    const linkedGereedschap = evenement.gereedschappen || [];
+  async function handleDeleteEvenement(id) {
+    // Check if user is authenticated before allowing delete
+    if (!isAuthed) {
+      // Redirect to login page with a message
+      navigate('/login?redirect=evenementen&message=Je moet ingelogd zijn om items te verwijderen');
+      return;
+    }
 
-    await Promise.all(
-      linkedGereedschap.map((g) =>
-        save('gereedschap', { arg: { id: g.id, beschikbaar: true, evenementId: null } }),
-      ),
-    );
+    try {
+      const evenement = await getById(`evenementen/${id}`);
+      const linkedGereedschap = evenement.gereedschappen || [];
 
-    await triggerDelete(id); // <-- pass only id here
+      await Promise.all(
+        linkedGereedschap.map((g) =>
+          save('gereedschap', { arg: { id: g.id, beschikbaar: true, evenementId: null } }),
+        ),
+      );
 
-    mutateEvenementen();
-  } catch (err) {
-    console.error('Failed to delete event and reset gereedschap', err);
+      await triggerDelete(id); // <-- pass only id here
+
+      mutateEvenementen();
+    } catch (err) {
+      console.error('Failed to delete event and reset gereedschap', err);
+    }
   }
-}
-
-
 
   return (
     <div className="container-fluid">
@@ -108,10 +114,12 @@ async function handleDeleteEvenement(id) {
           <IoCalendarOutline className="me-2 text-primary" size={32} />
           <h1 className={`mb-0 text-${textTheme}`}>Evenementen</h1>
         </div>
-        <Link to="/evenementen/add" className="btn btn-primary d-flex align-items-center">
-          <IoAddOutline className="me-2" size={18} />
-          Nieuw evenement
-        </Link>
+        {isAuthed && (
+          <Link to="/evenementen/add" className="btn btn-primary d-flex align-items-center">
+            <IoAddOutline className="me-2" size={18} />
+            Nieuw evenement
+          </Link>
+        )}
       </div>
 
       {/* Filter Section */}
@@ -236,7 +244,11 @@ async function handleDeleteEvenement(id) {
 
       {/* Results */}
       <AsyncData loading={isLoading} error={error || deleteError}>
-        <EvenementenTabel evenementen={filteredEvenementen} onDelete={handleDeleteEvenement} />
+        <EvenementenTabel
+          evenementen={filteredEvenementen}
+          onDelete={handleDeleteEvenement}
+          isAuthed={isAuthed}
+        />
       </AsyncData>
     </div>
   );

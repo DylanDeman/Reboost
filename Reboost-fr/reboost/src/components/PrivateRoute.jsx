@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/auth';
 
 
-export default function PrivateRoute() {
+export default function PrivateRoute({ children }) {
   const { ready, isAuthed } = useAuth();
   const { pathname } = useLocation();
   
@@ -25,5 +25,6 @@ export default function PrivateRoute() {
     return <Navigate replace to={`/login?redirect=${pathname}`} />;
   }
 
-  return <Outlet />;
+  // If children are provided, render them; otherwise use Outlet
+  return children || <Outlet />;
 }

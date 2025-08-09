@@ -34,7 +34,7 @@ import type { LoginResponse, LoginRequest } from '../types/gebruiker';
 const login = async (ctx: KoaContext<LoginResponse, void, LoginRequest>) => {
   const { naam, wachtwoord } = ctx.request.body;
   const token = await userService.login(naam, wachtwoord);
-
+  console.log('User logged in, token generated:', token);
   ctx.status = 200;
   ctx.body = { token };
 };

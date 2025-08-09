@@ -2,6 +2,7 @@ import { IoTrashOutline, IoPencil, IoConstructOutline, IoCheckmarkCircleOutline,
 import { Link } from 'react-router-dom';
 import { memo, useContext } from 'react';
 import { ThemeContext } from '../../contexts/Theme.context';
+import DisabledButtonTooltip from '../DisabledButtonTooltip';
 
 const GereedschapMemoized = memo(function Gereedschap({ id, naam, beschrijving, beschikbaar, evenement, onDelete }) {
 
@@ -61,22 +62,33 @@ const GereedschapMemoized = memo(function Gereedschap({ id, naam, beschrijving, 
               to={`/gereedschappen/edit/${id}`}
               className='btn btn-outline-warning btn-sm'
               title="Bewerken"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
             >
               <IoPencil size={14} />
             </Link>
-            <button
-              className='btn btn-outline-danger btn-sm'
-              onClick={handleDelete}
-              title={evenement ? "Kan niet verwijderen, gekoppeld aan evenement" : "Verwijderen"}
-              disabled={!!evenement}  // disable if evenement exists
-              style={{ cursor: evenement ? 'not-allowed' : 'pointer' }}
-            >
-              {evenement ? (
-                <IoLockClosed data-cy='gereedschap_verwijder_knop' size={14} />
-              ) : (
+            
+            {evenement ? (
+              <DisabledButtonTooltip title="Kan niet verwijderen, gekoppeld aan evenement">
+                <button
+                  className='btn btn-outline-danger btn-sm'
+                  disabled
+                  style={{ cursor: 'not-allowed' }}
+                >
+                  <IoLockClosed data-cy='gereedschap_verwijder_knop' size={14} />
+                </button>
+              </DisabledButtonTooltip>
+            ) : (
+              <button
+                className='btn btn-outline-danger btn-sm'
+                onClick={handleDelete}
+                title="Verwijderen"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+              >
                 <IoTrashOutline data-cy='gereedschap_verwijder_knop' size={14} />
-              )}
-            </button>
+              </button>
+            )}
           </div>
         )}
       </td>

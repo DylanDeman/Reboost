@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { IoTrashOutline, IoPencil, IoLocationOutline, IoLockClosed } from 'react-icons/io5';
 import { memo, useCallback, useContext } from 'react';
 import { ThemeContext } from '../../contexts/Theme.context';
+import DisabledButtonTooltip from '../DisabledButtonTooltip';
 
 const PlaatsMemoized = memo(function Plaats({
   id,
@@ -49,31 +50,38 @@ const PlaatsMemoized = memo(function Plaats({
                 data-cy="plaats_edit"
                 to={`/plaatsen/edit/${id}`}
                 className="btn btn-outline-warning btn-sm flex-fill d-flex align-items-center justify-content-center"
+                title="Bewerken"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
               >
                 <IoPencil className="me-1" size={16} />
                 Bewerken
               </Link>
-              <button
-                data-cy="plaats_delete"
-                className="btn btn-outline-danger btn-sm flex-fill d-flex align-items-center justify-content-center"
-                onClick={handleDelete}
-                disabled={hasEvenementen}
-                title={
-                  hasEvenementen
-                    ? 'Kan niet verwijderd worden omdat er evenementen aan gekoppeld zijn'
-                    : undefined
-                }
-              >
-                {hasEvenementen ? (
-                  <IoLockClosed className="me-1" size={16} />
-                ) : (
+              
+              {hasEvenementen ? (
+                <DisabledButtonTooltip title="Kan niet verwijderd worden omdat er evenementen aan gekoppeld zijn">
+                  <button
+                    data-cy="plaats_delete"
+                    className="btn btn-outline-danger btn-sm flex-fill d-flex align-items-center justify-content-center"
+                    disabled
+                  >
+                    <IoLockClosed className="me-1" size={16} />
+                    <span className="text-decoration-line-through">Verwijderen</span>
+                  </button>
+                </DisabledButtonTooltip>
+              ) : (
+                <button
+                  data-cy="plaats_delete"
+                  className="btn btn-outline-danger btn-sm flex-fill d-flex align-items-center justify-content-center"
+                  onClick={handleDelete}
+                  title="Verwijderen"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                >
                   <IoTrashOutline className="me-1" size={16} />
-                )}
-                <span className={hasEvenementen ? 'text-decoration-line-through' : ''}>
                   Verwijderen
-                </span>
-              </button>
-
+                </button>
+              )}
             </div>
           </div>
         )}

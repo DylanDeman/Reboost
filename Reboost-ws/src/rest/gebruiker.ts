@@ -15,19 +15,26 @@ import type {
 } from '../types/gebruiker';
 import type { IdParams } from '../types/common';
 import validate from '../core/validation';
-import { requireAuthentication, authDelay } from '../core/auth';
+import { authDelay, makeRequireRoles, requireAuthentication } from '../core/auth';
 
-const checkUserId = (ctx: KoaContext<unknown, GetGebruikerRequest>, next: Next) => {
-  const { userId } = ctx.state.session;
+const checkUserId = (ctx: KoaContext<any, { id: string | number }>, next: Next) => {
+  const { gebruikersId, roles } = ctx.state.session;
   const { id } = ctx.params;
 
-  if (id !== 'me' && id !== userId) {
+  const isAdmin = Array.isArray(roles) && roles.includes('admin');
+
+  // Allow if:
+  // - id param is 'me'
+  // - OR id param matches the logged in user's id (as number or string)
+  // - OR user is admin
+  if (id !== 'me' && Number(id) !== gebruikersId && !isAdmin) {
     return ctx.throw(
       403,
       'Je hebt geen toegang tot deze gebruiker',
       { code: 'FORBIDDEN' },
     );
   }
+
   return next();
 };
 
@@ -68,7 +75,7 @@ const registerUser = async (ctx: KoaContext<LoginResponse, void, RegisterGebruik
 registerUser.validationScheme = {
   body: {
     naam: Joi.string().max(255).required(),
-    wachtwoord: Joi.string().min(12).max(255).required(),
+    wachtwoord: Joi.string().min(8).max(255).required(),
     roles: Joi.array().items(Joi.string()).default([]).optional(),
   },
 };
@@ -87,7 +94,7 @@ registerUser.validationScheme = {
  */
 const getUserById = async (ctx: KoaContext<GetGebruikerByIdResponse, GetGebruikerRequest>) => {
   const user = await GebruikerService.getById(
-    ctx.params.id === 'me' ? ctx.state.session.userId : ctx.params.id,
+    ctx.params.id === 'me' ? ctx.state.session.gebruikersId : ctx.params.id,
   );
   ctx.status = 200;
   ctx.body = user;
@@ -126,8 +133,8 @@ updateUserById.validationScheme = {
   params: { id: Joi.number().integer().positive() },
   body: {
     naam: Joi.string().max(255).optional(),
-    roles: Joi.array().items(Joi.string()).default([]).optional(),
-    wachtwoord: Joi.string().min(12).max(255).optional(),
+    roles: Joi.array().items(Joi.string()).optional(),
+    wachtwoord: Joi.string().min(8).max(255).optional(),
   },
 };
 
@@ -142,7 +149,7 @@ updateUserById.validationScheme = {
  * @apiSuccess (204) No Content User successfully deleted
  */
 const deleteUserById = async (ctx: KoaContext<void, IdParams>) => {
-  await GebruikerService.deleteById(ctx.params.id);
+  await GebruikerService.deleteById(ctx.params.id, ctx.state.session.roles);
   ctx.status = 204;
 };
 deleteUserById.validationScheme = {
@@ -154,14 +161,16 @@ deleteUserById.validationScheme = {
 export default function installUserRoutes(parent: KoaRouter) {
   const router = new Router<ReboostState, ReboostContext>({ prefix: '/gebruikers' });
 
-  // Voor register is er geen authenticatie nodig
+  const requireAdmin = makeRequireRoles(['admin']);
+
   router.post(
     '/',
     authDelay,
+    requireAdmin,
     validate(registerUser.validationScheme),
     registerUser,
   );
-  
+
   router.get(
     '/',
     requireAuthentication,
@@ -177,20 +186,22 @@ export default function installUserRoutes(parent: KoaRouter) {
   );
   router.put(
     '/:id',
-    requireAuthentication,
-    validate(updateUserById.validationScheme),
+    requireAuthentication, // Use general authentication first
     checkUserId,
+    requireAdmin, // only admin can update other users
+    validate(updateUserById.validationScheme),
     updateUserById,
   );
   router.delete(
     '/:id',
     requireAuthentication,
-    validate(deleteUserById.validationScheme),
     checkUserId,
+    requireAdmin,
+    validate(deleteUserById.validationScheme),
     deleteUserById,
   );
 
   parent
     .use(router.routes())
     .use(router.allowedMethods());
-};
+}

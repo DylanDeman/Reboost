@@ -4,6 +4,7 @@ import type Router from '@koa/router';
 import type { SessionInfo } from './auth';
 
 export interface ReboostState {
+  gebruiker: any;
   session: SessionInfo;
 }
 

@@ -15,7 +15,7 @@ async function main() {
     data: {
       naam: 'Dylan De Man',
       wachtwoord: PASSWORD,
-      roles: JSON.stringify(['user', 'admin']),
+      roles: ['admin', 'user'],
     },
   });
   gebruikers.push(gebruiker);
@@ -25,7 +25,7 @@ async function main() {
       data: {
         naam: faker.person.fullName(),
         wachtwoord: PASSWORD,
-        roles: JSON.stringify(['user']),
+        roles: ['user'],
       },
     });
     gebruikers.push(gebruiker);

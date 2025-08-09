@@ -86,6 +86,8 @@ const EvenementMemoized = memo(function Evenement({
             className="btn btn-outline-primary btn-sm"
             onClick={handlePdfGenerate}
             title="Genereer PDF"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
           >
             <IoDocumentTextOutline size={14} />
           </button>
@@ -95,6 +97,8 @@ const EvenementMemoized = memo(function Evenement({
             to={`/evenementen/edit/${id}`}
             className="btn btn-outline-warning btn-sm"
             title="Bewerken"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
           >
             <IoPencil size={14} />
           </Link>
@@ -104,6 +108,8 @@ const EvenementMemoized = memo(function Evenement({
               className="btn btn-outline-danger btn-sm"
               onClick={handleDelete}
               title="Verwijderen"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
             >
               <IoTrashOutline data-cy="evenement_verwijder_knop" size={14} />
             </button>

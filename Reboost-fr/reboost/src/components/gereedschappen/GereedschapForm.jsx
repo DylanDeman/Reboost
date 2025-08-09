@@ -190,7 +190,7 @@ export default function GereedschapForm({
 
                 <button
                   type="submit"
-                  className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'} d-flex align-items-center gap-2`}
+                  className="btn btn-primary d-flex align-items-center gap-2" // Changed to btn-primary for consistency
                   data-cy="gereedschap_submit_btn"
                   disabled={isSubmitting}
                 >

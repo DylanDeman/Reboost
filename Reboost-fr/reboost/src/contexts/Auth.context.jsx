@@ -15,9 +15,35 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem(JWT_TOKEN_KEY));
 
+  // Fetch the current user data only if we have a token
   const {
-    data: user, loading: userLoading, error: userError,
+    data: gebruikerRaw,
+    loading: userLoading,
+    error: userError,
   } = useSWR(token ? 'gebruikers/me' : null, api.getById);
+
+const gebruiker = useMemo(() => {
+  if (!gebruikerRaw) return null;
+  try {
+    const parsedRoles =
+      typeof gebruikerRaw.roles === 'string'
+        ? JSON.parse(gebruikerRaw.roles)
+        : gebruikerRaw.roles ?? [];
+
+
+    return {
+      ...gebruikerRaw,
+      roles: parsedRoles,
+    };
+  } catch (err) {
+    console.error('Error parsing roles:', err);
+    return {
+      ...gebruikerRaw,
+      roles: [],
+    };
+  }
+}, [gebruikerRaw]);
+
 
   const {
     isMutating: loginLoading,
@@ -42,7 +68,6 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(
     async (naam, wachtwoord) => {
       try {
-
         const { token } = await doLogin({
           naam,
           wachtwoord,
@@ -50,10 +75,7 @@ export const AuthProvider = ({ children }) => {
 
         setSession(token);
 
-        localStorage.setItem(JWT_TOKEN_KEY, token);
-
         return true;
-
       } catch (error) {
         console.error(error);
         return false;
@@ -84,18 +106,29 @@ export const AuthProvider = ({ children }) => {
 
   const value = useMemo(
     () => ({
-      user,
+      gebruiker,
       error: loginError || userError || registerError,
       loading: loginLoading || userLoading || registerLoading,
       isAuthed: Boolean(token),
       ready: !userLoading,
-      roles: user?.roles,
+      roles: gebruiker?.roles ?? [],
       login,
       logout,
       register,
     }),
-    [token, user, loginError, loginLoading, userError, userLoading, registerError,
-      registerLoading, login, logout, register],
+    [
+      token,
+      gebruiker,
+      loginError,
+      loginLoading,
+      userError,
+      userLoading,
+      registerError,
+      registerLoading,
+      login,
+      logout,
+      register,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
