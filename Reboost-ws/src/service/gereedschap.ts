@@ -127,22 +127,22 @@ export const getGereedschapByEvenementId = async (evenement_id: number): Promise
   });
 };
 
-export async function getAvailableGereedschappen(evenementId?: number) {
-  return await prisma.gereedschap.findMany({
-    where: {
-      OR: [
-        {
-          evenement_id: null, // unassigned tools
-        },
-        ...(evenementId
-          ? [
-            {
-              evenement_id: evenementId, // tools already assigned to current event
-            },
-          ]
-          : []),
-      ],
-    },
-    orderBy: { naam: 'asc' },
-  });
-}
+// export async function getAvailableGereedschappen(evenementId?: number) {
+//   return await prisma.gereedschap.findMany({
+//     where: {
+//       OR: [
+//         {
+//           evenement_id: null,
+//         },
+//         ...(evenementId
+//           ? [
+//             {
+//               evenement_id: evenementId, 
+//             },
+//           ]
+//           : []),
+//       ],
+//     },
+//     orderBy: { naam: 'asc' },
+//   });
+// }

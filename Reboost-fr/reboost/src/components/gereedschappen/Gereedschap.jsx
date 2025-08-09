@@ -1,7 +1,8 @@
-import { IoTrashOutline, IoPencil, IoConstructOutline, IoCheckmarkCircleOutline, IoCloseCircleOutline, IoCalendarOutline } from 'react-icons/io5';
+import { IoTrashOutline, IoPencil, IoConstructOutline, IoCheckmarkCircleOutline, IoCloseCircleOutline, IoCalendarOutline, IoLockClosed  } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { memo, useContext } from 'react';
 import { ThemeContext } from '../../contexts/Theme.context';
+import DisabledButtonTooltip from '../DisabledButtonTooltip';
 
 const GereedschapMemoized = memo(function Gereedschap({ id, naam, beschrijving, beschikbaar, evenement, onDelete }) {
 
@@ -14,18 +15,18 @@ const GereedschapMemoized = memo(function Gereedschap({ id, naam, beschrijving, 
   return (
     <tr className="align-middle">
       <td data-cy='gereedschap_id' className="fw-medium">{id}</td>
-      
+
       <td data-cy='gereedschap_naam' className="fw-bold">
         <div className="d-flex align-items-center">
           <IoConstructOutline className="me-2 text-primary" size={16} />
           {naam}
         </div>
       </td>
-      
+
       <td data-cy='gereedschap_beschrijving'>
         <span className={`text-${textTheme} opacity-75`}>{beschrijving}</span>
       </td>
-      
+
       <td data-cy='gereedschap_beschikbaar'>
         {beschikbaar ? (
           <span className="badge bg-success d-flex align-items-center w-auto">
@@ -39,7 +40,7 @@ const GereedschapMemoized = memo(function Gereedschap({ id, naam, beschrijving, 
           </span>
         )}
       </td>
-      
+
       <td data-cy='gereedschap_evenement_naam'>
         {evenement?.naam ? (
           <div className="d-flex align-items-center">
@@ -52,7 +53,7 @@ const GereedschapMemoized = memo(function Gereedschap({ id, naam, beschrijving, 
           </span>
         )}
       </td>
-      
+
       <td>
         {onDelete && (
           <div className="d-flex gap-2">
@@ -61,16 +62,33 @@ const GereedschapMemoized = memo(function Gereedschap({ id, naam, beschrijving, 
               to={`/gereedschappen/edit/${id}`}
               className='btn btn-outline-warning btn-sm'
               title="Bewerken"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
             >
               <IoPencil size={14} />
             </Link>
-            <button
-              className='btn btn-outline-danger btn-sm'
-              onClick={handleDelete}
-              title="Verwijderen"
-            >
-              <IoTrashOutline data-cy='gereedschap_verwijder_knop' size={14} />
-            </button>
+            
+            {evenement ? (
+              <DisabledButtonTooltip title="Kan niet verwijderen, gekoppeld aan evenement">
+                <button
+                  className='btn btn-outline-danger btn-sm'
+                  disabled
+                  style={{ cursor: 'not-allowed' }}
+                >
+                  <IoLockClosed data-cy='gereedschap_verwijder_knop' size={14} />
+                </button>
+              </DisabledButtonTooltip>
+            ) : (
+              <button
+                className='btn btn-outline-danger btn-sm'
+                onClick={handleDelete}
+                title="Verwijderen"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+              >
+                <IoTrashOutline data-cy='gereedschap_verwijder_knop' size={14} />
+              </button>
+            )}
           </div>
         )}
       </td>

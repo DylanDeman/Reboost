@@ -15,8 +15,8 @@ import type { LoginResponse, LoginRequest } from '../types/gebruiker';
  * @api {post} /sessions Login en verkrijg een JWT-token
  * @apiName Login
  * @apiGroup Session
- * @apiParam {String} email Email van de gebruiker.
- * @apiParam {String} wachtwoord Wachtwoord van de gebruiker.
+ * @apiParam (Request body) {String} naam Naam van de gebruiker.
+ * @apiParam (Request body) {String} wachtwoord Wachtwoord van de gebruiker.
  * @apiSuccess {String} token JWT-token dat wordt gebruikt voor authenticatie.
  * @apiSuccessExample {json} Success-Response:
  *    HTTP/1.1 200 OK
@@ -34,15 +34,15 @@ import type { LoginResponse, LoginRequest } from '../types/gebruiker';
 const login = async (ctx: KoaContext<LoginResponse, void, LoginRequest>) => {
   const { naam, wachtwoord } = ctx.request.body;
   const token = await userService.login(naam, wachtwoord);
-
+  console.log('User logged in, token generated:', token);
   ctx.status = 200;
   ctx.body = { token };
 };
 
 login.validationScheme = {
   body: {
-    naam: Joi.string(),
-    wachtwoord: Joi.string().min(6),
+    naam: Joi.string().required(),
+    wachtwoord: Joi.string().min(6).required(),
   },
 };
 

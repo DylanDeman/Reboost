@@ -1,19 +1,19 @@
 import { useContext, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../contexts/Theme.context';
 import { IoMoonSharp, IoSunny } from 'react-icons/io5';
 import { useAuth } from '../contexts/auth';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
-  const { isAuthed } = useAuth();
+  const navigate = useNavigate();
+  const { isAuthed, gebruiker, logout } = useAuth();
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const { logout } = useAuth();
+  const isAdmin = isAuthed && gebruiker?.roles.includes('admin');
 
- 
   const textColorClass = theme === 'dark' ? 'text-light' : 'text-dark';
 
-   const uitloggen = async () => {
+  const uitloggen = async () => {
     logout();
     navigate('/login?logout=success');
     return;
@@ -29,7 +29,6 @@ export default function Navbar() {
         <NavLink className="navbar-brand" to="/evenementen">
           <img src="../../reboost_logo.png" alt="Reboost logo" width="50" height="50" />
         </NavLink>
-
 
         <button
           className="navbar-toggler"
@@ -55,13 +54,20 @@ export default function Navbar() {
                 Plaatsen
               </NavLink>
             </li>
-               {isAuthed ? (
+            {isAuthed && (
               <li className="nav-item">
                 <NavLink className={`nav-link ${textColorClass}`} to="/gereedschappen">
                   Gereedschappen
                 </NavLink>
               </li>
-            ) : null}
+            )}
+            {isAdmin && (
+              <li className="nav-item">
+                <NavLink className={`nav-link ${textColorClass}`} to="/gebruikers">
+                  Gebruikers
+                </NavLink>
+              </li>
+            )}
             <li className="nav-item">
               <NavLink className={`nav-link ${textColorClass}`} to="/about">
                 Over ons
@@ -81,7 +87,6 @@ export default function Navbar() {
               </li>
             )}
           </ul>
-
 
           <button
             className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'} ms-auto`}

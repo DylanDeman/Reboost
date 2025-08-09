@@ -1,15 +1,15 @@
-import axios from 'axios';
-
+import axiosRoot from 'axios';
+import { JWT_TOKEN_KEY } from '../contexts/Auth.context';
 const baseUrl = import.meta.env.VITE_API_URL;
 
 // Create an axios instance with base URL
-const api = axios.create({
+const api = axiosRoot.create({
   baseURL: baseUrl,
 });
 
 // Automatically attach JWT token to all requests
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('jwtToken');
+  const token = localStorage.getItem(JWT_TOKEN_KEY);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -17,6 +17,23 @@ api.interceptors.request.use((config) => {
 }, (error) => {
   return Promise.reject(error);
 });
+
+
+api.interceptors.response.use(
+  (response) => response, 
+  (error) => {
+    // Check if error is due to an expired token (usually 401 Unauthorized)
+    if (error.response && error.response.status === 401) {
+      // Remove the expired token from localStorage
+      localStorage.removeItem(JWT_TOKEN_KEY);
+      
+      const pathname = window.location.pathname;
+      window.location.href = `/login?redirect=${pathname}`;
+    }
+    
+    return Promise.reject(error);
+  },
+);
 
 // API functions using the configured axios instance
 

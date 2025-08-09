@@ -13,10 +13,12 @@ import { ThemeProvider } from './contexts/Theme.context';
 import AddOrEditPlaats from './pages/plaatsen/AddOrEditPlaats.jsx';
 import Login from './pages/Login.jsx';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
 import { AuthProvider } from './contexts/Auth.context.jsx';
 import GereedschapsLijst from './pages/gereedschappen/GereedschapsLijst.jsx';
 import AddOrEditGereedschap from './pages/gereedschappen/AddOrEditGereedschap.jsx';
-import { useNavigate } from 'react-router-dom';
+import GebruikersLijst from './pages/gebruikers/GebruikersLijst.jsx';
+import TooltipInitializer from './components/TooltipInitializer';
 
 
 const router = createBrowserRouter([
@@ -28,20 +30,30 @@ const router = createBrowserRouter([
       { path: '/', element: <Navigate replace to="/evenementen" /> },
       {
         path: '/evenementen',
-        element: <PrivateRoute />,
         children: [
           { index: true, element: <EvenementenLijst /> },
-          { path: 'add', element: <AddOrEditEvenement /> },
-          { path: 'edit/:id', element: <AddOrEditEvenement /> },
+          { 
+            path: 'add', 
+            element: <PrivateRoute><AddOrEditEvenement /></PrivateRoute> 
+          },
+          { 
+            path: 'edit/:id', 
+            element: <PrivateRoute><AddOrEditEvenement /></PrivateRoute> 
+          },
         ],
       },
       {
         path: '/plaatsen',
-        element: <PrivateRoute />,
         children: [
           { index: true, element: <PlaatsenLijst /> },
-          { path: 'add', element: <AddOrEditPlaats /> },
-          { path: 'edit/:id', element: <AddOrEditPlaats /> },
+          { 
+            path: 'add', 
+            element: <PrivateRoute><AddOrEditPlaats /></PrivateRoute> 
+          },
+          { 
+            path: 'edit/:id', 
+            element: <PrivateRoute><AddOrEditPlaats /></PrivateRoute> 
+          },
         ],
       },
       {
@@ -51,6 +63,13 @@ const router = createBrowserRouter([
           { index: true, element: <GereedschapsLijst /> },
           { path: 'add', element: <AddOrEditGereedschap /> },
           { path: 'edit/:id', element: <AddOrEditGereedschap /> },
+        ],
+      },
+      {
+        path: '/gebruikers',
+        element: <AdminRoute />,
+        children: [
+          { index: true, element: <GebruikersLijst /> },
         ],
       },
       {
@@ -72,6 +91,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <ThemeProvider>
+        <TooltipInitializer />
         <RouterProvider router={router} />
       </ThemeProvider>
     </AuthProvider>

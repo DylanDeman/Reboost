@@ -62,8 +62,8 @@ const getPlaatsById = async (ctx: KoaContext<GetPlaatsByIdResponse, IdParams>) =
  * @api {post} /plaatsen Maak een nieuwe plaats aan
  * @apiName CreatePlaats
  * @apiGroup Plaats
- * @apiParam {String} naam Naam van de plaats.
- * @apiParam {String} adres Adres van de plaats.
+ * @apiParam (Request body) {String} naam Naam van de plaats.
+ * @apiParam (Request body) {String} adres Adres van de plaats.
  * @apiSuccess {Object} plaats Gegevens van de nieuw aangemaakte plaats.
  * @apiSuccessExample {json} Success-Response:
  *    HTTP/1.1 201 Created
@@ -84,8 +84,8 @@ const createPlaats = async (ctx: KoaContext<CreatePlaatsResponse, void, CreatePl
  * @apiName UpdatePlaats
  * @apiGroup Plaats
  * @apiParam {Number} id ID van de te updaten plaats.
- * @apiParam {String} naam Naam van de plaats.
- * @apiParam {String} adres Adres van de plaats.
+ * @apiParam (Request body) {String} naam Naam van de plaats.
+ * @apiParam (Request body) {String} adres Adres van de plaats.
  * @apiSuccess {Object} plaats Gegevens van de bijgewerkte plaats.
  * @apiSuccessExample {json} Success-Response:
  *    HTTP/1.1 200 OK
@@ -115,7 +115,7 @@ const deletePlaats = async (ctx: KoaContext<void, IdParams>) => {
 };
 
 /**
- * @api {get} /plaatsen/:id/transactions Haal evenementen op voor een plaats
+ * @api {get} /plaatsen/:id/evenementen Haal evenementen op voor een plaats
  * @apiName GetEvenementsByPlaatsId
  * @apiGroup Plaats
  * @apiParam {Number} id ID van de plaats waarvoor de evenementen opgehaald moeten worden.
@@ -144,14 +144,13 @@ export default (parent: KoaRouter) => {
     prefix: '/plaatsen',
   });
 
-  router.get('/',requireAuthentication, getAllPlaatsen);
-  router.get('/:id',requireAuthentication, getPlaatsById);
-  router.post('/',requireAuthentication, createPlaats);
-  router.put('/:id',requireAuthentication, updatePlaats);
-  router.delete('/:id',requireAuthentication, deletePlaats);
+  router.get('/', getAllPlaatsen);
+  router.get('/:id', requireAuthentication, getPlaatsById);
+  router.post('/', requireAuthentication, createPlaats);
+  router.put('/:id', requireAuthentication, updatePlaats);
+  router.delete('/:id', requireAuthentication, deletePlaats);
 
-  // Haal evenementen op voor een specifieke plaats
-  router.get('/:id/evenementen',requireAuthentication, getEvenementenByPlaatsId);
+  router.get('/:id/evenementen', requireAuthentication, getEvenementenByPlaatsId);
 
   parent.use(router.routes())
     .use(router.allowedMethods());

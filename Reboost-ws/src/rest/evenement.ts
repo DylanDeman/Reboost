@@ -13,6 +13,7 @@ import type {
 } from '../types/evenement';
 import type { IdParams } from '../types/common';
 import validate from '../core/validation';
+import { requireAuthentication } from '../core/auth';
 
 /**
  * @api {get} /evenementen Haal alle evenementen op
@@ -45,10 +46,10 @@ getAllEvenementen.validationScheme = null;
  * @api {post} /evenementen Maak een nieuw evenement aan
  * @apiName CreateEvenement
  * @apiGroup Evenement
- * @apiParam {String} naam Naam van het evenement.
- * @apiParam {Date} datum Datum van het evenement.
- * @apiParam {Number} auteur_id ID van de auteur.
- * @apiParam {Number} plaats_id ID van de plaats.
+ * @apiParam (Request body) {String} naam Naam van het evenement.
+ * @apiParam (Request body) {Date} datum Datum van het evenement.
+ * @apiParam (Request body) {Number} auteur_id ID van de auteur.
+ * @apiParam (Request body) {Number} plaats_id ID van de plaats.
  * @apiSuccess {Object} evenement Gecreëerd evenement.
  * @apiSuccessExample {json} Success-Response:
  *    HTTP/1.1 201 Created
@@ -101,7 +102,6 @@ const getEvenementById = async (ctx: KoaContext<GetEvenementByIdResponse, IdPara
 };
 
 getEvenementById.validationScheme = {
-
   params: {
     id: Joi.number().integer().positive(),
   },
@@ -112,10 +112,10 @@ getEvenementById.validationScheme = {
  * @apiName UpdateEvenement
  * @apiGroup Evenement
  * @apiParam {Number} id Evenement ID.
- * @apiParam {String} naam Naam van het evenement.
- * @apiParam {Date} datum Datum van het evenement.
- * @apiParam {Number} auteur_id ID van de auteur.
- * @apiParam {Number} plaats_id ID van de plaats.
+ * @apiParam (Request body) {String} naam Naam van het evenement.
+ * @apiParam (Request body) {Date} datum Datum van het evenement.
+ * @apiParam (Request body) {Number} auteur_id ID van de auteur.
+ * @apiParam (Request body) {Number} plaats_id ID van de plaats.
  * @apiSuccess {Object} evenement Geüpdatet evenement.
  * @apiSuccessExample {json} Success-Response:
  *    HTTP/1.1 200 OK
@@ -137,6 +137,19 @@ const updateEvenement = async (
     datum: new Date(ctx.request.body.datum),
     gereedschap_ids: ctx.request.body.gereedschap_ids ?? [],
   });
+};
+
+updateEvenement.validationScheme = {
+  params: {
+    id: Joi.number().integer().positive(),
+  },
+  body: {
+    naam: Joi.string().required(),
+    datum: Joi.date().iso(),
+    auteur_id: Joi.number().integer().positive().required(),
+    plaats_id: Joi.number().integer().positive().required(),
+    gereedschap_ids: Joi.array().items(Joi.number().integer().positive()).optional(),
+  },
 };
 
 /**
@@ -166,15 +179,22 @@ export default (parent: KoaRouter) => {
   router.post(
     '/',
     validate(createEvenement.validationScheme),
-    createEvenement,
+    createEvenement, requireAuthentication,
   );
   router.get(
     '/:id',
     validate(getEvenementById.validationScheme),
-    getEvenementById,
+    getEvenementById, requireAuthentication,
   );
-  router.put('/:id', updateEvenement);
-  router.delete('/:id', deleteEvenement);
+  router.put(
+    '/:id',
+    validate(updateEvenement.validationScheme),
+    updateEvenement, requireAuthentication,
+  );
+  router.delete(
+    '/:id',
+    deleteEvenement, requireAuthentication,
+  );
 
   parent.use(router.routes())
     .use(router.allowedMethods());

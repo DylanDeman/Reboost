@@ -1,4 +1,4 @@
 export interface SessionInfo {
-  userId: number;
+  gebruikersId: number;
   roles: string[];
 }

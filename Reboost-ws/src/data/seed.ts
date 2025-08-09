@@ -15,7 +15,7 @@ async function main() {
     data: {
       naam: 'Dylan De Man',
       wachtwoord: PASSWORD,
-      roles: JSON.stringify(['user', 'admin']),
+      roles: ['admin', 'user'],
     },
   });
   gebruikers.push(gebruiker);
@@ -25,7 +25,7 @@ async function main() {
       data: {
         naam: faker.person.fullName(),
         wachtwoord: PASSWORD,
-        roles: JSON.stringify(['user']),
+        roles: ['user'],
       },
     });
     gebruikers.push(gebruiker);
@@ -58,8 +58,16 @@ async function main() {
     plaatsen.push(plaats);
   }
 
+  const generatedEventNames = new Set();
+
+  function toTitleCase(str: string) {
+    return str.replace(
+      /\w\S*/g,
+      (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
+    );
+  }
+
   function generateEventName() {
-  // Pick a random style to mix it up
     const styles = [
       () => `${faker.company.catchPhraseAdjective()} ${faker.company.catchPhraseNoun()} Conference`,
       () => `${faker.company.catchPhraseAdjective()} ${faker.commerce.department()} Summit`,
@@ -67,10 +75,33 @@ async function main() {
       () => `${faker.company.buzzAdjective()} ${faker.company.catchPhraseNoun()} Expo`,
       () => `${faker.commerce.productMaterial()} Technology Forum`,
       () => `${faker.company.catchPhraseDescriptor()} ${faker.company.catchPhraseNoun()} Meetup`,
+      () => `Annual ${faker.company.buzzAdjective()} ${faker.commerce.product()} Symposium`,
+      () => `${faker.company.catchPhraseAdjective()} ${faker.company.catchPhraseNoun()} Convention`,
+      () => `${faker.location.city()} ${faker.company.catchPhraseNoun()} Gathering`,
+      () => `${faker.company.buzzVerb()} ${faker.commerce.department()} Forum`,
+      () => `International ${faker.company.catchPhraseDescriptor()} Summit`,
+      () => `${faker.company.catchPhrase()} Networking Event`,
+      () => `${faker.commerce.productAdjective()} Innovation Expo`,
+      () => `${faker.company.buzzAdjective()} ${faker.company.catchPhraseNoun()} Roundtable`,
+      () => `Global ${faker.commerce.productMaterial()} Forum`,
     ];
 
-    const generate = faker.helpers.arrayElement(styles);
-    return toTitleCase(generate());
+    let eventName;
+    let attempts = 0;
+    const maxAttempts = 50; // avoid infinite loops
+
+    do {
+      const generate = faker.helpers.arrayElement(styles);
+      eventName = toTitleCase(generate());
+      attempts++;
+    } while (generatedEventNames.has(eventName) && attempts < maxAttempts);
+
+    if (attempts === maxAttempts) {
+      throw new Error('Unable to generate a unique event name after many attempts');
+    }
+
+    generatedEventNames.add(eventName);
+    return eventName;
   }
 
   // Create events
@@ -123,23 +154,35 @@ async function main() {
     { naam: 'Videomuur', beschrijving: 'Grootschalige LED videomuur voor dynamische visuele effecten en presentaties.' },
   ];
 
-  // Shuffle a copy of the array and pick unique ones
   const shuffledEquipment = faker.helpers.shuffle(eventEquipmentList);
 
-  for (let i = 0; i < 30; i++) {
-    const evenement = faker.helpers.arrayElement(evenementen);
-    const equipment = shuffledEquipment[i % shuffledEquipment.length]; // cycle through unique names
+  const batch1Equipment = shuffledEquipment.slice(0, 20);
 
-    if (equipment) {
-      await prisma.gereedschap.create({
-        data: {
-          naam: equipment.naam, 
-          beschrijving: equipment.beschrijving,
-          beschikbaar: faker.datatype.boolean(),
-          evenement_id: evenement.id,
-        },
-      });
-    }
+  const batch2Equipment = shuffledEquipment.slice(20, 35);
+
+  for (const equipment of batch1Equipment) {
+    const evenement = faker.helpers.arrayElement(evenementen);
+
+    await prisma.gereedschap.create({
+      data: {
+        naam: equipment.naam,
+        beschrijving: equipment.beschrijving,
+        beschikbaar: false,
+        evenement_id: evenement.id,
+      },
+    });
+  }
+
+  // Insert batch 2
+  for (const equipment of batch2Equipment) {
+    await prisma.gereedschap.create({
+      data: {
+        naam: equipment.naam,
+        beschrijving: equipment.beschrijving,
+        beschikbaar: true,
+        evenement_id: null,
+      },
+    });
   }
 
   console.log('🌱 Dummy data seeded.');
@@ -153,9 +196,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-function toTitleCase(str: string): string {
-  return str.replace(/\w\S*/g, (txt) =>
-    txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(),
-  );
-}
-

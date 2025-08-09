@@ -1,14 +1,19 @@
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 
 import { getAll, getById, save } from '../../api';
 import EvenementForm from '../../components/evenementen/evenementenForm';
 import AsyncData from '../../components/AsyncData';
+import { AuthContext } from '../../contexts/Auth.context';
 
 export default function AddOrEditEvenement() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // Get current user from AuthContext
+  const { user: currentUser } = useContext(AuthContext);
 
   const { data: evenement, error: evenementError, isLoading: evenementLoading } = useSWR(
     id ? `evenementen/${id}` : null,
@@ -23,48 +28,43 @@ export default function AddOrEditEvenement() {
     mutate: mutateGereedschap,
   } = useSWR('gereedschap', getAll);
 
-
   const { trigger: saveEvenement } = useSWRMutation('evenementen', save);
 
-async function onSave(data) {
-  try {
+  async function onSave(data) {
+    try {
+      const savedEvenement = await saveEvenement(data);
 
-    const savedEvenement = await saveEvenement(data);
+      const eventId = savedEvenement?.id ?? evenement?.id ?? data.id;
 
+      if (!eventId) {
+        throw new Error('No event ID found after saving.');
+      }
 
-    const eventId = savedEvenement?.id ?? evenement?.id ?? data.id;
+      const previouslyLinked = evenement?.gereedschappen?.map((g) => g.id) || [];
+      const currentSelected = data.gereedschap_ids ?? [];
+      const existingIds = beschikbareGereedschappen.map((g) => g.id);
 
-    if (!eventId) {
-      throw new Error('No event ID found after saving.');
+      const toLink = currentSelected.filter(
+        (id) => !previouslyLinked.includes(id) && existingIds.includes(id)
+      );
+      const toUnlink = previouslyLinked.filter(
+        (id) => !currentSelected.includes(id) && existingIds.includes(id)
+      );
+
+      await Promise.all(
+        toLink.map((gid) => putGereedschap(gid, { beschikbaar: false, evenementId: eventId }))
+      );
+
+      await Promise.all(
+        toUnlink.map((gid) => putGereedschap(gid, { beschikbaar: true, evenementId: null }))
+      );
+
+      mutateGereedschap();
+      navigate('/evenementen');
+    } catch (err) {
+      console.error('Error saving evenement and updating gereedschap', err);
     }
-
-    const previouslyLinked = evenement?.gereedschappen?.map((g) => g.id) || [];
-    const currentSelected = data.gereedschap_ids ?? [];
-    const existingIds = beschikbareGereedschappen.map((g) => g.id);
-
-    const toLink = currentSelected.filter(
-      (id) => !previouslyLinked.includes(id) && existingIds.includes(id)
-    );
-    const toUnlink = previouslyLinked.filter(
-      (id) => !currentSelected.includes(id) && existingIds.includes(id)
-    );
-
-    await Promise.all(
-      toLink.map((gid) => putGereedschap(gid, { beschikbaar: false, evenementId: eventId }))
-    );
-
-    await Promise.all(
-      toUnlink.map((gid) => putGereedschap(gid, { beschikbaar: true, evenementId: null }))
-    );
-
-    mutateGereedschap();
-    navigate('/evenementen');
-  } catch (err) {
-    console.error('Error saving evenement and updating gereedschap', err);
   }
-}
-
-
 
   async function putGereedschap(gereedschapId, data) {
     if (!gereedschapId) return;
@@ -104,6 +104,7 @@ async function onSave(data) {
           evenement={evenement}
           saveEvenement={onSave}
           isEdit={!!id}
+          currentUser={currentUser}
         />
       </AsyncData>
     </>

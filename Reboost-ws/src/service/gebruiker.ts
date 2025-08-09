@@ -34,7 +34,7 @@ export const checkAndParseSession = async (
     const { roles, sub } = await verifyJWT(authToken);
 
     return {
-      userId: Number(sub),
+      gebruikersId: Number(sub),
       roles,
     };
   } catch (error: any) {
@@ -70,7 +70,6 @@ export const login = async (
   const gebruiker = await prisma.gebruiker.findUnique({ where: { naam } });
 
   if (!gebruiker) {
-    // DO NOT expose we don't know the user
     throw ServiceError.unauthorized(
       'De gegeven gebruikersnaam en wachtwoord komen niet overeen',
     );
@@ -79,7 +78,6 @@ export const login = async (
   const wachtwoordValid = await verifyPassword(wachtwoord, gebruiker.wachtwoord);
 
   if (!wachtwoordValid) {
-    // DO NOT expose we know the user but an invalid password was given
     throw ServiceError.unauthorized(
       'De gegeven gebruikersnaam en wachtwoord komen niet overeen',
     );
@@ -118,7 +116,7 @@ export const getAll = async (): Promise<PublicGebruiker[]> => {
 
 export const getById = async (id: number): Promise<PublicGebruiker> => {
   const gebruiker = await prisma.gebruiker.findUnique({ where: { id } });
-
+  console.log('Fetched user roles:', gebruiker?.roles);
   if (!gebruiker) {
     throw ServiceError.notFound('Er bestaat geen gebruiker met dit id');
   }
@@ -128,9 +126,22 @@ export const getById = async (id: number): Promise<PublicGebruiker> => {
 
 export const updateById = async (id: number, changes: GebruikerUpdateInput): Promise<PublicGebruiker> => {
   try {
+    const dataToUpdate: any = { ...changes };
+
+    if (changes.wachtwoord) {
+      dataToUpdate.wachtwoord = await hashPassword(changes.wachtwoord);
+    } else {
+      delete dataToUpdate.wachtwoord;
+    }
+
+    // If roles is undefined, do not update roles
+    if (typeof changes.roles === 'undefined') {
+      delete dataToUpdate.roles;
+    }
+
     const user = await prisma.gebruiker.update({
       where: { id },
-      data: changes,
+      data: dataToUpdate,
     });
     return makeExposedUser(user);
   } catch (error) {
@@ -138,10 +149,16 @@ export const updateById = async (id: number, changes: GebruikerUpdateInput): Pro
   }
 };
 
-export const deleteById = async (id: number): Promise<void> => {
+export const deleteById = async (id: number, rolesUser: string[]): Promise<void> => {
+
+  if (!rolesUser.includes('admin')) {
+    throw ServiceError.forbidden('Je hebt geen toestemming om gebruikers te verwijderen');
+  }
+
   try {
     await prisma.gebruiker.delete({ where: { id } });
   } catch (error) {
     throw handleDBError(error);
   }
 };
+

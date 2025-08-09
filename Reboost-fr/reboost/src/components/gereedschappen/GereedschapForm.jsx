@@ -72,6 +72,9 @@ export default function GereedschapForm({
     reset,
   } = methods;
 
+  // Watch evenementId to disable availability checkbox if linked
+  const geselecteerdEvenementId = methods.watch('evenementId');
+
   useEffect(() => {
     if (gereedschap && isEdit) {
       reset({
@@ -144,7 +147,7 @@ export default function GereedschapForm({
                   name="evenementId"
                   placeholder="-- Selecteer evenement --"
                   items={[
-                    { id: '', naam: 'Geen evenement' },  // <-- Add this option here
+                    { id: '', naam: 'Geen evenement' }, // <-- Add this option here
                     ...evenementen.map((e) => ({
                       id: e.id,
                       naam: formatEvenementName(e),
@@ -156,18 +159,24 @@ export default function GereedschapForm({
                 />
               </div>
 
-              <div className="mb-5 form-check form-switch">
+              <div className="mb-1 form-check form-switch">
                 <input
                   type="checkbox"
                   id="beschikbaar"
                   className="form-check-input"
                   {...methods.register('beschikbaar')}
                   data-cy="gereedschap_beschikbaar_input"
+                  disabled={!!geselecteerdEvenementId} // disabled if event linked
                 />
                 <label htmlFor="beschikbaar" className="form-check-label">
                   Beschikbaar voor gebruik
                 </label>
               </div>
+              {geselecteerdEvenementId && (
+                <small className=" mb-4 d-block">
+                  Beschikbaarheid kan niet worden aangepast wanneer een evenement is gekoppeld.
+                </small>
+              )}
 
               <div className="d-flex justify-content-end gap-3">
                 <Link
@@ -181,7 +190,7 @@ export default function GereedschapForm({
 
                 <button
                   type="submit"
-                  className={`btn btn-outline-${theme === 'dark' ? 'light' : 'dark'} d-flex align-items-center gap-2`}
+                  className="btn btn-primary d-flex align-items-center gap-2" // Changed to btn-primary for consistency
                   data-cy="gereedschap_submit_btn"
                   disabled={isSubmitting}
                 >

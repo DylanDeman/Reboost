@@ -2,7 +2,7 @@ import GereedschappenTabel from '../../components/gereedschappen/GereedschappenT
 import { useState, useMemo, useCallback, useContext } from 'react';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
-import { getAll, deleteById } from '../../api';
+import { getAll, deleteById, getById } from '../../api';
 import AsyncData from '../../components/AsyncData';
 import { Link } from 'react-router-dom';
 import { ThemeContext } from '../../contexts/Theme.context';
@@ -34,6 +34,11 @@ export default function GereedschapLijst() {
   const { trigger: deleteGereedschap, error: deleteError } = useSWRMutation(
     'gereedschap',
     deleteById,
+  );
+
+  const {trigger: getGereedschap, id: id} = useSWRMutation(
+    'gereedschap',
+    getById,
   );
 
   // Generate filter options for evenementen
@@ -77,15 +82,27 @@ export default function GereedschapLijst() {
     });
   };
 
+
+
   const hasActiveFilters = Object.values(filters).some(filter => filter !== '');
 
-  const handleDeleteGereedschap = useCallback(
-    async (id) => {
+ const handleDeleteGereedschap = useCallback(
+  async (id) => {
+    try {
+      const gereedschap = await getGereedschap(id); 
+
+      if (gereedschap.evenement_id) {
+        return; 
+      }
+
       await deleteGereedschap(id);
-      alert('Het gereedschap is verwijderd.');
-    },
-    [deleteGereedschap],
-  );
+    } catch (error) {
+      console.error('Fout bij verwijderen:', error);
+    }
+  },
+  [deleteGereedschap],
+);
+
 
   return (
     <div className="container-fluid">

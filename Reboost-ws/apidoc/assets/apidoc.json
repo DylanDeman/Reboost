@@ -1,0 +1,12 @@
+{
+  "name": "Reboost",
+  "version": "1.0.0",
+  "description": "My project API documentation",
+  "title": "Reboost Docs",
+  "url": "http://localhost:3000",
+  "template": {
+    "withGenerator": false
+  },
+  "input": "src/rest",
+  "output": "docs/api"
+}

@@ -15,7 +15,11 @@ export interface GebruikerCreateInput {
 
 export interface PublicGebruiker extends Omit<Gebruiker, 'wachtwoord'> {}
 
-export interface GebruikerUpdateInput extends Pick<GebruikerCreateInput, 'naam' > {}
+export interface GebruikerUpdateInput {
+  naam?: string;
+  roles?: Prisma.JsonValue;
+  wachtwoord?: string;
+}
 
 export interface LoginRequest {
   naam: string;

@@ -14,15 +14,41 @@ import type {
   GereedschapUpdateResponse,
   GereedschapEventResponse,
 } from '../types/gereedschap';
+import { requireAuthentication } from '../core/auth';
 
-// GET /gereedschap — list all
+/**
+ * @api {get} /gereedschap List all gereedschap
+ * @apiName ListGereedschap
+ * @apiGroup Gereedschap
+ * @apiPermission authenticated
+ *
+ * @apiSuccess {Object[]} items List of gereedschap items
+ * @apiSuccess {Number} items.id Gereedschap ID
+ * @apiSuccess {String} items.naam Name of the gereedschap
+ * @apiSuccess {String} items.beschrijving Description
+ * @apiSuccess {Boolean} items.beschikbaar Availability status
+ * @apiSuccess {Number} [items.evenementId] Associated event ID (optional)
+ */
 const listGereedschap = async (ctx: KoaContext<GereedschapListResponse>) => {
   const gereedschappen = await gereedschapService.getAll();
   ctx.body = { items: gereedschappen };
 };
 listGereedschap.validationScheme = null;
 
-// GET /gereedschap/:id — get one by ID
+/**
+ * @api {get} /gereedschap/:id Get gereedschap by ID
+ * @apiName GetGereedschapById
+ * @apiGroup Gereedschap
+ * @apiPermission authenticated
+ *
+ * @apiParam {Number} id Gereedschap unique ID
+ *
+ * @apiSuccess {Number} id Gereedschap ID
+ * @apiSuccess {String} naam Name of the gereedschap
+ * @apiSuccess {String} beschrijving Description
+ * @apiSuccess {Boolean} beschikbaar Availability status
+ * @apiSuccess {Number} [evenementId] Associated event ID (optional)
+ */
 const getGereedschapById = async (ctx: KoaContext<GereedschapByIdResponse, IdParams>) => {
   ctx.body = await gereedschapService.getById(Number(ctx.params.id));
 };
@@ -32,7 +58,23 @@ getGereedschapById.validationScheme = {
   },
 };
 
-// POST /gereedschap — create
+/**
+ * @api {post} /gereedschap Create new gereedschap
+ * @apiName CreateGereedschap
+ * @apiGroup Gereedschap
+ * @apiPermission authenticated
+ *
+ * @apiBody {String} naam Name of the gereedschap
+ * @apiBody {String} [beschrijving] Description of the gereedschap
+ * @apiBody {Boolean} beschikbaar Availability status
+ * @apiBody {Number} [evenementId] Associated event ID (optional)
+ *
+ * @apiSuccess (201) {Number} id New gereedschap ID
+ * @apiSuccess {String} naam Name
+ * @apiSuccess {String} beschrijving Description
+ * @apiSuccess {Boolean} beschikbaar Availability
+ * @apiSuccess {Number} [evenementId] Associated event ID
+ */
 const createGereedschap = async (
   ctx: KoaContext<GereedschapCreateResponse, void, GereedschapCreateInput>,
 ) => {
@@ -56,7 +98,25 @@ createGereedschap.validationScheme = {
   },
 };
 
-// PUT /gereedschap/:id — update
+/**
+ * @api {put} /gereedschap/:id Update gereedschap by ID
+ * @apiName UpdateGereedschap
+ * @apiGroup Gereedschap
+ * @apiPermission authenticated
+ *
+ * @apiParam {Number} id Gereedschap unique ID
+ *
+ * @apiBody {String} [naam] Name
+ * @apiBody {String} [beschrijving] Description
+ * @apiBody {Boolean} [beschikbaar] Availability
+ * @apiBody {Number} [evenementId] Associated event ID (optional)
+ *
+ * @apiSuccess {Number} id Updated gereedschap ID
+ * @apiSuccess {String} naam Updated name
+ * @apiSuccess {String} beschrijving Updated description
+ * @apiSuccess {Boolean} beschikbaar Updated availability
+ * @apiSuccess {Number} [evenementId] Updated event ID
+ */
 const updateGereedschap = async (
   ctx: KoaContext<GereedschapUpdateResponse, IdParams, GereedschapUpdateInput>,
 ) => {
@@ -84,7 +144,16 @@ updateGereedschap.validationScheme = {
   },
 };
 
-// DELETE /gereedschap/:id — delete
+/**
+ * @api {delete} /gereedschap/:id Delete gereedschap by ID
+ * @apiName DeleteGereedschap
+ * @apiGroup Gereedschap
+ * @apiPermission authenticated
+ *
+ * @apiParam {Number} id Gereedschap unique ID
+ *
+ * @apiSuccess (204) No Content Gereedschap deleted
+ */
 const deleteGereedschap = async (ctx: KoaContext<void, IdParams>) => {
   await gereedschapService.deleteById(Number(ctx.params.id));
   ctx.status = 204;
@@ -95,7 +164,17 @@ deleteGereedschap.validationScheme = {
   },
 };
 
-// GET /gereedschap/:id/evenement — get event
+/**
+ * @api {get} /gereedschap/:id/evenement Get event by gereedschap ID
+ * @apiName GetEventByGereedschapId
+ * @apiGroup Gereedschap
+ * @apiPermission authenticated
+ *
+ * @apiParam {Number} id Gereedschap unique ID
+ *
+ * @apiSuccess {Object} gereedschap Gereedschap details
+ * @apiSuccess {Object|null} evenement Associated event, or null if none
+ */
 const getEventByGereedschapId = async (
   ctx: KoaContext<GereedschapEventResponse, IdParams>,
 ) => {
@@ -118,12 +197,12 @@ export default (parent: KoaRouter) => {
     prefix: '/gereedschap',
   });
 
-  router.get('/', validate(listGereedschap.validationScheme), listGereedschap);
-  router.post('/', validate(createGereedschap.validationScheme), createGereedschap);
-  router.get('/:id', validate(getGereedschapById.validationScheme), getGereedschapById);
-  router.put('/:id', validate(updateGereedschap.validationScheme), updateGereedschap);
-  router.delete('/:id', validate(deleteGereedschap.validationScheme), deleteGereedschap);
-  router.get('/:id/evenement', validate(getEventByGereedschapId.validationScheme), getEventByGereedschapId);
+  router.get('/', validate(listGereedschap.validationScheme), listGereedschap, requireAuthentication);
+  router.post('/', validate(createGereedschap.validationScheme), createGereedschap, requireAuthentication);
+  router.get('/:id', validate(getGereedschapById.validationScheme), getGereedschapById, requireAuthentication);
+  router.put('/:id', validate(updateGereedschap.validationScheme), updateGereedschap, requireAuthentication);
+  router.delete('/:id', validate(deleteGereedschap.validationScheme), deleteGereedschap, requireAuthentication);
+  router.get('/:id/evenement', validate(getEventByGereedschapId.validationScheme), getEventByGereedschapId, requireAuthentication);
 
   parent.use(router.routes()).use(router.allowedMethods());
 };
