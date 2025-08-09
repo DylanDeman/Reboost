@@ -32,7 +32,8 @@ export default function generateEvenementPdf(evenement) {
   
   const { naam, datum, plaats, gereedschappen = [] } = evenement;
   
-  const logourl = '../../../public/images/reboost_text_logo.jpg';
+const logourl = '/images/reboost_text_logo.jpg';
+
   const logo = new Image();
   logo.src = logourl;
 

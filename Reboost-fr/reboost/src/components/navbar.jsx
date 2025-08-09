@@ -20,14 +20,15 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    document.body.style.backgroundColor = theme === 'dark' ? '#212529' : '#f8f9fa'; 
+    document.body.style.backgroundColor = theme === 'dark' ? '#212529' : '#f8f9fa';
   }, [theme]);
 
   return (
     <nav className={`navbar navbar-expand-lg sticky-top bg-${theme} ${theme === 'dark' ? 'navbar-dark' : 'navbar-light'} mb-4`}>
       <div className="container-fluid">
         <NavLink className="navbar-brand" to="/evenementen">
-          <img src="../../public/images/reboost_logo.png" alt="Reboost logo" width="50" height="50" />
+          <img src="/images/reboost_logo.png" alt="Reboost logo" width="50" height="50" />
+
         </NavLink>
 
         <button
