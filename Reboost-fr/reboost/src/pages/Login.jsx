@@ -40,7 +40,7 @@ const { theme, textTheme } = useContext(ThemeContext);
             {/* Logo */}
             <div className="text-center mb-4">
               <img
-                src='../../reboost_logo.png'
+                src='/images/reboost_logo.png'
                 alt="Reboost Logo"
                 className="img-fluid mb-3"
                 style={{ maxWidth: '200px' }}
