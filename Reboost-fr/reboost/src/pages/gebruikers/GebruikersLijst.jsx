@@ -5,7 +5,7 @@ import { ThemeContext } from '../../contexts/Theme.context';
 import { useAuth } from '../../contexts/auth';
 import AsyncData from '../../components/AsyncData';
 import GebruikersTabel from '../../components/gebruikers/GebruikersTabel';
-import GebruikerForm from '../../components/gebruikers/Gebruikerform';
+import GebruikerForm from '../../components/gebruikers/GebruikerForm';
 import TooltipEffect from '../../components/TooltipEffect';
 import {
   IoPersonOutline,
