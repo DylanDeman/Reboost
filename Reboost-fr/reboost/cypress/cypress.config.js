@@ -3,13 +3,19 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 module.exports = defineConfig({
+  e2e: {
+    baseUrl: 'http://localhost:5173',
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
+    },
+    // Increase timeout for login operations
+    defaultCommandTimeout: 10000,
+    // Allow more time for page transitions
+    pageLoadTimeout: 120000
+  },
   env: {
-    auth0_username: process.env.AUTH0_USERNAME,
-    auth0_password: process.env.AUTH0_PASSWORD,
-    auth0_domain: process.env.REACT_APP_AUTH0_DOMAIN,
-    auth0_audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-    auth0_scope: process.env.REACT_APP_AUTH0_SCOPE,
-    auth0_client_id: process.env.REACT_APP_AUTH0_CLIENTID,
-    auth0_client_secret: process.env.AUTH0_CLIENT_SECRET,
+    // Test user credentials
+    username: 'Dylan De Man',
+    password: '123456789',
   },
 })

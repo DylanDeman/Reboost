@@ -233,7 +233,7 @@ export default function EvenementForm({
                     }}
                   >
                     {availableGereedschappen.map((tool) => (
-                      <option key={tool.id} value={tool.id}>
+                      <option key={tool.id} value={tool.id} data-cy={`gereedschap_option_${tool.id}`}>
                         {tool.naam}
                       </option>
                     ))}

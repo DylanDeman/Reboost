@@ -98,7 +98,8 @@ export default function EvenementenLijst() {
         ),
       );
 
-      await triggerDelete(id); // <-- pass only id here
+      // Fix: Pass the endpoint and ID as separate parameters
+      await triggerDelete(['evenementen', id]);
 
       mutateEvenementen();
     } catch (err) {

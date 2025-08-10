@@ -110,8 +110,9 @@ const EvenementMemoized = memo(function Evenement({
               title="Verwijderen"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
+              data-cy="evenement_verwijder_knop"
             >
-              <IoTrashOutline data-cy="evenement_verwijder_knop" size={14} />
+              <IoTrashOutline size={14} />
             </button>
           )}
         </div>
