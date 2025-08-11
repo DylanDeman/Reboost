@@ -12,11 +12,12 @@ async function main() {
     }
 
     process.on('SIGTERM', onClose); 
-    process.on('SIGQUIT', onClose); 
+    process.on('SIGQUIT', onClose);
+    process.on('SIGINT', onClose); // Add handler for Ctrl+C
   } catch (error) {
     console.log('\n', error); 
     process.exit(-1); 
   }
 }
 
-main(); 
+main();
