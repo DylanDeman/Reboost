@@ -1,4 +1,5 @@
 import Router from '@koa/router';
+import Joi from 'joi';
 import * as PlaatsService from '../service/plaats';
 import * as EvenementenService from '../service/evenement';
 import type { ReboostContext, ReboostState } from '../types/koa';
@@ -14,6 +15,30 @@ import type {
 import type { IdParams } from '../types/common';
 import type { GetAllEvenementenReponse } from '../types/evenement';
 import { requireAuthentication } from '../core/auth';
+import validate from '../core/validation';
+
+const idParamSchema = {
+  params: Joi.object({
+    id: Joi.number().integer().positive().required(),
+  }),
+};
+
+const createPlaatsSchema = {
+  body: Joi.object({
+    naam: Joi.string().max(255).required(),
+    adres: Joi.string().max(500).required(),
+  }),
+};
+
+const updatePlaatsSchema = {
+  params: Joi.object<IdParams>({
+    id: Joi.number().integer().positive().required(),
+  }),
+  body: Joi.object({
+    naam: Joi.string().max(255).required(),
+    adres: Joi.string().max(500).required(),
+  }),
+};
 
 /**
  * @api {get} /plaatsen Haal alle plaatsen op
@@ -34,9 +59,7 @@ import { requireAuthentication } from '../core/auth';
  */
 const getAllPlaatsen = async (ctx: KoaContext<GetAllPlaatsResponse>) => {
   const plaats = await PlaatsService.getAll();
-  ctx.body = {
-    items: plaats,
-  };
+  ctx.body = { items: plaats };
 };
 
 /**
@@ -134,9 +157,7 @@ const deletePlaats = async (ctx: KoaContext<void, IdParams>) => {
  */
 const getEvenementenByPlaatsId = async (ctx: KoaContext<GetAllEvenementenReponse, IdParams>) => {
   const evenementen = await EvenementenService.getEvenementenByPlaceId(Number(ctx.params.id));
-  ctx.body = {
-    items: evenementen,
-  };
+  ctx.body = { items: evenementen };
 };
 
 export default (parent: KoaRouter) => {
@@ -145,13 +166,11 @@ export default (parent: KoaRouter) => {
   });
 
   router.get('/', getAllPlaatsen);
-  router.get('/:id', requireAuthentication, getPlaatsById);
-  router.post('/', requireAuthentication, createPlaats);
-  router.put('/:id', requireAuthentication, updatePlaats);
-  router.delete('/:id', requireAuthentication, deletePlaats);
+  router.get('/:id', requireAuthentication, validate(idParamSchema), getPlaatsById);
+  router.post('/', requireAuthentication, validate(createPlaatsSchema), createPlaats);
+  router.put('/:id', requireAuthentication, validate(updatePlaatsSchema), updatePlaats);
+  router.delete('/:id', requireAuthentication, validate(idParamSchema), deletePlaats);
+  router.get('/:id/evenementen', requireAuthentication, validate(idParamSchema), getEvenementenByPlaatsId);
 
-  router.get('/:id/evenementen', requireAuthentication, getEvenementenByPlaatsId);
-
-  parent.use(router.routes())
-    .use(router.allowedMethods());
+  parent.use(router.routes()).use(router.allowedMethods());
 };
