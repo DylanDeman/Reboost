@@ -186,9 +186,9 @@ export default function installUserRoutes(parent: KoaRouter) {
   );
   router.put(
     '/:id',
-    requireAuthentication, // Use general authentication first
+    requireAuthentication, 
     checkUserId,
-    requireAdmin, // only admin can update other users
+    requireAdmin, 
     validate(updateUserById.validationScheme),
     updateUserById,
   );

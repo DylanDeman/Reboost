@@ -17,6 +17,8 @@ export default function AddOrEditPlaats() {
     isLoading: PlaatsenLoading,
   } = useSWR(id ? `plaatsen/${id}` : null, getById);
 
+  const isEdit = !!id;
+
   const { trigger: savePlaats, error: saveError } = useSWRMutation(
     'plaatsen',
     save,
@@ -25,11 +27,11 @@ export default function AddOrEditPlaats() {
   return (
     <>
       <h1 className={theme === 'dark' ? 'text-light' : 'text-dark'}>
-        {id ? 'Bewerk plaats' : 'Voeg een plaats toe'}
+        {isEdit ? 'Bewerk plaats' : 'Voeg een plaats toe'}
       </h1>
 
       <AsyncData error={PlaatsenError || saveError} loading={PlaatsenLoading}>
-        <Plaatsenform plaats={plaats} savePlaats={savePlaats} />
+        <Plaatsenform plaats={plaats} savePlaats={savePlaats} isEdit={isEdit} />
       </AsyncData>
     </>
   );

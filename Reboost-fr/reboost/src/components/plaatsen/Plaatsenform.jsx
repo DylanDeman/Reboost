@@ -42,7 +42,7 @@ const validationRules = {
   },
 };
 
-export default function PlaatsenForm({ plaats = EMPTY_PLAATS, savePlaats, isEdit = false }) {
+export default function PlaatsenForm({ plaats = EMPTY_PLAATS, savePlaats, isEdit }) {
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
 

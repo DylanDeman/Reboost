@@ -1,7 +1,6 @@
 import Router from '@koa/router';
 import Joi from 'joi';
 import * as PlaatsService from '../service/plaats';
-import * as EvenementenService from '../service/evenement';
 import type { ReboostContext, ReboostState } from '../types/koa';
 import type { KoaContext, KoaRouter } from '../types/koa';
 import type {
@@ -13,7 +12,7 @@ import type {
   UpdatePlaatsResponse,
 } from '../types/plaats';
 import type { IdParams } from '../types/common';
-import type { GetAllEvenementenReponse } from '../types/evenement';
+
 import { requireAuthentication } from '../core/auth';
 import validate from '../core/validation';
 
@@ -26,7 +25,10 @@ const idParamSchema = {
 const createPlaatsSchema = {
   body: {
     naam: Joi.string().max(255).required(),
-    adres: Joi.string().max(500).required(),
+    straat: Joi.string().required(),
+    huisnummer: Joi.string().max(255).required(),
+    postcode: Joi.string().max(255).required(),
+    gemeente: Joi.string().max(255).required(),
   },
 };
 
@@ -36,7 +38,10 @@ const updatePlaatsSchema = {
   },
   body: {
     naam: Joi.string().max(255).required(),
-    adres: Joi.string().max(500).required(),
+    straat: Joi.string().required(),
+    huisnummer: Joi.string().max(255).required(),
+    postcode: Joi.string().max(255).required(),
+    gemeente: Joi.string().max(255).required(),
   },
 };
 
@@ -86,14 +91,20 @@ const getPlaatsById = async (ctx: KoaContext<GetPlaatsByIdResponse, IdParams>) =
  * @apiName CreatePlaats
  * @apiGroup Plaats
  * @apiParam (Request body) {String} naam Naam van de plaats.
- * @apiParam (Request body) {String} adres Adres van de plaats.
+ * @apiParam (Request body) {String} straat Straat van de plaats.
+ * @apiParam (Request body) {String} huisnummer Huisnummer van de plaats.
+ * @apiParam (Request body) {String} postcode Postcode van de plaats.
+ * @apiParam (Request body) {String} gemeente Gemeente van de plaats.
  * @apiSuccess {Object} plaats Gegevens van de nieuw aangemaakte plaats.
  * @apiSuccessExample {json} Success-Response:
  *    HTTP/1.1 201 Created
  *    {
  *      "id": 2,
  *      "naam": "Nieuwe Locatie",
- *      "adres": "Nieuwstraat 5, 9200 Dendermonde"
+ *      "straat": "Nieuwstraat",
+ *      "huisnummer": "5",
+ *      "postcode": "9200",
+ *      "gemeente": "Dendermonde"
  *    }
  */
 const createPlaats = async (ctx: KoaContext<CreatePlaatsResponse, void, CreatePlaatsRequest>) => {
@@ -108,14 +119,20 @@ const createPlaats = async (ctx: KoaContext<CreatePlaatsResponse, void, CreatePl
  * @apiGroup Plaats
  * @apiParam {Number} id ID van de te updaten plaats.
  * @apiParam (Request body) {String} naam Naam van de plaats.
- * @apiParam (Request body) {String} adres Adres van de plaats.
+ * @apiParam (Request body) {String} straat Straat van de plaats.
+ * @apiParam (Request body) {String} huisnummer Huisnummer van de plaats.
+ * @apiParam (Request body) {String} postcode Postcode van de plaats.
+ * @apiParam (Request body) {String} gemeente Gemeente van de plaats.
  * @apiSuccess {Object} plaats Gegevens van de bijgewerkte plaats.
  * @apiSuccessExample {json} Success-Response:
  *    HTTP/1.1 200 OK
  *    {
  *      "id": 1,
  *      "naam": "Bijgewerkte Locatie",
- *      "adres": "Nieuwe Straat 10, 9200 Dendermonde"
+ *      "straat": "Nieuwe Straat",
+ *      "huisnummer": "10",
+ *      "postcode": "9200",
+ *      "gemeente": "Dendermonde"
  *    }
  */
 const updatePlaats = async (ctx: KoaContext<UpdatePlaatsResponse, IdParams, UpdatePlaatsRequest>) => {
@@ -155,10 +172,6 @@ const deletePlaats = async (ctx: KoaContext<void, IdParams>) => {
  *      ]
  *    }
  */
-const getEvenementenByPlaatsId = async (ctx: KoaContext<GetAllEvenementenReponse, IdParams>) => {
-  const evenementen = await EvenementenService.getEvenementenByPlaceId(Number(ctx.params.id));
-  ctx.body = { items: evenementen };
-};
 
 export default (parent: KoaRouter) => {
   const router = new Router<ReboostState, ReboostContext>({
@@ -170,7 +183,6 @@ export default (parent: KoaRouter) => {
   router.post('/', requireAuthentication, validate(createPlaatsSchema), createPlaats);
   router.put('/:id', requireAuthentication, validate(updatePlaatsSchema), updatePlaats);
   router.delete('/:id', requireAuthentication, validate(idParamSchema), deletePlaats);
-  router.get('/:id/evenementen', requireAuthentication, validate(idParamSchema), getEvenementenByPlaatsId);
 
   parent.use(router.routes()).use(router.allowedMethods());
 };

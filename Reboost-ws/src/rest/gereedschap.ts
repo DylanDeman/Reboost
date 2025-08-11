@@ -202,7 +202,6 @@ export default (parent: KoaRouter) => {
   router.get('/:id', validate(getGereedschapById.validationScheme), getGereedschapById, requireAuthentication);
   router.put('/:id', validate(updateGereedschap.validationScheme), updateGereedschap, requireAuthentication);
   router.delete('/:id', validate(deleteGereedschap.validationScheme), deleteGereedschap, requireAuthentication);
-  router.get('/:id/evenement', validate(getEventByGereedschapId.validationScheme), getEventByGereedschapId, requireAuthentication);
 
   parent.use(router.routes()).use(router.allowedMethods());
 };
