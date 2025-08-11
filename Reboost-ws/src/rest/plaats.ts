@@ -18,26 +18,26 @@ import { requireAuthentication } from '../core/auth';
 import validate from '../core/validation';
 
 const idParamSchema = {
-  params: Joi.object({
+  params: {
     id: Joi.number().integer().positive().required(),
-  }),
+  },
 };
 
 const createPlaatsSchema = {
-  body: Joi.object({
+  body: {
     naam: Joi.string().max(255).required(),
     adres: Joi.string().max(500).required(),
-  }),
+  },
 };
 
 const updatePlaatsSchema = {
-  params: Joi.object<IdParams>({
+  params: {
     id: Joi.number().integer().positive().required(),
-  }),
-  body: Joi.object({
+  },
+  body: {
     naam: Joi.string().max(255).required(),
     adres: Joi.string().max(500).required(),
-  }),
+  },
 };
 
 /**
