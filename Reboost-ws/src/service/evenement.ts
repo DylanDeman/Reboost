@@ -148,9 +148,35 @@ export const updateById = async (
 };
 
 export const deleteById = async (id: number): Promise<void> => {
-  await prisma.evenement.delete({
-    where: { id },
-  });
+  try {
+    // First get the evenement to check if it exists
+    const evenement = await prisma.evenement.findUnique({
+      where: { id },
+      include: { gereedschappen: true },
+    });
+
+    if (!evenement) {
+      throw ServiceError.notFound('Er bestaat geen evenement met dit id');
+    }
+
+    // Update any associated gereedschappen to make them available again
+    if (evenement.gereedschappen.length > 0) {
+      await prisma.gereedschap.updateMany({
+        where: { evenement_id: id },
+        data: {
+          evenement_id: null,
+          beschikbaar: true,
+        },
+      });
+    }
+
+    // Now delete the evenement
+    await prisma.evenement.delete({
+      where: { id },
+    });
+  } catch (error: any) {
+    throw handleDBError(error);
+  }
 };
 
 export const getEvenementenByPlaceId = async (

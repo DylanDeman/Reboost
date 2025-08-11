@@ -178,22 +178,26 @@ export default (parent: KoaRouter) => {
   );
   router.post(
     '/',
+    requireAuthentication,
     validate(createEvenement.validationScheme),
-    createEvenement, requireAuthentication,
+    createEvenement,
   );
   router.get(
     '/:id',
+    requireAuthentication,
     validate(getEvenementById.validationScheme),
-    getEvenementById, requireAuthentication,
+    getEvenementById,
   );
   router.put(
     '/:id',
+    requireAuthentication,
     validate(updateEvenement.validationScheme),
-    updateEvenement, requireAuthentication,
+    updateEvenement,
   );
   router.delete(
     '/:id',
-    deleteEvenement, requireAuthentication,
+    requireAuthentication,
+    deleteEvenement,
   );
 
   parent.use(router.routes())
