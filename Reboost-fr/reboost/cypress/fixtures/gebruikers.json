@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "naam": "Dylan De Man",
+      "roles": [
+        "admin",
+        "user"
+      ]
+    },
+    {
+      "id": 2,
+      "naam": "Maxime Jacobs",
+      "roles": [
+        "user"
+      ]
+    },
+    {
+      "id": 3,
+      "naam": "Jade Janssens",
+      "roles": [
+        "user"
+      ]
+    }
+  ]
+}

@@ -68,16 +68,25 @@ const gebruiker = useMemo(() => {
   const login = useCallback(
     async (naam, wachtwoord) => {
       try {
-        const { token } = await doLogin({
+        const result = await doLogin({
           naam,
           wachtwoord,
         });
-
+        
+        // Check if result contains an error (from our error handling)
+        if (result.error) {
+          // Handle error without throwing to prevent page refresh
+          console.error("Login error:", result.error);
+          return false;
+        }
+        
+        // If we got here, the login was successful
+        const { token } = result;
         setSession(token);
-
         return true;
       } catch (error) {
-        console.error(error);
+        // This should not throw for 401 errors anymore
+        console.error("Unexpected login error:", error);
         return false;
       }
     },

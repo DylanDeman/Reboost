@@ -1,25 +1,37 @@
 {
-  "plaatsen": [
+  "items": [
     {
-      "naam": "Het klokhuis",
-      "straat": "Kaaiplein",
+      "id": 1,
+      "naam": "Verhaeghe, Michiels and Lemmens Theater",
+      "straat": "Felixdreef",
+      "huisnummer": "426",
+      "postcode": "5267",
+      "gemeente": "Zarlardingevijve",
+      "_count": {
+        "evenementen": 3
+      }
+    },
+    {
+      "id": 2,
+      "naam": "Peeters NV Convention Center",
+      "straat": "Hermansplein",
       "huisnummer": "18",
-      "postcode": "9220",
-      "gemeente": "Hamme"
+      "postcode": "9642",
+      "gemeente": "Oetingengem",
+      "_count": {
+        "evenementen": 2
+      }
     },
     {
-      "naam": "JH Snuffel",
-      "straat": "Hamsesteenweg",
-      "huisnummer": "1",
-      "postcode": "9200",
-      "gemeente": "Dendermonde"
-    },
-    {
-      "naam": "JH Zenith",
-      "straat": "Otterstraat",
-      "huisnummer": "58",
-      "postcode": "9200",
-      "gemeente": "Dendermonde"
+      "id": 3,
+      "naam": "Verhaeghe, Smets and Thijs Convention Center",
+      "straat": "Gillesstraat",
+      "huisnummer": "404a",
+      "postcode": "6076",
+      "gemeente": "Erondegem",
+      "_count": {
+        "evenementen": 0
+      }
     }
   ]
 }

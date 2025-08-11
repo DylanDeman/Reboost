@@ -1,5 +1,7 @@
 import { prisma } from '../data';
 import type { Plaats, PlaatsCreateInput, PlaatsUpdateInput } from '../types/plaats';
+import ServiceError from '../core/serviceError';
+import handleDBError from './_handleDBError';
 
 export const getAll = async (): Promise<(Plaats & { _count: { evenementen: number } })[]> => {
   return prisma.plaats.findMany({
@@ -12,48 +14,84 @@ export const getAll = async (): Promise<(Plaats & { _count: { evenementen: numbe
 };
 
 export const getById = async (id: number): Promise<Plaats> => {
-  const plaats = await prisma.plaats.findUnique({
-    where: {
-      id,
-    }, 
-    include: {
-      evenementen: {
-        select: {
-          id: true,
-          naam: true,
-          datum: true,
-          auteur: true,
+  try {
+    const plaats = await prisma.plaats.findUnique({
+      where: {
+        id,
+      }, 
+      include: {
+        evenementen: {
+          select: {
+            id: true,
+            naam: true,
+            datum: true,
+            auteur: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (!plaats) {
-    throw new Error('Er bestaat geen plaats met dit id');
+    if (!plaats) {
+      throw ServiceError.notFound('Er bestaat geen plaats met dit id');
+    }
+
+    return plaats;
+  } catch (error) {
+    throw handleDBError(error);
   }
-
-  return plaats;
 };
 
 export const create = async (plaats: PlaatsCreateInput): Promise<Plaats> => {
-  return prisma.plaats.create({
-    data: plaats,
-  });
+  try {
+    return prisma.plaats.create({
+      data: plaats,
+    });
+  } catch (error) {
+    throw handleDBError(error);
+  }
 };
 
 export const updateById = async (id: number, changes: PlaatsUpdateInput): Promise<Plaats> => {
-  return prisma.plaats.update({
-    where: {
-      id,
-    },
-    data: changes,
-  });
+  try {
+    // First check if plaats exists
+    const exists = await prisma.plaats.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!exists) {
+      throw ServiceError.notFound('Er bestaat geen plaats met dit id');
+    }
+
+    return prisma.plaats.update({
+      where: {
+        id,
+      },
+      data: changes,
+    });
+  } catch (error) {
+    throw handleDBError(error);
+  }
 };
 
 export const deleteById = async (id: number) => {
-  await prisma.plaats.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    // First check if plaats exists
+    const exists = await prisma.plaats.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!exists) {
+      throw ServiceError.notFound('Er bestaat geen plaats met dit id');
+    }
+
+    await prisma.plaats.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    throw handleDBError(error);
+  }
 };

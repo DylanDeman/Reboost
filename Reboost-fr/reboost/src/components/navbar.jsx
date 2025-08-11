@@ -28,7 +28,6 @@ export default function Navbar() {
       <div className="container-fluid">
         <NavLink className="navbar-brand" to="/evenementen">
           <img src="/images/reboost_logo.png" alt="Reboost logo" width="50" height="50" />
-
         </NavLink>
 
         <button
@@ -76,7 +75,11 @@ export default function Navbar() {
             </li>
             {isAuthed ? (
               <li className="nav-item">
-                <button className={`nav-link ${textColorClass}`} onClick={uitloggen}>
+                <button 
+                  className={`nav-link ${textColorClass}`} 
+                  onClick={uitloggen}
+                  data-cy="logoutButton"
+                >
                   Uitloggen
                 </button>
               </li>

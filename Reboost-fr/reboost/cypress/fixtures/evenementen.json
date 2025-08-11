@@ -1,156 +1,58 @@
-{"items": [
+{
+    "items": [
         {
             "id": 1,
-            "naam": "Disco Dasco",
-            "datum": "2021-05-25T17:40:00.000Z",
+            "naam": "Distributed Structure Expo",
+            "datum": "2025-11-24T15:13:57.000Z",
             "plaats": {
                 "id": 1,
-                "naam": "Het klokhuis",
-                "straat": "Kaaiplein",
-                "huisnummer": "18",
-                "postcode": "9220",
-                "gemeente": "Hamme"
+                "naam": "Verhaeghe, Michiels and Lemmens Theater",
+                "straat": "Felixdreef",
+                "huisnummer": "426",
+                "postcode": "5267",
+                "gemeente": "Zarlardingevijve"
             },
             "auteur": {
                 "id": 1,
                 "naam": "Dylan De Man"
-            }
+            },
+            "gereedschappen": []
         },
         {
             "id": 2,
-            "naam": "Nacht van de jeugdbeweging",
-            "datum": "2021-05-08T18:00:00.000Z",
+            "naam": "Global Metalen Forum",
+            "datum": "2025-08-21T11:22:30.000Z",
             "plaats": {
                 "id": 2,
-                "naam": "JH Snuffel",
-                "straat": "Hamsesteenweg",
-                "huisnummer": "1",
-                "postcode": "9200",
-                "gemeente": "Dendermonde"
+                "naam": "Peeters NV Convention Center",
+                "straat": "Hermansplein",
+                "huisnummer": "18",
+                "postcode": "9642",
+                "gemeente": "Oetingengem"
             },
             "auteur": {
-                "id": 1,
-                "naam": "Dylan De Man"
-            }
+                "id": 2,
+                "naam": "Maxime Jacobs"
+            },
+            "gereedschappen": []
         },
         {
             "id": 3,
-            "naam": "Fantasia",
-            "datum": "2021-05-21T12:30:00.000Z",
+            "naam": "Innovate Kleding Forum",
+            "datum": "2026-03-02T09:13:12.000Z",
             "plaats": {
                 "id": 3,
-                "naam": "JH Zenith",
-                "straat": "Otterstraat",
-                "huisnummer": "58",
-                "postcode": "9200",
-                "gemeente": "Dendermonde"
-            },
-            "auteur": {
-                "id": 1,
-                "naam": "Dylan De Man"
-            }
-        },
-        {
-            "id": 4,
-            "naam": "Gentse feesten",
-            "datum": "2021-05-25T17:40:00.000Z",
-            "plaats": {
-                "id": 1,
-                "naam": "Het klokhuis",
-                "straat": "Kaaiplein",
-                "huisnummer": "18",
-                "postcode": "9220",
-                "gemeente": "Hamme"
-            },
-            "auteur": {
-                "id": 2,
-                "naam": "Steve Schwing"
-            }
-        },
-        {
-            "id": 5,
-            "naam": "Tomorrowland",
-            "datum": "2021-05-09T21:00:00.000Z",
-            "plaats": {
-                "id": 2,
-                "naam": "JH Snuffel",
-                "straat": "Hamsesteenweg",
-                "huisnummer": "1",
-                "postcode": "9200",
-                "gemeente": "Dendermonde"
-            },
-            "auteur": {
-                "id": 2,
-                "naam": "Steve Schwing"
-            }
-        },
-        {
-            "id": 6,
-            "naam": "Pukkelpop",
-            "datum": "2021-05-22T10:00:00.000Z",
-            "plaats": {
-                "id": 3,
-                "naam": "JH Zenith",
-                "straat": "Otterstraat",
-                "huisnummer": "58",
-                "postcode": "9200",
-                "gemeente": "Dendermonde"
-            },
-            "auteur": {
-                "id": 2,
-                "naam": "Steve Schwing"
-            }
-        },
-        {
-            "id": 7,
-            "naam": "ZogRock",
-            "datum": "2021-05-25T17:40:00.000Z",
-            "plaats": {
-                "id": 1,
-                "naam": "Het klokhuis",
-                "straat": "Kaaiplein",
-                "huisnummer": "18",
-                "postcode": "9220",
-                "gemeente": "Hamme"
+                "naam": "Verhaeghe, Smets and Thijs Convention Center",
+                "straat": "Gillesstraat",
+                "huisnummer": "404a",
+                "postcode": "6076",
+                "gemeente": "Erondegem"
             },
             "auteur": {
                 "id": 3,
-                "naam": "Nathan Van heirseele"
-            }
-        },
-        {
-            "id": 8,
-            "naam": "Redalert",
-            "datum": "2021-05-10T08:00:00.000Z",
-            "plaats": {
-                "id": 2,
-                "naam": "JH Snuffel",
-                "straat": "Hamsesteenweg",
-                "huisnummer": "1",
-                "postcode": "9200",
-                "gemeente": "Dendermonde"
+                "naam": "Jade Janssens"
             },
-            "auteur": {
-                "id": 3,
-                "naam": "Nathan Van heirseele"
-            }
-        },
-        {
-            "id": 9,
-            "naam": "Blue",
-            "datum": "2021-05-19T09:30:00.000Z",
-            "plaats": {
-                "id": 3,
-                "naam": "JH Zenith",
-                "straat": "Otterstraat",
-                "huisnummer": "58",
-                "postcode": "9200",
-                "gemeente": "Dendermonde"
-            },
-            "auteur": {
-                "id": 3,
-                "naam": "Nathan Van heirseele"
-            }
+            "gereedschappen": []
         }
     ]
 }

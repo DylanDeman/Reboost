@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "naam": "Videomuur",
+      "beschrijving": "Grootschalige LED videomuur voor dynamische visuele effecten en presentaties.",
+      "beschikbaar": true,
+      "evenement": null
+    },
+    {
+      "id": 2,
+      "naam": "Draadloze Presenter",
+      "beschrijving": "Draadloze afstandsbediening voor het bedienen van diavoorstellingen en presentaties.",
+      "beschikbaar": true,
+      "evenement": null
+    },
+    {
+      "id": 3,
+      "naam": "Cateringstation",
+      "beschrijving": "Volledig uitgerust cateringstation voor het serveren van eten en dranken.",
+      "beschikbaar": true,
+      "evenement": null
+    }
+  ]
+}
+
