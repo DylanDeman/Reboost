@@ -37,6 +37,7 @@ const cleanupJoiError = (error: Joi.ValidationError) => {
 };
 
 const validate = (scheme: RequestValidationSchemeInput | null) => {
+  // Ensure we have empty objects as defaults
   const parsedSchema: RequestValidationScheme = {
     body: Joi.object(scheme?.body || {}),
     params: Joi.object(scheme?.params || {}),
@@ -45,6 +46,11 @@ const validate = (scheme: RequestValidationSchemeInput | null) => {
 
   return (ctx: KoaContext, next: Next) => {
     const errors = new Map();
+
+    // Ensure ctx.request.body exists
+    if (!ctx.request.body && scheme?.body) {
+      ctx.request.body = {};
+    }
 
     const { error: paramsErrors, value: paramsValue } =
       parsedSchema.params.validate(ctx.params, JOI_OPTIONS);
@@ -78,7 +84,7 @@ const validate = (scheme: RequestValidationSchemeInput | null) => {
     }
 
     if (errors.size > 0) {
-      ctx.throw(400, 'validatie gefaald', {
+      ctx.throw(400, 'Validation failed', {
         code: 'VALIDATION_FAILED',
         details: Object.fromEntries(errors),
       });
