@@ -17,12 +17,6 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 ## Opstarten
 ### Maak een .env bestand aan met volgende:
 * VITE_API_URL='http://localhost:9000/api'
-* AUTH0_USERNAME='test@reboost.be'
-* AUTH0_PASSWORD='Test123.'
-* REACT_APP_AUTH0_DOMAIN='https://dev-eu5g8sejk0b6k23l.us.auth0.com'
-* REACT_APP_AUTH0_AUDIENCE='https://dev-eu5g8sejk0b6k23l.us.auth0.com/api/v2/'
-* REACT_APP_AUTH0_SCOPE='read:current_user'
-* REACT_APP_AUTH0_CLIENTID='DsCO5tTYas6vWM3MrPCZ4h9Qw5IuXExs'
 
 ### Dependencies installeren
  * yarn install
