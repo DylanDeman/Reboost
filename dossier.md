@@ -13,83 +13,133 @@
 ## Logingegevens
 
 ### Lokaal
+#### Admin:
+- Gebruikersnaam: Dylan De Man
+- Wachtwoord: 123456789
 
-- Gebruikersnaam/e-mailadres: test@reboost.be
-- Wachtwoord: Test123.
+#### User:
+- Gebruikersnaam: Pauline Wouters
+- Wachtwoord: 123456789
 
 ### Online
 
-- Gebruikersnaam/e-mailadres: test@reboost.be
-- Wachtwoord: Test123.
+#### Admin:
+- Gebruikersnaam: Dylan De Man
+- Wachtwoord: 123456789
+
+ #### User:
+- Gebruikersnaam: Pauline Wouters
+- Wachtwoord: 123456789
 
 
 ## Projectbeschrijving
-Reboost is een bedrijf in de evenementensector gelegen in Hamme, in dit project geven we gebruikers de mogelijkheid om evenementen in te plannen op locaties, de locaties kunnen ook zelf aangemaakt worden.
+Reboost is een bedrijf in de evenementensector gelegen in Hamme, in dit project geven we gebruikers de mogelijkheid om evenementen in te plannen op locaties, de locaties kunnen ook zelf aangemaakt worden. Ook kunnen er gereedschappen worden toegevoegd aan evenementen, en een admin kan gebruikers beheren.
 
 ## Screenshots
 
 ### Login:
 
-![image](https://github.com/user-attachments/assets/becd15f5-c007-4272-bf71-7c8c3795b2fb)
+<img width="780" height="792" alt="image" src="https://github.com/user-attachments/assets/5fd04470-3f64-4fb4-887e-76736fe9108b" />
 
-![image](https://github.com/user-attachments/assets/fe411fe1-2e46-4368-8fdc-d419f11e7e93)
+
+<img width="632" height="714" alt="image" src="https://github.com/user-attachments/assets/1d9b6868-d13a-4e75-93b2-3d1c94f6a0d5" />
+
 
 ### Evenementen:
 
-#### Toevoegen:
+#### Bekijken als uitgelogde gebruiker:
 
-![image](https://github.com/user-attachments/assets/7922b503-6fb0-4926-8cf1-deeca04f8368)
+<img width="1297" height="1265" alt="image" src="https://github.com/user-attachments/assets/90146d97-5769-46d8-9f77-25bdb005ae7b" />
 
-![image](https://github.com/user-attachments/assets/928ee1e4-0c77-4468-876f-c8414953ee16)
+
+#### Toevoegen (ingelogd):
+
+<img width="1302" height="807" alt="image" src="https://github.com/user-attachments/assets/6c7b17e5-cbc7-4295-9398-b7d81ba0a747" />
+
+
+<img width="1216" height="1003" alt="image" src="https://github.com/user-attachments/assets/c51d86b9-a4ed-42f0-aee6-8c32d9ed9eaf" />
+
 
 
 #### Bewerken:
-![image](https://github.com/user-attachments/assets/2434a673-67d2-4972-bde9-95adf64ad23e)
-![image](https://github.com/user-attachments/assets/e43e2d37-bd6f-4258-bc52-3df4a9290338)
-![image](https://github.com/user-attachments/assets/d5c525a7-a5f9-4cad-89dd-a51258265639)
+<img width="1287" height="65" alt="image" src="https://github.com/user-attachments/assets/7e4797eb-10e6-4e40-b6aa-cca4f4f5c1ce" />
+
+<img width="1033" height="976" alt="image" src="https://github.com/user-attachments/assets/c17d273e-7943-429d-bfbe-fc1d8f7b2b02" />
+
+<img width="1292" height="66" alt="image" src="https://github.com/user-attachments/assets/bea68960-94d9-4b6d-b6e1-86696e115181" />
+
 
 
 
 #### Verwijderen:
 
-![image](https://github.com/user-attachments/assets/455c0399-673b-4b10-b9d1-a50e43f234f3)
+<img width="1295" height="75" alt="image" src="https://github.com/user-attachments/assets/4ecf41a6-3686-4e89-9c17-9df5c80f9edb" />
 
-![image](https://github.com/user-attachments/assets/964e684c-59c1-4049-9174-52594260b645)
+#### pdf genereren:
+<img width="1297" height="795" alt="image" src="https://github.com/user-attachments/assets/8848701d-3d41-401c-9a34-ce55ddba8746" />
 
-![image](https://github.com/user-attachments/assets/0c7779c1-f8b5-482d-9568-40046d6be8b0)
+<img width="791" height="1118" alt="image" src="https://github.com/user-attachments/assets/9ef22251-85cd-4eb4-b122-b11f1d2b3658" />
 
-### Plaatsen:
+
+
+### Plaatsen
+
+<img width="1302" height="1134" alt="image" src="https://github.com/user-attachments/assets/87b8532f-0cb3-4caa-bab3-af827c25ce86" />
+
 
 #### Toevoegen:
 
-![image](https://github.com/user-attachments/assets/faf63edc-87ce-4abb-9926-faa67a5e5370)
-
-![image](https://github.com/user-attachments/assets/676dbfe6-0ce2-4ab0-9c8b-026a27ba8f61)
+<img width="1289" height="686" alt="image" src="https://github.com/user-attachments/assets/27307a4f-0ec8-4297-81b3-8bd4ff25ee4c" />
 
 
+<img width="1035" height="811" alt="image" src="https://github.com/user-attachments/assets/1351683b-ad0e-448a-b665-8f78274aca76" />
 
-![image](https://github.com/user-attachments/assets/57e7d446-acb2-4428-9f1a-f20bd5969970)
+<img width="1392" height="570" alt="image" src="https://github.com/user-attachments/assets/00c1243b-d29e-4d0f-a643-4b5e7679c068" />
+
 
 #### Bewerken:
 
-![image](https://github.com/user-attachments/assets/65fffa89-9dff-44b2-927f-56bbd64842df)
+<img width="322" height="261" alt="image" src="https://github.com/user-attachments/assets/b4b3250f-197a-44c5-92e4-3e152d2940cd" />
 
-![image](https://github.com/user-attachments/assets/7f206369-c03c-454e-9529-9570e6c6179b)
+<img width="1014" height="812" alt="image" src="https://github.com/user-attachments/assets/85b5f980-6a38-4c89-965e-2cf897b83597" />
+
+
 
 #### Verwijderen:
 
-![image](https://github.com/user-attachments/assets/c77c5b58-3d6a-47b7-8b36-aa6292f5ced0)
+<img width="299" height="257" alt="image" src="https://github.com/user-attachments/assets/0142b5cd-3a55-43e8-9179-a7fdd02963a7" />
 
-![image](https://github.com/user-attachments/assets/b13decd5-25cd-4e91-91cb-068f9ad1ff38)
+### Gebruikers (admin role)
 
-![image](https://github.com/user-attachments/assets/a67bcfb9-61c4-438e-a019-8ffbe89366de)
+#### Toevoegen
+<img width="1321" height="997" alt="image" src="https://github.com/user-attachments/assets/00b26a57-4199-4703-99fc-32dab90ceaf5" />
+
+<img width="503" height="517" alt="image" src="https://github.com/user-attachments/assets/67464555-a7a7-4ff6-b7b4-23aaedf30a41" />
+
+<img width="1298" height="936" alt="image" src="https://github.com/user-attachments/assets/28f785d6-49d0-40dc-8e6f-9e6ac8c4374b" />
+
+#### Bewerken
+<img width="1320" height="671" alt="image" src="https://github.com/user-attachments/assets/0d823f9e-27a9-4804-84ad-81fee512b64e" />
+
+
+<img width="496" height="520" alt="image" src="https://github.com/user-attachments/assets/b536d624-c21f-470c-8dd0-6038514bfbf0" />
+
+
+<img width="1331" height="695" alt="image" src="https://github.com/user-attachments/assets/4379351e-17ad-4cf1-8c81-0c2061524022" />
+
+#### Verwijderen
+
+<img width="1279" height="50" alt="image" src="https://github.com/user-attachments/assets/feba198d-3f61-4a72-aa3e-3f41d73e24d6" />
+
+<img width="504" height="208" alt="image" src="https://github.com/user-attachments/assets/88888e86-ed16-4359-8362-8c485d180242" />
+
+
 
 ### Dark mode / light mode
+<img width="1309" height="1121" alt="image" src="https://github.com/user-attachments/assets/a83f8530-741b-4eec-af92-6a5e4452c731" />
 
-![image](https://github.com/user-attachments/assets/7f4d6052-129a-4a24-a7bc-d0cfbd640bc1)
-![image](https://github.com/user-attachments/assets/4d71d589-efb2-4621-8373-dbb7f03a05be)
-![image](https://github.com/user-attachments/assets/44502dbf-74bc-4b12-b4ee-795f13be1a19)
 
+<img width="1318" height="1233" alt="image" src="https://github.com/user-attachments/assets/7b21090b-884e-4430-a6c2-9ffa7a9812f2" />
 
 
 
@@ -116,6 +166,13 @@ Reboost is een bedrijf in de evenementensector gelegen in Hamme, in dit project 
 - `POST /api/gebruikers/`: Nieuwe gebruiker toevoegen
 - `PUT /api/gebruikers/:id`: gebruiker met een bepaald id bewerken
 - `DELETE /api/gebruikers/:id`: gebruiker met een bepaald id verwijderen
+
+### Gebruikers
+- `GET /api/gereedschap`: alle gereedschappen ophalen
+- `GET /api/gereedschap/:id`: gereedschap met een bepaald id ophalen
+- `POST /api/gereedschap/`: Nieuw gereeschap toevoegen
+- `PUT /api/gereerschap/:id`: gereedschap met een bepaald id bewerken
+- `DELETE /api/gereedschap/:id`: gereedschap met een bepaald id verwijderen
 
 ## Behaalde minimumvereisten
 
@@ -206,31 +263,39 @@ Reboost is een bedrijf in de evenementensector gelegen in Hamme, in dit project 
 
 ### Front-end Web Development
 
-![image](https://github.com/user-attachments/assets/df49b1d5-40e9-47c7-8308-facf3b047788)
+<img width="212" height="764" alt="image" src="https://github.com/user-attachments/assets/9f0f9c38-0f70-4012-9cbd-d2c231ead656" />
+
 
 De front end is opgedeeld in een components & pages structuur, hierbij worden ook contexts gebruikt
 
 ### Web Services
 
-![image](https://github.com/user-attachments/assets/2616960c-14b2-446d-9672-dec339bce64f)
+<img width="181" height="657" alt="image" src="https://github.com/user-attachments/assets/dec2cf4e-7713-477e-a40f-661d880cbe34" />
+
 
 De api is opgedeeld in een data, rest & service laag
 
 #### ERD
-![image](https://github.com/user-attachments/assets/6f1f20dc-bd9c-4dac-8b89-172272a33374)
+<img width="559" height="933" alt="image" src="https://github.com/user-attachments/assets/52714ed9-3b52-4021-a541-8350199dd933" />
+
 
 
 ## Extra technologie
 
 ### Front-end Web Development
 
-[Auth0](https://www.npmjs.com/package/auth0)
+[jspdf](https://www.npmjs.com/package/jspdf)
 
 ### Web Services
 
 [apidoc](https://www.npmjs.com/package/apidoc)
+[fakerjs](https://fakerjs.dev/)
+
 
 ## Reflectie
 
 Het was leuk om zelf een project te mogen maken zonder extreme richtlijnen, ookal heb ik de tijdsdruk onderschat. 
 Ik zou volgende keer meer doen doorheen het semester, aangezien ik nu nog veel heb moeten doen op het einde van het semester.
+
+### EP3
+na duidelijke feedback, was het interessant om dingen op te lossen, dit ging veel beter, aangezien ik nu meer tijd nam.
