@@ -3,7 +3,7 @@
 - Student: Dylan De Man
 - Studentennummer: 202396547
 - E-mailadres: <mailto:dylan.deman@student.hogent.be>
-- Demo: [https://hogent.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=58cbab38-3b45-4b0e-9e8d-b24c0102c447&start=0](https://hogent.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=58cbab38-3b45-4b0e-9e8d-b24c0102c447&start=0)
+- Demo: [https://hogent.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=73aee3e0-aed3-44b9-a456-b337010adac3](https://hogent.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=73aee3e0-aed3-44b9-a456-b337010adac3)
 - GitHub-repository: <https://github.com/HOGENT-frontendweb/frontendweb-2425-DylanDeman>
 - Front-end Web Development
   - Online versie: [https://frontendweb-2425-dylandeman-1.onrender.com](https://frontendweb-2425-dylandeman-1.onrender.com)
@@ -28,7 +28,7 @@
 - Wachtwoord: 123456789
 
  #### User:
-- Gebruikersnaam: Pauline Wouters
+- Gebruikersnaam: Maxime Jacobs
 - Wachtwoord: 123456789
 
 
