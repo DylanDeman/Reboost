@@ -18,7 +18,7 @@
 - Wachtwoord: 123456789
 
 #### User:
-- Gebruikersnaam: Pauline Wouters
+- Gebruikersnaam: Maxime Jacobs
 - Wachtwoord: 123456789
 
 ### Online
