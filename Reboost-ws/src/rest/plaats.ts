@@ -154,25 +154,6 @@ const deletePlaats = async (ctx: KoaContext<void, IdParams>) => {
   ctx.status = 204;
 };
 
-/**
- * @api {get} /plaatsen/:id/evenementen Haal evenementen op voor een plaats
- * @apiName GetEvenementsByPlaatsId
- * @apiGroup Plaats
- * @apiParam {Number} id ID van de plaats waarvoor de evenementen opgehaald moeten worden.
- * @apiSuccess {Object[]} items Lijst van evenementen die plaatsvinden op deze plaats.
- * @apiSuccessExample {json} Success-Response:
- *    HTTP/1.1 200 OK
- *    {
- *      "items": [
- *        {
- *          "id": 1,
- *          "naam": "testEvenement",
- *          "datum": "2024-07-01T19:00:00Z"
- *        }
- *      ]
- *    }
- */
-
 export default (parent: KoaRouter) => {
   const router = new Router<ReboostState, ReboostContext>({
     prefix: '/plaatsen',

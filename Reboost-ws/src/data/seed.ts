@@ -18,7 +18,15 @@ async function main() {
       roles: ['admin', 'user'],
     },
   });
+  const gebruiker2 = await prisma.gebruiker.create({
+    data: {
+      naam: 'Maxime Jacobs',
+      wachtwoord: PASSWORD,
+      roles: ['user'],
+    },
+  });
   gebruikers.push(gebruiker);
+  gebruikers.push(gebruiker2);
 
   for (let i = 0; i < 10; i++) {
     const gebruiker = await prisma.gebruiker.create({

@@ -70,10 +70,12 @@ export default function GereedschapForm({
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
     reset,
+    setValue,
+    watch,
   } = methods;
 
   // Watch evenementId to disable availability checkbox if linked
-  const geselecteerdEvenementId = methods.watch('evenementId');
+  const geselecteerdEvenementId = watch('evenementId');
 
   useEffect(() => {
     if (gereedschap && isEdit) {
@@ -85,6 +87,13 @@ export default function GereedschapForm({
       });
     }
   }, [gereedschap, isEdit, reset]);
+
+  // Set beschikbaar to false when an evenement is selected
+  useEffect(() => {
+    if (geselecteerdEvenementId) {
+      setValue('beschikbaar', false);
+    }
+  }, [geselecteerdEvenementId, setValue]);
 
   const onSubmit = async (values) => {
     if (!isValid) return;

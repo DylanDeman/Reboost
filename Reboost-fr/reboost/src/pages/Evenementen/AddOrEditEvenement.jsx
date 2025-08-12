@@ -13,7 +13,7 @@ export default function AddOrEditEvenement() {
   const navigate = useNavigate();
 
   // Get current user from AuthContext
-  const { user: currentUser } = useContext(AuthContext);
+  const { gebruiker: currentUser } = useContext(AuthContext);
 
   const { data: evenement, error: evenementError, isLoading: evenementLoading } = useSWR(
     id ? `evenementen/${id}` : null,
@@ -81,8 +81,15 @@ export default function AddOrEditEvenement() {
     }
   }
 
+  // Ensure we're passing the correct user format to the form
+  const formattedUser = currentUser ? {
+    id: currentUser.id,
+    naam: currentUser.naam || currentUser.username || currentUser.email || 'Current User'
+  } : null;
+
   if (gebruikersError || evenementError || plaatsenError || gereedschapError) return <div>Error loading data.</div>;
-  if (gebruikersLoading || evenementLoading || plaatsenLoading || gereedschapLoading) return <div>Loading...</div>;
+  if (gebruikersLoading || evenementLoading || plaatsenLoading || gereedschapLoading) 
+    return <div>Loading...</div>;
 
   const linkedGereedschap = evenement?.gereedschappen || [];
   const availableNotLinked = beschikbareGereedschappen.filter(
@@ -93,6 +100,12 @@ export default function AddOrEditEvenement() {
   return (
     <>
       <h1>{id ? 'Bewerk evenement' : 'Voeg een evenement toe'}</h1>
+      {!formattedUser && !id && (
+        <div className="alert alert-warning">
+          Je bent niet ingelogd of je gebruikersgegevens zijn niet beschikbaar. 
+          Je kunt nog steeds een evenement aanmaken, maar je wordt niet automatisch als auteur geselecteerd.
+        </div>
+      )}
       <AsyncData
         error={gebruikersError || evenementError || plaatsenError || gereedschapError}
         loading={gebruikersLoading || evenementLoading || plaatsenLoading || gereedschapLoading}
@@ -104,7 +117,7 @@ export default function AddOrEditEvenement() {
           evenement={evenement}
           saveEvenement={onSave}
           isEdit={!!id}
-          currentUser={currentUser}
+          currentUser={formattedUser}
         />
       </AsyncData>
     </>

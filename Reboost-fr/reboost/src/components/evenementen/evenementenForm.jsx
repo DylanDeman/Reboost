@@ -1,8 +1,9 @@
 // src/components/evenements/EvenementForm.jsx
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { ThemeContext } from '../../contexts/Theme.context';
+import { useAuth } from '../../contexts/auth'; 
 import LabelInput from '../LabelInput';
 import SelectList from '../SelectList';
 import {
@@ -58,22 +59,26 @@ export default function EvenementForm({
   evenement = EMPTY_EVENEMENT,
   saveEvenement,
   isEdit = false,
-  currentUser = null, // Add currentUser prop
+  currentUser = null,
 }) {
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
+  const { gebruiker } = useAuth();
+  const formInitialized = useRef(false);
 
+  const activeUser = !isEdit ? (currentUser || gebruiker) : null;
+  
   const [selectedGereedschappen, setSelectedGereedschappen] = useState([]);
   const [availableGereedschappen, setAvailableGereedschappen] = useState([]);
 
-  // Helper function to get the correct author ID
-  const getAuteurId = () => {
+ 
+  const initialAuthorId = () => {
     if (isEdit && evenement?.gebruiker) {
-      // For edit mode, use the event's author
-      return evenement.gebruiker.id?.toString() || '';
-    } else if (!isEdit && currentUser) {
-      // For new events, use current user
-      return currentUser.id?.toString() || '';
+  
+      return evenement?.gebruiker?.id?.toString() || '';
+    } else if (!isEdit && activeUser) {
+ 
+      return activeUser.id?.toString() || '';
     }
     return '';
   };
@@ -84,7 +89,7 @@ export default function EvenementForm({
       naam: evenement?.naam || '',
       datum: todatumInputString(evenement?.datum),
       plaats_id: evenement?.plaats?.id?.toString() || '',
-      auteur_id: getAuteurId(),
+      auteur_id: initialAuthorId(),
     },
   });
 
@@ -95,25 +100,75 @@ export default function EvenementForm({
     setValue,
   } = methods;
 
+
   useEffect(() => {
-    if (isEdit && evenement && gebruikers.length > 0) {
-      // Reset form with event data for edit mode
-      const auteurId = evenement.gebruiker?.id?.toString() || evenement.auteur?.id?.toString() || '';
+    if (formInitialized.current) return;
+    
+    if (isEdit && evenement) {
+
+      let authorId = '';
       
+      if (evenement.gebruiker && evenement.gebruiker.id) {
+        authorId = evenement.gebruiker.id.toString();
+      } else if (evenement.auteur && evenement.auteur.id) {
+        authorId = evenement.auteur.id.toString();
+      } else if (evenement.auteur_id) {
+        authorId = evenement.auteur_id.toString();
+      }
+      
+    
       reset({
         naam: evenement.naam || '',
         datum: todatumInputString(evenement.datum),
         plaats_id: evenement.plaats?.id?.toString() || '',
-        auteur_id: auteurId,
+        auteur_id: authorId,
       });
+      
+   
       setSelectedGereedschappen(evenement.gereedschappen || []);
-    } else if (!isEdit && currentUser && gebruikers.length > 0) {
-      // Set current user as default author for new events
-      const currentUserId = currentUser.id?.toString() || '';
-      console.log('New event - setting currentUser as author:', currentUserId);
-      setValue('auteur_id', currentUserId);
+      
+     
+      setTimeout(() => {
+ 
+        setValue('auteur_id', authorId);
+        
+ 
+        try {
+          const selectElement = document.querySelector('select[name="auteur_id"]');
+          if (selectElement) {
+            selectElement.value = authorId;
+            
+         
+            const event = new Event('change', { bubbles: true });
+            selectElement.dispatchEvent(event);
+          }
+        } catch (e) {
+          console.error('Failed to set author select element:', e);
+        }
+      }, 100);
+      
+      formInitialized.current = true;
+    } 
+    else if (!isEdit && activeUser && gebruikers.length > 0) {
+
+      const userId = activeUser.id?.toString();
+      const userExists = gebruikers.some(u => u.id.toString() === userId);
+      
+      if (userExists) {
+        setValue('auteur_id', userId);
+
+        setTimeout(() => {
+          const select = document.querySelector('select[name="auteur_id"]');
+          if (select) {
+            select.value = userId;
+          }
+        }, 50);
+        
+        formInitialized.current = true;
+      }
     }
-  }, [evenement, isEdit, reset, setValue, currentUser, gebruikers]);
+  }, [isEdit, evenement, activeUser, gebruikers, reset, setValue]);
+
 
   useEffect(() => {
     const available = gereedschappen.filter(
@@ -125,11 +180,16 @@ export default function EvenementForm({
   const onSubmit = async (values) => {
     if (!isValid) return;
 
+   
+    const finalAuthorId = values.auteur_id || 
+      (!isEdit && activeUser?.id?.toString()) || 
+      null;
+
     const submitData = {
       id: evenement?.id,
       ...values,
       plaats_id: values.plaats_id === '' ? null : parseInt(values.plaats_id) || null,
-      auteur_id: values.auteur_id === '' ? null : parseInt(values.auteur_id) || null,
+      auteur_id: finalAuthorId === '' ? null : parseInt(finalAuthorId) || null,
       gereedschap_ids: selectedGereedschappen.map((tool) => tool.id),
     };
 
@@ -203,6 +263,11 @@ export default function EvenementForm({
                   data-cy="auteur_input"
                   isInvalid={!!errors.auteur_id}
                 />
+                {!isEdit && currentUser && (
+                  <small className=" mt-1">
+                    <i>Je bent standaard geselecteerd als auteur, maar je kunt dit wijzigen indien nodig.</i>
+                  </small>
+                )}
               </div>
 
               <div className="mb-5">
@@ -318,3 +383,4 @@ export default function EvenementForm({
     </div>
   );
 }
+
